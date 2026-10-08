@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+import {Networks} from "./lib/Networks.sol";
 import {IVRF} from "./interfaces/External.sol";
 import {Guard, Owned} from "./lib/Security.sol";
 import {Balls} from "./lib/Balls.sol";
@@ -21,7 +22,10 @@ contract Sorphera is Guard, Owned {
         RandomReady,
         Won,
         Rolled,
-        Cancelled
+        Cancelled,
+        TieBreakNeeded,
+        TieBreakRequested,
+        TieBreakReady
     }
 
     struct Rules {
@@ -64,6 +68,8 @@ contract Sorphera is Guard, Owned {
         uint256 winningTicket;
         uint256 eligibleNFTs;
         uint256 frozenNFTs;
+        uint256 tieBreakRequestId;
+        uint256 tieBreakWord;
     }
 
     struct Group {
@@ -89,7 +95,11 @@ contract Sorphera is Guard, Owned {
         uint8 game;
         uint256 round;
         bool exists;
+        bool tieBreak;
     }
+    error MissingFactoryCode(address dependency, uint256 chainId);
+    error MissingCoordinatorCode(address dependency, uint256 chainId);
+    uint256 public immutable deploymentChainId;
     SorpheraVaultFactory public immutable factory;
     IVRF public immutable coordinator;
     bool public salesEnabled;
@@ -159,8 +169,19 @@ contract Sorphera is Guard, Owned {
         uint8 indexed game, uint256 indexed originRound, uint256 indexed group, uint256 count
     );
 
+    event TieBreakRequired(uint8 indexed game, uint256 indexed round, uint256 matches);
+    event TieBreakRequested(uint8 indexed game, uint256 indexed round, uint256 indexed requestId);
+    event TieBreakRandomnessStored(
+        uint8 indexed game, uint256 indexed round, uint256 indexed requestId, uint256 word
+    );
+    event TieBreakResult(
+        uint8 indexed game, uint256 indexed round, uint256 indexed requestId, uint256 winningTicket
+    );
+
     constructor(address owner_, address factory_, address coordinator_) Owned(owner_) {
-        require(factory_.code.length != 0 && coordinator_.code.length != 0, "Sorphera: dependencies");
+        if (factory_.code.length == 0) revert MissingFactoryCode(factory_, block.chainid);
+        if (coordinator_.code.length == 0) revert MissingCoordinatorCode(coordinator_, block.chainid);
+        deploymentChainId = block.chainid;
         factory = SorpheraVaultFactory(factory_);
         coordinator = IVRF(coordinator_);
         currentGroup[0] = 1;
@@ -208,13 +229,31 @@ contract Sorphera is Guard, Owned {
     }
 
     function validateLaunch() external onlyOwner {
-        require(block.chainid == 11155111, "Sorphera: Sepolia only");
+        _validateNetwork(randomConfig);
         factory.router().validate(factory.router().pool());
         _checkFunding(randomConfig);
         require(futureRules[0].price != 0 && futureRules[1].price != 0, "Sorphera: rules not configured");
         require(factory.lottery() == address(this), "Sorphera: factory not bound");
         launchValidated = true;
         emit LaunchValidated();
+    }
+
+    function _validateNetwork(RandomConfig memory c) internal view virtual {
+        require(block.chainid == deploymentChainId, "Sorphera: chain changed");
+        Networks.validate(block.chainid, address(coordinator), c.keyHash);
+        (bool active,) = coordinator.s_provingKeys(c.keyHash);
+        (uint16 minimumConfirmations, uint32 maximumGas,,,,,,,) = coordinator.s_config();
+        require(
+            active && c.confirmations >= minimumConfirmations && c.callbackGas <= maximumGas,
+            "Sorphera: coordinator configuration"
+        );
+        if (block.chainid == 1) {
+            require(factory.router().pool() == Networks.MAINNET_POOL, "Sorphera: mainnet pool");
+        }
+    }
+
+    function isTerminal(Status status) public pure returns (bool) {
+        return status == Status.Won || status == Status.Rolled || status == Status.Cancelled;
     }
 
     function _checkFunding(RandomConfig memory c) internal view {
@@ -240,10 +279,11 @@ contract Sorphera is Guard, Owned {
         require(launchValidated, "Sorphera: launch not validated");
         uint256 previous = latestRound[game];
         if (previous != 0) {
-            require(uint8(rounds[game][previous].status) >= uint8(Status.Won), "Sorphera: previous unsettled");
+            require(isTerminal(rounds[game][previous].status), "Sorphera: previous unsettled");
         }
         Rules memory rules = futureRules[game];
         require(rules.price != 0, "Sorphera: rules not configured");
+        _validateNetwork(randomConfig);
         _checkFunding(randomConfig);
         id = previous + 1;
         uint256 cutoff = rules.firstCutoff + previous * WEEK;
@@ -284,6 +324,8 @@ contract Sorphera is Guard, Owned {
             picks.length > 0 && picks.length <= MAX_TICKETS_PER_TX && msg.value == picks.length * r.price,
             "Sorphera: tickets/payment"
         );
+        require(block.chainid == deploymentChainId, "Sorphera: chain changed");
+        factory.router().validate(address(SorpheraVault(payable(r.vault)).pool()));
         uint256 fee = msg.value / 10;
         r.fees += fee;
         totalLiabilities += fee;
@@ -359,8 +401,14 @@ contract Sorphera is Guard, Owned {
         r.frozenNFTs = g.nftCount;
         r.status = Status.Requested;
         r.requestedAt = block.timestamp;
+        r.requestId = _request(game, id, false);
+        emit DrawRequested(game, id, r.requestId, r.frozenNFTs);
+    }
+
+    function _request(uint8 game, uint256 id, bool tieBreak) internal returns (uint256 requestId) {
+        require(block.chainid == deploymentChainId, "Sorphera: chain changed");
         RandomConfig memory c = roundRandomConfig[game][id];
-        uint256 requestId = coordinator.requestRandomWords(
+        requestId = coordinator.requestRandomWords(
             IVRF.Request(
                 c.keyHash,
                 c.subscription,
@@ -371,9 +419,16 @@ contract Sorphera is Guard, Owned {
             )
         );
         require(requestId != 0 && !requests[requestId].exists, "Sorphera: duplicate VRF request");
-        r.requestId = requestId;
-        requests[requestId] = RequestBinding(game, id, true);
-        emit DrawRequested(game, id, requestId, r.frozenNFTs);
+        requests[requestId] = RequestBinding(game, id, true, tieBreak);
+    }
+
+    /// @notice A failed request transaction may be retried; a successful request can never be replaced.
+    function requestTieBreak(uint8 game, uint256 id) external nonReentrant {
+        Round storage r = rounds[game][id];
+        require(game == 1 && r.status == Status.TieBreakNeeded, "Sorphera: tie-break state");
+        r.status = Status.TieBreakRequested;
+        r.tieBreakRequestId = _request(game, id, true);
+        emit TieBreakRequested(game, id, r.tieBreakRequestId);
     }
 
     function rawFulfillRandomWords(uint256 requestId, uint256[] calldata words) external {
@@ -381,6 +436,16 @@ contract Sorphera is Guard, Owned {
         RequestBinding memory b = requests[requestId];
         require(b.exists && words.length == 1, "Sorphera: unknown callback");
         Round storage r = rounds[b.game][b.round];
+        if (b.tieBreak) {
+            require(
+                r.status == Status.TieBreakRequested && r.tieBreakRequestId == requestId,
+                "Sorphera: stale callback"
+            );
+            r.tieBreakWord = words[0];
+            r.status = Status.TieBreakReady;
+            emit TieBreakRandomnessStored(b.game, b.round, requestId, words[0]);
+            return;
+        }
         require(r.status == Status.Requested && r.requestId == requestId, "Sorphera: stale callback");
         r.randomWord = words[0];
         r.status = Status.RandomReady;
@@ -388,7 +453,7 @@ contract Sorphera is Guard, Owned {
     }
 
     function seedFor(uint8 game, uint256 id, uint256 word) public view returns (bytes32) {
-        return keccak256(abi.encode("Sorphera lottery v1", block.chainid, address(this), game, id, word));
+        return keccak256(abi.encode("Sorphera lottery v1", deploymentChainId, address(this), game, id, word));
     }
 
     function finalize(uint8 game, uint256 id) external nonReentrant {
@@ -400,21 +465,56 @@ contract Sorphera is Guard, Owned {
         if (r.matches == 0) {
             _releaseFees(game, id);
             _roll(game, id);
+        } else if (game == 1 && r.matches > 1) {
+            r.status = Status.TieBreakNeeded;
+            emit TieBreakRequired(game, id, r.matches);
         } else {
-            r.status = Status.Won;
-            if (game == 1) {
-                uint256 index =
-                    Balls.uniform(seed, keccak256("Sorphera NFT matching ticket tie-break v1"), r.matches);
-                r.winningTicket = matching[game][id][r.winningKey][index];
-            }
-            Group storage g = groups[game][r.group];
-            g.terminalRound = id;
-            g.divisor = game == 0 ? r.matches : 1;
-            ++currentGroup[game];
-            _releaseFees(game, id);
-            _distribute(game, r.group);
+            if (game == 1) r.winningTicket = matching[game][id][r.winningKey][0];
+            _win(game, id);
         }
         emit Result(game, id, r.ordered, r.bonus, r.winningKey, r.matches, r.winningTicket);
+    }
+
+    function tieBreakSeedFor(uint8 game, uint256 id, uint256 requestId, uint256 word)
+        public
+        view
+        returns (bytes32)
+    {
+        return keccak256(
+            abi.encode(
+                "Sorphera independent tie-break v2",
+                deploymentChainId,
+                address(this),
+                game,
+                id,
+                requestId,
+                word
+            )
+        );
+    }
+
+    function finalizeTieBreak(uint8 game, uint256 id) external nonReentrant {
+        Round storage r = rounds[game][id];
+        require(game == 1 && r.status == Status.TieBreakReady, "Sorphera: tie-break not ready");
+        uint256 index = Balls.uniform(
+            tieBreakSeedFor(game, id, r.tieBreakRequestId, r.tieBreakWord),
+            keccak256("Sorphera NFT matching ticket tie-break v2"),
+            r.matches
+        );
+        r.winningTicket = matching[game][id][r.winningKey][index];
+        _win(game, id);
+        emit TieBreakResult(game, id, r.tieBreakRequestId, r.winningTicket);
+    }
+
+    function _win(uint8 game, uint256 id) internal {
+        Round storage r = rounds[game][id];
+        r.status = Status.Won;
+        Group storage g = groups[game][r.group];
+        g.terminalRound = id;
+        g.divisor = game == 0 ? r.matches : 1;
+        ++currentGroup[game];
+        _releaseFees(game, id);
+        _distribute(game, r.group);
     }
 
     function _roll(uint8 game, uint256 id) internal {

@@ -1,0 +1,27 @@
+{
+  "kind": "evm_contracts",
+  "contracts": [
+    {
+      "contract": "SorpheraRouter",
+      "constructorArgs": [
+        "$owner"
+      ]
+    },
+    {
+      "contract": "SorpheraVaultFactory",
+      "constructorArgs": [
+        "$contract:SorpheraRouter",
+        "$owner"
+      ]
+    },
+    {
+      "contract": "Sorphera",
+      "constructorArgs": [
+        "$owner",
+        "$contract:SorpheraVaultFactory",
+        "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a"
+      ]
+    }
+  ],
+  "notes": "DRAFT MAINNET MANIFEST ONLY. Chain 1 requires separate platform-supported launch approval. Router -> factory -> Sorphera, then owner binds factory.setLottery. Owner and company subscription supplied by requester. All sales disabled. This does not retarget parked Sepolia launch 961."
+}

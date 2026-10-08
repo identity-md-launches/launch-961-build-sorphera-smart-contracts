@@ -1,15 +1,15 @@
 {
   "Sorphera": {
-    "runtimeBytes": 17554,
-    "initBytesWithoutArgs": 18047
+    "runtimeBytes": 21485,
+    "initBytesWithoutArgs": 22054
   },
   "SorpheraRouter": {
-    "runtimeBytes": 6781,
-    "initBytesWithoutArgs": 6978
+    "runtimeBytes": 8424,
+    "initBytesWithoutArgs": 8648
   },
   "SorpheraVaultFactory": {
     "runtimeBytes": 15710,
-    "initBytesWithoutArgs": 16033
+    "initBytesWithoutArgs": 16013
   },
   "SorpheraVault": {
     "runtimeBytes": 12914,

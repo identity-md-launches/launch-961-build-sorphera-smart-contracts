@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sorphera activation inputs (draft nulls are intentionally invalid)",
+  "type": "object",
+  "required": [
+    "chainId",
+    "owner",
+    "treasury",
+    "pool",
+    "helper",
+    "coordinator",
+    "randomness",
+    "rules",
+    "gasPriceAssumptionWei"
+  ],
+  "properties": {
+    "chainId": {
+      "enum": [
+        1,
+        11155111
+      ]
+    },
+    "randomness": {
+      "type": "object",
+      "required": [
+        "subscription",
+        "keyHash",
+        "confirmations",
+        "callbackGas",
+        "nativePayment",
+        "minimumFundingWei"
+      ],
+      "properties": {
+        "subscription": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "keyHash": {
+          "type": "string",
+          "pattern": "^0x[0-9a-fA-F]{64}$"
+        },
+        "confirmations": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 200
+        },
+        "callbackGas": {
+          "type": "integer",
+          "minimum": 150000,
+          "maximum": 2500000
+        },
+        "nativePayment": {
+          "type": "boolean"
+        },
+        "minimumFundingWei": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": [
+        "ETH",
+        "NFT"
+      ],
+      "properties": {
+        "ETH": {
+          "$ref": "#/$defs/rules"
+        },
+        "NFT": {
+          "$ref": "#/$defs/rules"
+        }
+      }
+    },
+    "gasPriceAssumptionWei": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "salesEnabled": {
+      "const": false
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "not": {
+        "const": "0x0000000000000000000000000000000000000000"
+      }
+    },
+    "treasury": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "not": {
+        "const": "0x0000000000000000000000000000000000000000"
+      }
+    },
+    "pool": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "not": {
+        "const": "0x0000000000000000000000000000000000000000"
+      }
+    },
+    "helper": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "not": {
+        "const": "0x0000000000000000000000000000000000000000"
+      }
+    },
+    "coordinator": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "not": {
+        "const": "0x0000000000000000000000000000000000000000"
+      }
+    }
+  },
+  "$defs": {
+    "rules": {
+      "type": "object",
+      "required": [
+        "price",
+        "firstCutoff",
+        "drawDelay",
+        "settlementDelay",
+        "maxFee",
+        "maxTotal",
+        "minValue",
+        "slippage"
+      ],
+      "properties": {
+        "price": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "firstCutoff": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "drawDelay": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "settlementDelay": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "maxFee": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "maxTotal": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "minValue": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "slippage": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      }
+    }
+  }
+}

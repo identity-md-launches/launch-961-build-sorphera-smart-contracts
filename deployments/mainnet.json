@@ -1,0 +1,28 @@
+{
+  "status": "PREPARATION ONLY; NOT DEPLOYED",
+  "chainId": 1,
+  "owner": null,
+  "treasury": null,
+  "router": null,
+  "factory": null,
+  "lottery": null,
+  "salesEnabled": false,
+  "pool": "0x958C41181182e76F221331b2755b77D9e1426A98",
+  "helper": "0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B",
+  "coordinator": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
+  "randomness": {
+    "subscription": null,
+    "keyHash": null,
+    "confirmations": null,
+    "callbackGas": null,
+    "nativePayment": null,
+    "minimumFundingWei": null
+  },
+  "rules": {
+    "ETH": null,
+    "NFT": null
+  },
+  "gasPriceAssumptionWei": null,
+  "builderRewardMinOut": null,
+  "approvalForPublicSales": false
+}

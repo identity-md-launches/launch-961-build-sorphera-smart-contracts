@@ -1,44 +1,66 @@
-# Sorphera checks and review scope
+# Test report — this continuation
 
-Solidity 0.8.26, Foundry 1.8.3. Default tests are self-contained, do not inspect/set environment variables, and share no persistent state between tests. The standard library is vendored v1.9.7 (MIT/Apache licenses preserved). No runtime third-party Solidity dependency is downloaded.
+Use `docs/validation.json` and `docs/evidence/` for final execution counts and logs. Toolchain: Forge **1.8.5**, Solidity **0.8.26**, optimizer 200, via IR, Cancun, metadata hash none. Existing build configuration and vendored dependencies are unchanged. Tests never read/set environment variables; default tests run offline. CLI RPC/profile parameters select the separate integration suite.
 
-## Local coverage
+The baseline at `b06997d42012b7ad7ffe943b3acdd816b2092c4e` passed: Forge 1.8.5 reported **59 passed, 0 failed, 0 skipped**. This runner groups six `invariant_*` properties into one invariant run; there were 64 test/property functions, consistent with the earlier 64/64 report but not an independent reproduction on Forge 1.7.1. This continuation adds six offline hardening tests and eleven mainnet-fork tests.
 
-The application suite exercises:
+## Commands
 
-- Unset/disabled launch, owner-only configuration, unfunded VRF rejection, separate game anchors, immutable opened rules and sale pause with continuing claims.
-- Valid/invalid/unordered combinations; duplicate tickets within/across wallets; zero/one/multiple exact matches; late purchases and bounded calls.
-- Both carryovers, old-ticket expiry, inability to acquire with carryover, reserved unclaimed winnings, fee withdrawals and division dust.
-- NFT exact-match tie-break over ticket indices, custody before inventory registration, frozen inventory, individual/partial claims, nominated recipients, rejecting receivers, token-specific transfer failure and retry, double claims.
-- Real-cost quote/VRF bounds, blackout, expired deadline, insufficient budget, reverted acquisitions, timed-out FWA requests, known-but-unwithdrawn refund credit blocking a draw, late ETH refunds and cancellation fee refunds.
-- Delayed settlement, forced ETH in the NFT game, stuck NFT recovery after timeout, involuntary ETH-game NFT custody, late NFT after the published cancellation deadline and unanimous co-owner recovery.
-- A permanently stuck FWA delivery that leaves no request pending: the ETH draw, fee release and next round proceed, an NFT round with nothing else secured cancels, and a much later recovery is claimable by the original winner or refund cohort only.
-- Forced delivery before the settlement deadline that is reconciled after it still counts as secured (receipt-time stamp), while forced delivery after the deadline still cancels.
-- A late allocation settled after cancellation becomes ETH refund cash shared pro rata rather than a shared NFT.
-- Vault factory binding: anyone-but-the-lottery creation reverts, the binding is owner-only and one-time, and launch validation refuses an unbound factory.
-- Authenticated/mapped asynchronous VRF, out-of-order callbacks across games, unknown/duplicate/stale callbacks, zero word acceptance, no new request after delay, and separate finalization.
-- Builder immediate caller vs purchaser, overpayments, allowance-bounded builder rewards, purchaser token entitlements, restricted FWA transfers, scoped Permit2 signatures, helper failure rolling back allowance consumption.
-- ETH receiver rejection and reentry attempts, conservation under fuzzed ticket counts/recovery amounts, unbiased sampler bounds/distinctness/replay, application runtime size and forbidden opcode checks.
-- 2,000 matching tickets and 104 NFTs with finalization below a fixed gas ceiling and individual NFT delivery. The entire fixture is many simulated calls inside one test; it does not claim they fit in a single block/transaction.
+```sh
+forge build
+forge test --summary
+forge fmt --check
+forge test --match-test testLargeSalesConstantFinalizationAndPartialLargeInventory -vv --gas-report
+python3 tools/export.py
+FOUNDRY_PROFILE=integration forge test --match-contract ConstructorRehearsalTest -vvvv
+FOUNDRY_PROFILE=integration forge test --match-contract ConstructorRehearsalTest \
+  --fork-url "$SEPOLIA_ARCHIVE_RPC" --fork-block-number 11866914 -vvvv
+FOUNDRY_PROFILE=integration forge test --match-contract SorpheraSepoliaIntegrationTest \
+  --fork-url "$SEPOLIA_ARCHIVE_RPC" --fork-block-number 11866914 -vv
+FOUNDRY_PROFILE=integration forge test --match-contract SorpheraMainnetForkTest \
+  --fork-url "$MAINNET_ARCHIVE_RPC" --fork-block-number 26145236 -vv -j 1
+```
 
-Tests choose words in a **mock coordinator** to exercise specific outcomes. Users/operators cannot choose words in the deployed lottery. Mocks implement FWA request status/expiry, fixed settlement outcomes, restricted purchaser permissions, refund credits and ERC721 delivery failures; they do not prove external protocol correctness, Chainlink proofs/billing, reward market depth, or arbitrary NFT compliance.
+Mainnet used a localhost read-only RPC cache forwarding to the public `https://one.valve.city/rpc/vk_demo/evm/1`; the snapshot initially used `https://eth-pokt.nodies.app`. Provider URLs are transport, not trust anchors. Pin and verify block hash. Initial public RPC attempts encountered 403/method restrictions, rate limits and a storage-read timeout; a failure in fork setup is not a contract failure unless the trace establishes it. Local cache files are optional temporary infrastructure, not offline verification dependencies.
 
-## Separate real-dependency checks
+## Coverage and distinctions
 
-The `integration` Foundry profile points at `integration/` and requires a Sepolia fork. It is excluded from offline default tests. At pinned block 11,866,914 the two tests passed: published pool/token/rewards/coordinator wiring and quote/windows; and **expected incompatibility** of the current builder getter. That is a deployment gate, not an end-to-end success result.
+| Behavior | Evidence |
+| --- | --- |
+| Full ETH game, duplicates/equal shares, zero winners, dust, reserved claims/fees | Offline unit/fuzz/invariants; mainnet ETH lifecycle with actual allocation/cashout and 100 matching tickets |
+| Full NFT game, one winner, independent multiwinner tie, inventory rollover | Offline and mainnet fork; separate requests and one ticket for all inventory |
+| Bounded delivery, receiver rejection/reentry, retry and stuck recovery | Offline adversarial/invariants; actual NFT custody/claim on mainnet fork |
+| Expiry, immediate/deferred refunds, stale price/value bounds | Offline and real FWA fork |
+| Ordered allocation, out-of-order words, settlement price drift | Real FWA fork: two queued requests, separate cached words, zero drift tolerance and refund; pending FWA config changes reject |
+| Missed FWA windows, forced ETH/NFT outcomes, cancellation and late shared assets | Offline full matrix; mainnet actual public default NFT delivery into ETH recovery cohort |
+| Company builder attribution, snapshotted rates, eligible acquisition/settlement credit | Real pool/rewards records and allowance deltas/events; rate-change fault uses actual rewards owner setter on fork |
+| Token purchase, liquidity, exact Permit2 authority, helper next-block queue | Real mainnet rewards, v4 market, canonical Permit2 and published helper |
+| Purchaser epoch entitlements kept in originating vault | Real mainnet acquisition unit and nonzero epoch token claim, ticket share/helper delivery; offline late deposits/dust/helper failures |
+| Cross-game/round isolation and conservation, locked liabilities | Six stateful invariants, directed adversarial tests and fork balances/custody checks |
+| Number validation, all unordered permutations, duplicate entries, cutoff/frozen terms | Offline exhaustive 5,700-combination indexing test, boundary tests and sampler fuzz |
+| Unknown/unauthorized/duplicate/delayed/out-of-order VRF; round/phase binding | Offline callbacks for both games and independent tie; real coordinator request path on fork, **fulfillment simulated** |
+| Administration, pause, dependency/helper permission changes | Offline authorization/fail-closed tests; real current permission reads and helper path on fork |
+| 2,000 tickets / 104 NFTs, no ticket enumeration in finalization | Directed gas/scaling test; bounded acquisition and individual delivery progress |
+| Constructor code checks and argument substitutions | Empty-state negative and real-chain positive public rehearsals; private gate unavailable |
 
-No fork purchase, actual lottery VRF callback, funded subscription, helper deposit, transaction signing or deployment was performed. Before release, verify a compatible deployment's code/source and exercise real acquisition attribution, settlement attribution, refunds, rewards and helper delivery on Sepolia with company-funded resources. Published addresses alone are insufficient.
+The FWA contracts and mainnet coordinator are deployed bytecode; no dependency code is etched/replaced. `vm.deal` funds test wallets and a newly created fork subscription. Both FWA and lottery callbacks impersonate the coordinator **only in fork tests**. A snapshot/revert and router impersonation previews token output, then the real router executes against a minimum of 99% of that preview. Isolated protocol-owner impersonation tests configure zero drift tolerance before requests and change builder share to prove snapshotting. No live administrative changes occur.
 
-## Local review and remaining trust
+The nonzero purchaser epoch amount observed for the test vault is **72,496,539,568,554,303,529 token units** before ticket division; it is a fixture observation, not a promised emission. Builder purchase/delivery and purchaser claims are independently accounted. Ancillary service/notifier/buyback runtime bytes are recorded; full Sourcify ABIs were unavailable for those three (404). Their observable bindings come from verified pool/rewards code and actual execution; that limitation is retained in the snapshot. Core pool/rewards/token/helper/Permit2/hook/PoolManager/coordinator ABIs are saved.
 
-The implementation was reviewed for authority boundaries, state transitions, refund/fee separation, callbacks, carryover addressing and fail-closed dependency setup. The protected deployment checks supplied with the assignment were read; corresponding EIP-170/opcode checks are included locally. The external protected factory rehearsal requires deployment inputs supplied by the network and was not fabricated here.
+`Balls.uniform` rejection excludes the incomplete residue interval before modulo. Main numbers sample without replacement from a 20-ball bag; bonus uses a separate domain and may equal any main number. Hash expansion assumes a cryptographic random oracle. Fuzzing checks range/distinctness/replay; it is not a statistical proof of VRF randomness. There is no automatic onchain quick-pick API: a future client may sample entry numbers locally, but it must never substitute client seeds for draw/tie VRF. Choosing entry numbers does not create valuable randomness.
 
-No Slither/Mythril report or independent contributor audit is claimed. A separate adversarial review is required before holding player funds. Relevant residual assumptions:
+## Gas and scaling
 
-1. Chainlink's configured coordinator verifies proofs and issues globally distinct asynchronous request IDs; the subscription owner preserves consumer registration/funding. Sorphera cannot recover by rerolling after permanent callback failure.
-2. FWA/rewards/helper implementations and their upgrade/owner powers can change behavior or liveness. New round dependencies are snapshotted, but external protocol state and fee/windows remain mutable. Settlement keepers must react promptly.
-3. NFT `ownerOf` and transfer methods obey ERC721 semantics. Malicious collections can lie or permanently reject transfer; no owner rescue bypass exists. A permanently rejecting collection costs that one asset, not the round or the game. FWA's forced deliveries are assumed to use `safeTransferFrom` (its stuck-recipient bookkeeping implies a receiver check); a plain `transferFrom` would merely fall back to the reconciliation time for the deadline test.
-4. Helper/Permit2/token permissions and liquidity remain available. Token amounts are actual claimed amounts, not fixed emissions. Shared indivisible recovery assets can require unanimous ticket-holder cooperation.
-5. Permissionless acquisitions use a frozen company-selected price/slippage policy. Execution timing within those bounds is not optimized for guaranteed value. External charges/losses can reduce prizes/refunds.
-6. Sales are scheduled weekly but serialized within each game; severe delays can shorten/skip subsequent sales windows without allowing late entry or a schedule rewrite.
-7. Rejection sampling uses cryptographic hash expansion in the random-oracle model. Its rejection loops are probabilistically terminating, independent of ticket sales; all inventory/sales-dependent work is bounded/indexed.
+At 2,000 matching tickets and 104 NFTs: measured draw finalization **138,634 gas**, separate tie finalization **224,049 gas**; both are asserted below 350,000. The gas reporter shows a maximum **5,351,848 gas** for a 100-ticket purchase, **1,593,767** for an eight-acquisition batch against mocks, and **108,844** for delivery of asset index 103. No earlier assets are enumerated or delivered by that claim. See `evidence/gas-scaling.txt`; instrumentation and warm/cold storage affect the difference between call-reporter gas and gasleft measurements.
+
+The fixture performs many bounded calls in one test harness; its aggregate 187.9 million test gas is not a proposed transaction/block. Keeper/user operations split sales, acquisitions, settlement and claims into their enforced batch limits. Counts can grow without a cap on total sales. A future estimate must use the actual mainnet pool/collection/current gas state, not mock batch figures.
+
+Runtime sizes: Sorphera **21,485**, router **8,424**, factory **15,710**, vault **12,914** bytes. All are below EIP-170; all initcode sizes are below EIP-3860. ABI/size exports are regenerated from build artifacts.
+
+## Repairs during testing and limits
+
+The required independent tie state exposed several earlier tests/handler steps that claimed immediately after a draw. They now wait for separate request, fulfillment and finalization, and assert locked fees/claims throughout. New test failures exposed a consumed `vm.prank` before an argument getter, the helper's actual `(claimableBlock, amount)` return order, pre-funded deterministic fork addresses, and FWA's protection against config changes while requests are pending; those fixtures were corrected against traces, without weakening production guards. Quotes can fall during staged-listing activation, so the refund assertion compares actual escrow plus VRF fee rather than assuming the pre-call quote was spent in full. RPC quotes use `--legacy --gas-price` to make the intended `tx.gasprice` explicit; an EIP-1559 cap alone can yield a different effective gas price.
+
+Real Sepolia oracle canary: **NOT RUN**; company test owner, funded subscription/access and controlled deployment authority are required. Scripts and exact procedure are in `DEPLOYMENT.md`. No live cryptographic proof verification or Chainlink fulfillment bill was tested. The private IMD gate is **last reported failed, not rerun**; see `REHEARSAL.md`. Slither, Mythril and an independent audit were not run.
+
+Permanent VRF failure can lock either draw or tie phase indefinitely. ETH acquisitions wait for FWA resolution; NFT no-inventory cancellation follows its precommitted deadline. Shared exceptional NFTs may require unanimous ticket-owner agreement. Mutable external permissions and liquidity can delay token delivery. These are explicit liveness/trust assumptions, not owner withdrawal permissions. Tests support independent security review and deployment rehearsal; they do not approve public sales.

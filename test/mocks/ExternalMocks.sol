@@ -47,6 +47,10 @@ contract MockToken {
         isDistributor[who] = true;
     }
 
+    function revokeDistributor(address who) external {
+        isDistributor[who] = false;
+    }
+
     function mint(address to, uint256 amount) external {
         balanceOf[to] += amount;
     }
@@ -119,6 +123,10 @@ contract MockHelper {
 
     constructor(address token_) {
         token = token_;
+    }
+
+    function depositsPaused() external view returns (bool) {
+        return !enabled;
     }
 
     function setEnabled(bool b) external {
@@ -226,6 +234,10 @@ contract MockFWA {
         vrfFee = vrf_;
     }
 
+    function setInventory(uint256 n) external {
+        activeListingCount = n;
+    }
+
     function setBlackout(bool value) external {
         isPurchaseBlackout = value;
     }
@@ -252,8 +264,8 @@ contract MockFWA {
         returns (uint256[] memory ids)
     {
         require(
-            !isPurchaseBlackout && n > 0 && n <= 8 && maxFee >= fee && minValue <= weightedBackingTotal
-                && slip <= 10000
+            !isPurchaseBlackout && activeListingCount > 0 && n > 0 && n <= 8 && maxFee >= fee
+                && minValue <= weightedBackingTotal && slip <= 10000
         );
         require(msg.value >= (fee + vrfFee) * n && purchaser != msg.sender);
         ids = new uint256[](n);

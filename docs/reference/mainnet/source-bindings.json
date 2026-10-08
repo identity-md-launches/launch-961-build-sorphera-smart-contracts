@@ -1,0 +1,29 @@
+{
+  "poolSourceSha256": "1b5dbbe6a2c1d15e8df38c075da85036659aacb38936ccd94619b86a8240a425",
+  "source": "https://sourcify.dev/server/v2/contract/1/0x958C41181182e76F221331b2755b77D9e1426A98?fields=all",
+  "immutables": {
+    "vrfService": {
+      "sourceAstId": "1812",
+      "byteOffsets": [
+        1612,
+        14767,
+        17246
+      ],
+      "address": "0xcacbd874e24b533935176154e990bf710f56693a"
+    },
+    "purchaseNotifier": {
+      "sourceAstId": "1917",
+      "byteOffsets": [
+        10972,
+        15661,
+        17767,
+        19298
+      ],
+      "address": "0x612df3a344990f8e53499ec1bc79be63cfa496d0"
+    }
+  },
+  "builderExample": {
+    "source": "https://github.com/adamlizek/fwa-examples/blob/a54aa65d47173cde00dd337d40e5f6d0a1b9b546/FWAV2BuilderBase.sol",
+    "sha256": "5a3f7d778075621fa08c80e445bc0c9fabd4accff55b5a4fe52761f302385c6e"
+  }
+}

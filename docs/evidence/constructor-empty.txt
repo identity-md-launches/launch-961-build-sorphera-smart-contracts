@@ -1,0 +1,31 @@
+No files changed, compilation skipped
+
+Ran 1 test for integration/rehearsal/Constructor.t.sol:ConstructorRehearsalTest
+[PASS] testResolvedManifestConstructorOrder() (gas: 17902)
+Traces:
+  [17902] ConstructorRehearsalTest::testResolvedManifestConstructorOrder()
+    ├─ [0] VM::addr(<pk>) [staticcall]
+    │   └─ ← [Return] explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa]
+    ├─ [0] VM::label(explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], "explicit rehearsal owner; not a deployment input")
+    │   └─ ← [Return]
+    ├─ [0] VM::deployCode("src/SorpheraRouter.sol:SorpheraRouter", 0x00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba)
+    │   ├─ [1898709] → new SorpheraRouter@0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+    │   │   └─ ← [Return] 8424 bytes of code
+    │   └─ ← [Return] SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    ├─ emit Resolved(name: "SorpheraVaultFactory", owner: explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], dependency: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], coordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, chain: 31337 [3.133e4], blockNumber: 1, dependencyCode: 8424, coordinatorCode: 0)
+    ├─ [0] VM::deployCode("src/SorpheraVaultFactory.sol:SorpheraVaultFactory", 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba)
+    │   ├─ [3464071] → new SorpheraVaultFactory@0x2e234DAe75C793f67A35089C9d99245E1C58470b
+    │   │   └─ ← [Return] 15710 bytes of code
+    │   └─ ← [Return] SorpheraVaultFactory: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]
+    ├─ emit Resolved(name: "Sorphera", owner: explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], dependency: SorpheraVaultFactory: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], coordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, chain: 31337 [3.133e4], blockNumber: 1, dependencyCode: 15710 [1.571e4], coordinatorCode: 0)
+    ├─ [0] VM::expectRevert(MissingCoordinatorCode(0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, 31337 [3.133e4]))
+    │   └─ ← [Return]
+    ├─ [0] VM::deployCode("src/Sorphera.sol:Sorphera", 0x00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b0000000000000000000000009ddfaca8183c41ad55329bdeed9f6a8d53168b1b)
+    │   ├─ [426917] → new <unknown>@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   │   └─ ← [Revert] 0x20d11d4a0000000000000000000000009ddfaca8183c41ad55329bdeed9f6a8d53168b1b0000000000000000000000000000000000000000000000000000000000007a69
+    │   └─ ← [Revert] MissingCoordinatorCode(0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, 31337 [3.133e4])
+    └─ ← [Revert] MissingCoordinatorCode(0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, 31337 [3.133e4])
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 4.80ms (4.41ms CPU time)
+
+Ran 1 test suite in 28.19ms (4.80ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)

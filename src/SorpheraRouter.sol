@@ -7,6 +7,7 @@ import {RewardTransfer} from "./lib/RewardTransfer.sol";
 /// @title Sorphera builder router
 /// @notice Immediate FWA caller. Round vaults remain purchasers; company owns only builder revenue.
 contract SorpheraRouter is Guard, Owned, RewardTransfer {
+    uint256 public immutable deploymentChainId;
     address public pool;
     address public helper;
     mapping(address => address) public helperForPool;
@@ -17,9 +18,13 @@ contract SorpheraRouter is Guard, Owned, RewardTransfer {
         address indexed purchaser, address indexed pool, uint256[] requests, uint256 refund
     );
     event BuilderRewardClaimed(address indexed rewards, uint256 allowance, uint256 tokenOut);
-    constructor(address owner_) Owned(owner_) {}
+
+    constructor(address owner_) Owned(owner_) {
+        deploymentChainId = block.chainid;
+    }
 
     function configure(address pool_, address helper_) external onlyOwner {
+        require(block.chainid == deploymentChainId, "Sorphera: chain changed");
         require(pool_.code.length != 0 && helper_.code.length != 0, "Sorphera: dependency code");
         IFWA p = IFWA(pool_);
         IRewards r = IRewards(p.rewards());
@@ -44,16 +49,42 @@ contract SorpheraRouter is Guard, Owned, RewardTransfer {
         helperForPool[pool_] = helper_;
         rewardsForPool[pool_] = address(r);
         tokenForPool[pool_] = address(t);
+        validate(pool_);
         emit DependenciesConfigured(pool_, address(r), helper_);
     }
 
     function validate(address p) public view {
-        require(p != address(0) && rewardsForPool[p] != address(0), "Sorphera: FWA not configured");
+        _validateCore(p);
+        IFWAToken t = IFWAToken(tokenForPool[p]);
+        ITransferHelper h = ITransferHelper(helperForPool[p]);
         require(
-            IFWA(p).token() == tokenForPool[p] && IRewards(rewardsForPool[p]).token() == tokenForPool[p]
-                && IFWA(p).rewards() == rewardsForPool[p]
-                && IRewards(rewardsForPool[p]).builderRewardBps() <= 2500,
+            t.permit2() == PERMIT2 && h.permit2() == PERMIT2 && h.token() == address(t)
+                && t.isDistributor(address(h)) && t.isDistributor(rewardsForPool[p]),
+            "Sorphera: helper wiring"
+        );
+        require(!h.depositsPaused(), "Sorphera: helper paused");
+    }
+
+    function _validateCore(address p) internal view {
+        require(block.chainid == deploymentChainId, "Sorphera: chain changed");
+        require(p != address(0) && rewardsForPool[p] != address(0), "Sorphera: FWA not configured");
+        IRewards r = IRewards(rewardsForPool[p]);
+        IFWAToken t = IFWAToken(tokenForPool[p]);
+        ITransferHelper h = ITransferHelper(helperForPool[p]);
+        require(
+            p.code.length != 0 && address(r).code.length != 0 && address(t).code.length != 0
+                && address(h).code.length != 0 && PERMIT2.code.length != 0,
+            "Sorphera: dependency code"
+        );
+        require(
+            IFWA(p).token() == address(t) && IFWA(p).rewards() == address(r) && r.token() == address(t)
+                && r.fwa() == p && r.builderRewardBps() <= 2500,
             "Sorphera: dependency changed"
+        );
+        require(
+            r.tokenPoolManager() == t.poolManager() && r.tokenHook() == t.hook()
+                && t.poolManager().code.length != 0 && t.hook().code.length != 0,
+            "Sorphera: market wiring"
         );
     }
 
@@ -96,7 +127,7 @@ contract SorpheraRouter is Guard, Owned, RewardTransfer {
     }
 
     function recoverBuilderAllowance(address p, address recipient) external onlyOwner nonReentrant {
-        validate(p);
+        _validateCore(p);
         uint256 beforeBalance = address(this).balance;
         IRewards(rewardsForPool[p]).withdrawTokenBuyAllowanceAsETH();
         _send(recipient, address(this).balance - beforeBalance);

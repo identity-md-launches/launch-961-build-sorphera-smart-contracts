@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+import {SimulatedSorphera} from "./SimulatedSorphera.sol";
 import {Test} from "forge-std/Test.sol";
 import {Sorphera} from "../../src/Sorphera.sol";
 import {SorpheraVault} from "../../src/SorpheraVault.sol";
@@ -33,7 +34,7 @@ abstract contract SorpheraFixture is Test {
     uint256 internal cutoff;
 
     function setUp() public virtual {
-        vm.chainId(11155111);
+        vm.chainId(31337);
         vm.warp(10 days);
         vm.roll(100);
         MockPermit2 permit = new MockPermit2();
@@ -50,7 +51,7 @@ abstract contract SorpheraFixture is Test {
         router.configure(address(pool), address(helper));
         factory = new SorpheraVaultFactory(address(router), address(this));
         vrf = new MockVRF();
-        lottery = new Sorphera(address(this), address(factory), address(vrf));
+        lottery = new SimulatedSorphera(address(this), address(factory), address(vrf));
         factory.setLottery(address(lottery));
         vrf.setConsumer(address(lottery));
         cutoff = vm.getBlockTimestamp() + 7 days;
@@ -95,6 +96,11 @@ abstract contract SorpheraFixture is Test {
         lottery.requestDraw(game, id);
         vrf.fulfill(lottery.getRound(game, id).requestId, word);
         lottery.finalize(game, id);
+        if (lottery.getRound(game, id).status == Sorphera.Status.TieBreakNeeded) {
+            lottery.requestTieBreak(game, id);
+            vrf.fulfill(lottery.getRound(game, id).tieBreakRequestId, word + 1000);
+            lottery.finalizeTieBreak(game, id);
+        }
     }
 
     function _one(uint256 id) internal pure returns (uint256[] memory a) {

@@ -225,5 +225,21 @@
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "MissingRouterCode",
+    "inputs": [
+      {
+        "name": "dependency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "chainId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   }
 ]

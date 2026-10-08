@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+import {SimulatedSorphera} from "./helpers/SimulatedSorphera.sol";
 import {SorpheraFixture} from "./helpers/SorpheraFixture.sol";
 import {Sorphera} from "../src/Sorphera.sol";
 import {SorpheraVault} from "../src/SorpheraVault.sol";
@@ -396,7 +397,7 @@ contract SorpheraAdversarialTest is SorpheraFixture {
     }
 
     function testSecondLotteryCannotValidateAgainstBoundFactoryOrCreateVaults() public {
-        Sorphera impostor = new Sorphera(address(this), address(factory), address(vrf));
+        Sorphera impostor = new SimulatedSorphera(address(this), address(factory), address(vrf));
         impostor.configureRules(0, _rules(cutoff));
         impostor.configureRules(1, _rules(cutoff + 1 hours));
         impostor.configureRandomness(Sorphera.RandomConfig(123, keccak256("mock key"), 3, 200000, true));

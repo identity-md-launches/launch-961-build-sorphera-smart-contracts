@@ -1,5 +1,7 @@
 # Sorphera dependency verification
 
+**Current target: Ethereum mainnet.** See [MAINNET.md](MAINNET.md) and `reference/mainnet/` for this continuation's pinned integration evidence. The remainder of this file preserves the earlier Sepolia readback as historical evidence, not the mainnet configuration.
+
 Read on 2026-10-08; block 11,866,914 on Ethereum Sepolia (11155111). Application contracts have **not** been deployed.
 
 | Dependency | Published/observed address | Verification |

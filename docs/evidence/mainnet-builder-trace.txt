@@ -1,0 +1,853 @@
+No files changed, compilation skipped
+
+Ran 1 test for integration/mainnet/Mainnet.t.sol:SorpheraMainnetForkTest
+[PASS] testRealETHLifecycleBuilderAllowanceAndNextBlockDelivery() (gas: 14162273)
+Traces:
+  [14752575] SorpheraMainnetForkTest::testRealETHLifecycleBuilderAllowanceAndNextBlockDelivery()
+    ├─ [3213131] Sorphera::openRound(0)
+    │   ├─ [2591] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::s_provingKeys(0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9) [staticcall]
+    │   │   └─ ← [Return] true, 200000000000 [2e11]
+    │   ├─ [2804] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::s_config() [staticcall]
+    │   │   └─ ← [Return] 3, 2500000 [2.5e6], false, 172800 [1.728e5], 38900 [3.89e4], 0, 0, 24, 20
+    │   ├─ [331] SorpheraVaultFactory::router() [staticcall]
+    │   │   └─ ← [Return] SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    │   ├─ [2346] SorpheraRouter::pool() [staticcall]
+    │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   ├─ [9881] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::getSubscription(32325211015908035585574034918576073693840033365205427203438400000795598744953 [3.232e76]) [staticcall]
+    │   │   └─ ← [Return] 0, 5000000000000000000 [5e18], 0, SorpheraMainnetForkTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496], [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9]
+    │   ├─ [2811158] SorpheraVaultFactory::create(0, 1, Settings({ maxFee: 77228754927675333 [7.722e16], maxTotal: 78279154927675333 [7.827e16], minValue: 3230369999999999999829542547769173985940 [3.23e39], slippage: 1000, cutoff: 1792037867 [1.792e9] }))
+    │   │   ├─ [346] SorpheraRouter::pool() [staticcall]
+    │   │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   │   ├─ [63953] SorpheraRouter::validate(0x958C41181182e76F221331b2755b77D9e1426A98) [staticcall]
+    │   │   │   ├─ [4399] 0x958C41181182e76F221331b2755b77D9e1426A98::token() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   │   ├─ [3563] 0x958C41181182e76F221331b2755b77D9e1426A98::rewards() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516
+    │   │   │   ├─ [1382] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::token() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   │   ├─ [3243] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::fwa() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   │   │   ├─ [2716] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::builderRewardBps() [staticcall]
+    │   │   │   │   └─ ← [Return] 1500
+    │   │   │   ├─ [392] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenPoolManager() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   │   ├─ [1074] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenHook() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   │   ├─ [234] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::permit2() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   │   ├─ [171] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::permit2() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   │   ├─ [556] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::token() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   │   └─ ← [Return] true
+    │   │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516) [staticcall]
+    │   │   │   │   └─ ← [Return] true
+    │   │   │   ├─ [2474] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::depositsPaused() [staticcall]
+    │   │   │   │   └─ ← [Return] false
+    │   │   │   └─ ← [Stop]
+    │   │   ├─ [2705185] → new SorpheraVault@0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2
+    │   │   │   ├─ [346] SorpheraRouter::pool() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   │   │   ├─ [534] SorpheraRouter::rewardsForPool(0x958C41181182e76F221331b2755b77D9e1426A98) [staticcall]
+    │   │   │   │   └─ ← [Return] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516
+    │   │   │   ├─ [2399] 0x958C41181182e76F221331b2755b77D9e1426A98::token() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   │   ├─ [2434] SorpheraRouter::helper() [staticcall]
+    │   │   │   │   └─ ← [Return] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B
+    │   │   │   └─ ← [Return] 12914 bytes of code
+    │   │   ├─ emit VaultCreated(lottery: Sorphera: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], game: 0, round: 1, vault: SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2])
+    │   │   └─ ← [Return] SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]
+    │   ├─ emit RoundOpened(game: 0, round: 1, group: 1, vault: SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], start: 1791433067 [1.791e9], cutoff: 1792037867 [1.792e9], earliestDraw: 1792041467 [1.792e9], settlementDeadline: 1792210667 [1.792e9], price: 5000000000000000 [5e15])
+    │   └─ ← [Return] 1
+    ├─ [47273] Sorphera::getRound(0, 1) [staticcall]
+    │   └─ ← [Return] Round({ status: 1, group: 1, price: 5000000000000000 [5e15], start: 1791433067 [1.791e9], cutoff: 1792037867 [1.792e9], earliestDraw: 1792041467 [1.792e9], settlementDeadline: 1792210667 [1.792e9], vault: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, sold: 0, fees: 0, requestId: 0, requestedAt: 0, randomWord: 0, ordered: [0, 0, 0], bonus: 0, winningKey: 0, matches: 0, winningTicket: 0, eligibleNFTs: 0, frozenNFTs: 0, tieBreakRequestId: 0, tieBreakWord: 0 })
+    ├─ [1314] Sorphera::seedFor(0, 1, 123) [staticcall]
+    │   └─ ← [Return] 0x4f689505cb18fa0045bb5dcfec7add8bec969fe534bf3bb731ad19dfaae39139
+    ├─ [0] VM::prank(fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D])
+    │   └─ ← [Return]
+    ├─ [5365244] Sorphera::buy{value: 500000000000000000}(0, 1, [Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 }), Pick({ main: [13, 10, 14], bonus: 2 })])
+    │   ├─ [331] SorpheraVaultFactory::router() [staticcall]
+    │   │   └─ ← [Return] SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    │   ├─ [267] SorpheraVault::pool() [staticcall]
+    │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   ├─ [63953] SorpheraRouter::validate(0x958C41181182e76F221331b2755b77D9e1426A98) [staticcall]
+    │   │   ├─ [4399] 0x958C41181182e76F221331b2755b77D9e1426A98::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3563] 0x958C41181182e76F221331b2755b77D9e1426A98::rewards() [staticcall]
+    │   │   │   └─ ← [Return] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516
+    │   │   ├─ [1382] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3243] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::fwa() [staticcall]
+    │   │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   │   ├─ [2716] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::builderRewardBps() [staticcall]
+    │   │   │   └─ ← [Return] 1500
+    │   │   ├─ [392] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenPoolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [1074] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenHook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [234] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::permit2() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   ├─ [171] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::permit2() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   ├─ [556] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516) [staticcall]
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [2474] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::depositsPaused() [staticcall]
+    │   │   │   └─ ← [Return] false
+    │   │   └─ ← [Stop]
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 1, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 2, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 3, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 4, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 5, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 6, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 7, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 8, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 9, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 10, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 11, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 12, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 13, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 14, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 15, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 16, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 17, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 18, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 19, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 20, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 21, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 22, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 23, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 24, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 25, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 26, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 27, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 28, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 29, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 30, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 31, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 32, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 33, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 34, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 35, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 36, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 37, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 38, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 39, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 40, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 41, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 42, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 43, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 44, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 45, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 46, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 47, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 48, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 49, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 50, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 51, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 52, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 53, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 54, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 55, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 56, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 57, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 58, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 59, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 60, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 61, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 62, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 63, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 64, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 65, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 66, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 67, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 68, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 69, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 70, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 71, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 72, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 73, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 74, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 75, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 76, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 77, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 78, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 79, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 80, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 81, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 82, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 83, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 84, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 85, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 86, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 87, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 88, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 89, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 90, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 91, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 92, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 93, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 94, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 95, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 96, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 97, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 98, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 99, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ emit TicketBought(game: 0, round: 1, ticket: 100, player: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], combination: 80298 [8.029e4])
+    │   ├─ [22902] SorpheraVault::fund{value: 450000000000000000}()
+    │   │   └─ ← [Return]
+    │   └─ ← [Return]
+    ├─ [2724498] SorpheraVault::acquire(1, 1791433667 [1.791e9])
+    │   ├─ [4866] Sorphera::acquisitionOpen(0, 1) [staticcall]
+    │   │   └─ ← [Return] true
+    │   ├─ [835] 0x958C41181182e76F221331b2755b77D9e1426A98::isPurchaseBlackout() [staticcall]
+    │   │   └─ ← [Return] false
+    │   ├─ [18477] 0x958C41181182e76F221331b2755b77D9e1426A98::quoteAcquisitionPrice() [staticcall]
+    │   │   ├─ [7513] 0xCACBd874e24B533935176154E990Bf710F56693A::requestFee() [staticcall]
+    │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000003b1dfde910000
+    │   │   └─ ← [Return] 76464113789777558 [7.646e16], 1040000000000000 [1.04e15], 77504113789777558 [7.75e16]
+    │   ├─ [2498613] SorpheraRouter::acquire{value: 77504113789777558}(0x958C41181182e76F221331b2755b77D9e1426A98, 1, 77228754927675333 [7.722e16], 3230369999999999999829542547769173985940 [3.23e39], 1000, 1791433667 [1.791e9])
+    │   │   ├─ [4399] 0x958C41181182e76F221331b2755b77D9e1426A98::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3563] 0x958C41181182e76F221331b2755b77D9e1426A98::rewards() [staticcall]
+    │   │   │   └─ ← [Return] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516
+    │   │   ├─ [1382] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3243] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::fwa() [staticcall]
+    │   │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   │   ├─ [2716] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::builderRewardBps() [staticcall]
+    │   │   │   └─ ← [Return] 1500
+    │   │   ├─ [392] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenPoolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [1074] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenHook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   │   ├─ [234] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::permit2() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   ├─ [171] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::permit2() [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   │   ├─ [556] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::token() [staticcall]
+    │   │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516) [staticcall]
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [2474] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::depositsPaused() [staticcall]
+    │   │   │   └─ ← [Return] false
+    │   │   ├─ [2396771] 0x958C41181182e76F221331b2755b77D9e1426A98::acquire{value: 77504113789777558}(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], 1, 77228754927675333 [7.722e16], 3230369999999999999829542547769173985940 [3.23e39], 1000)
+    │   │   │   ├─ [76923] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77586 [7.758e4], 0xebaD3ac3A7cb423CA9205917b8e2c826f2785Db5, 85699938000000003 [8.569e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f12
+    │   │   │   │   │        topic 2: 0x000000000000000000000000ebad3ac3a7cb423ca9205917b8e2c826f2785db5
+    │   │   │   │   │           data: 0x000000000000000000000000000000000000000000000000013077a3b9c35403000000000000000000000000000000000000000000000000000000001172f12d
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f12
+    │   │   │   │        topic 2: 0x000000000000000000000000000000000000000000000000000000000000000a
+    │   │   │   │        topic 3: 0x000000000000000000000000ebad3ac3a7cb423ca9205917b8e2c826f2785db5
+    │   │   │   │           data: 0x000000000000000000000000790b2cf29ed4f310bf7641f013c65d4560d2837100000000000000000000000000000000000000000000000000000000000158c3000000000000000000000000000000000000000000000000a1ef43f4808a3b91000000000000000000000000000000000000000000000000013077a3b9c35403
+    │   │   │   ├─ [70123] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77587 [7.758e4], 0x679860202fa99ADb925E183C0e9e22cf20bEA625, 73470000000000000 [7.347e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f13
+    │   │   │   │   │        topic 2: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000105049363a5e000000000000000000000000000000000000000000000000000000000001027f2bc
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f13
+    │   │   │   │        topic 2: 0x000000000000000000000000000000000000000000000000000000000000017f
+    │   │   │   │        topic 3: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │   │           data: 0x000000000000000000000000ff9c1b15b16263c61d017ee9f65c50e4ae0113d70000000000000000000000000000000000000000000000000000000000001d0a000000000000000000000000000000000000000000000000bce3fa480877410d0000000000000000000000000000000000000000000000000105049363a5e000
+    │   │   │   ├─ [70123] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77588 [7.758e4], 0x1a71a3ee9efDA7ACECf9693C0f270ea95D76f9F8, 53147466000000000 [5.314e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f14
+    │   │   │   │   │        topic 2: 0x0000000000000000000000001a71a3ee9efda7acecf9693c0f270ea95d76f9f8
+    │   │   │   │   │           data: 0x00000000000000000000000000000000000000000000000000bcd156b7a46400000000000000000000000000000000000000000000000000000000000dbdb87d
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f14
+    │   │   │   │        topic 2: 0x000000000000000000000000000000000000000000000000000000000000209a
+    │   │   │   │        topic 3: 0x0000000000000000000000001a71a3ee9efda7acecf9693c0f270ea95d76f9f8
+    │   │   │   │           data: 0x000000000000000000000000355919971b379ca9741ff29939c4ba716f8735600000000000000000000000000000000000000000000000000000000000000250000000000000000000000000000000000000000000000001051e578124895f6200000000000000000000000000000000000000000000000000bcd156b7a46400
+    │   │   │   ├─ [70123] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77589 [7.758e4], 0xebaD3ac3A7cb423CA9205917b8e2c826f2785Db5, 88000000000000000 [8.8e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f15
+    │   │   │   │   │        topic 2: 0x000000000000000000000000ebad3ac3a7cb423ca9205917b8e2c826f2785db5
+    │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000138a388a43c00000000000000000000000000000000000000000000000000000000000011ae7d03
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f15
+    │   │   │   │        topic 2: 0x000000000000000000000000000000000000000000000000000000000000121d
+    │   │   │   │        topic 3: 0x000000000000000000000000ebad3ac3a7cb423ca9205917b8e2c826f2785db5
+    │   │   │   │           data: 0x0000000000000000000000009378368ba6b85c1fba5b131b530f5f5bedf21a180000000000000000000000000000000000000000000000000000000000009a6b0000000000000000000000000000000000000000000000009db3bf10cb41d1740000000000000000000000000000000000000000000000000138a388a43c0000
+    │   │   │   ├─ [70123] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77590 [7.759e4], 0x679860202fa99ADb925E183C0e9e22cf20bEA625, 43540000000000000 [4.354e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f16
+    │   │   │   │   │        topic 2: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │   │   │           data: 0x000000000000000000000000000000000000000000000000009aaf6639854000000000000000000000000000000000000000000000000000000000000c6fef86
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f16
+    │   │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000001bd7
+    │   │   │   │        topic 3: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │   │           data: 0x000000000000000000000000355919971b379ca9741ff29939c4ba716f87356000000000000000000000000000000000000000000000000000000000000000730000000000000000000000000000000000000000000000013ebc8c29f06aafaf000000000000000000000000000000000000000000000000009aaf6639854000
+    │   │   │   ├─ [70123] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77591 [7.759e4], 0xaedCe07a16eb2F17977A9B13a800d364e3d62058, 53900000000000000 [5.39e16])
+    │   │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f17
+    │   │   │   │   │        topic 2: 0x000000000000000000000000aedce07a16eb2f17977a9b13a800d364e3d62058
+    │   │   │   │   │           data: 0x00000000000000000000000000000000000000000000000000bf7dc3b164c000000000000000000000000000000000000000000000000000000000000dd68997
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f17
+    │   │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000000876
+    │   │   │   │        topic 3: 0x000000000000000000000000aedce07a16eb2f17977a9b13a800d364e3d62058
+    │   │   │   │           data: 0x000000000000000000000000355919971b379ca9741ff29939c4ba716f873560000000000000000000000000000000000000000000000000000000000000029700000000000000000000000000000000000000000000000101790e25de2250bd00000000000000000000000000000000000000000000000000bf7dc3b164c000
+    │   │   │   ├─ [1513] 0xCACBd874e24B533935176154E990Bf710F56693A::requestFee() [staticcall]
+    │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000003b1dfde910000
+    │   │   │   ├─ [48442] 0xCACBd874e24B533935176154E990Bf710F56693A::prepareRequests{value: 1040000000000000}(1)
+    │   │   │   │   ├─ [5861] 0x958C41181182e76F221331b2755b77D9e1426A98::vrfRequestConfig() [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d900000000000000000000000000000000000000000000000000000000000dbba0
+    │   │   │   │   ├─ emit RequestFeesReceived(: 1, : 1040000000000000 [1.04e15])
+    │   │   │   │   ├─ [3627] 0x958C41181182e76F221331b2755b77D9e1426A98::unfulfilledVrfCount() [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   ├─ [4937] 0x958C41181182e76F221331b2755b77D9e1426A98::vrfCoordinatorAndSubId() [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a, 105635216111862975908859364934260387362758947578681163548045548039867846446581 [1.056e77]
+    │   │   │   │   ├─ [9881] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::getSubscription(105635216111862975908859364934260387362758947578681163548045548039867846446581 [1.056e77]) [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0, 31016796102182252104 [3.101e19], 71336 [7.133e4], 0x019817aD02a31B990433542097bE29D97613E8Cb, [0x958C41181182e76F221331b2755b77D9e1426A98]
+    │   │   │   │   └─ ← [Return]
+    │   │   │   ├─ emit VrfServiceFeePaid(param0: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], param1: 1040000000000000 [1.04e15])
+    │   │   │   ├─ [39937] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::requestRandomWords(Request({ keyHash: 0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9, subId: 105635216111862975908859364934260387362758947578681163548045548039867846446581 [1.056e77], requestConfirmations: 3, callbackGasLimit: 900000 [9e5], numWords: 1, extraArgs: 0x92fd13380000000000000000000000000000000000000000000000000000000000000001 }))
+    │   │   │   │   ├─  emit topic 0: 0xeb0e3652e0f44f417695e6e90f2f42c99b65cd7169074c5a654b16b9748c3a4e
+    │   │   │   │   │        topic 1: 0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9
+    │   │   │   │   │        topic 2: 0xe98b69dd502c0108ecb19e5b18c7f7f6bd4eae8a0251afc7d3f3251553d14df5
+    │   │   │   │   │        topic 3: 0x000000000000000000000000958c41181182e76f221331b2755b77d9e1426a98
+    │   │   │   │   │           data: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362ab970e855d1f941d66823cfafe578d8d3c296038462a04fce2819223d7d7cd79000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000dbba0000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000002492fd1338000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000
+    │   │   │   │   └─ ← [Return] 27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]
+    │   │   │   ├─ [117710] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::registerAcquisition(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76], SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 764392738361225 [7.643e14])
+    │   │   │   │   ├─  emit topic 0: 0x8524531f7959bc0d45a23b32b268a7f7a4267746310a8422c7e00798b1e74d1d
+    │   │   │   │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │   │   │        topic 2: 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2
+    │   │   │   │   │        topic 3: 0x0000000000000000000000000000000000000000000000000000000000000015
+    │   │   │   │   │           data: 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f000000000000000000000000000000000000000000000000000068481ba5558700000000000000000000000000000000000000000000000000000000000005dc
+    │   │   │   │   └─ ← [Return] 0x000000000000000000000000000000000000000000000000000068481ba555870000000000000000000000000000000000000000000000000000000000000015
+    │   │   │   ├─  emit topic 0: 0xf23e34f4aa4a06ecddd309d9692e7b7ca45b76fd0d5f4ce4f7fbf29731d9abd6
+    │   │   │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │   │        topic 2: 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2
+    │   │   │   │           data: 0x000000000000000000000000000000000000000000000000010f911d53e411b200000000000000000000000000000000000000000000098243f7fb6b0cc0a17d
+    │   │   │   ├─  emit topic 0: 0x3e5b01ceee4741bf17318a3f74c2fd1dbac13bba024b4f6b5bca0ca1851e3f70
+    │   │   │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │   │        topic 2: 0x00000000000000000000000000000000000000000000000000000000000116a9
+    │   │   │   │           data: 0x00000000000000000000000000000000000000000000000000000000018ef1f20000000000000000000000000000000000000000000000000000000000000001
+    │   │   │   ├─ [67] SorpheraRouter::receive{value: 24839953655012}()
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return] [27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]]
+    │   │   ├─ [67] SorpheraVault::receive{value: 24839953655012}()
+    │   │   │   └─ ← [Stop]
+    │   │   ├─ emit AcquisitionForwarded(purchaser: SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], pool: 0x958C41181182e76F221331b2755b77D9e1426A98, requests: [27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]], refund: 24839953655012 [2.483e13])
+    │   │   └─ ← [Return] [27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]]
+    │   ├─ [3693] 0x958C41181182e76F221331b2755b77D9e1426A98::settlementWindow() [staticcall]
+    │   │   └─ ← [Return] 3600
+    │   ├─ [3315] 0x958C41181182e76F221331b2755b77D9e1426A98::finalizeWindow() [staticcall]
+    │   │   └─ ← [Return] 3600
+    │   ├─ [1417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 0, status: 1 })
+    │   ├─ emit Acquisition(game: 0, round: 1, requestId: 27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76], fee: 76439273836122546 [7.643e16], vrf: 1040000000000000 [1.04e15], settlementWindow: 3600, finalizeWindow: 3600)
+    │   └─ ← [Return]
+    ├─ [2528] SorpheraVault::requestCount() [staticcall]
+    │   └─ ← [Return] 1
+    ├─ [2836] SorpheraVault::requestAt(0) [staticcall]
+    │   └─ ← [Return] 27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]
+    ├─ [7032] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::acquisitionRewards(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], 21, 1, 114658910754183 [1.146e14], SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    ├─ [0] VM::assertEq(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertEq(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [11417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 0, status: 1 })
+    ├─ [2479] 0x958C41181182e76F221331b2755b77D9e1426A98::ownerAcquisitionFeeBps() [staticcall]
+    │   └─ ← [Return] 100
+    ├─ [3316] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::acquisitionBuilderRewardBps(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] 1500
+    ├─ [0] VM::assertEq(114658910754183 [1.146e14], 114658910754183 [1.146e14]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0xD7f86b4b8Cae7D942340FF628F82735b7a20893a)
+    │   └─ ← [Return]
+    ├─ [95355] 0x958C41181182e76F221331b2755b77D9e1426A98::rawFulfillRandomWords(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76], [456789 [4.567e5]])
+    │   ├─  emit topic 0: 0x98f19be7797a0d9a9520c633b7e2ac1fc1517fcb3a5185d16a8081572f15a992
+    │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │        topic 2: 0x00000000000000000000000000000000000000000000000000000000000116a9
+    │   │           data: 0x000000000000000000000000000000000000000000000000000000000006f855
+    │   └─ ← [Stop]
+    ├─ [858370] SorpheraVault::process(50)
+    │   ├─ [810851] 0x958C41181182e76F221331b2755b77D9e1426A98::processAcquisitions(50)
+    │   │   ├─ [78923] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingActivated(77592 [7.759e4], 0x679860202fa99ADb925E183C0e9e22cf20bEA625, 71490000000000000 [7.149e16])
+    │   │   │   ├─  emit topic 0: 0xc19c446b4ee563fe45da68d79680e6700e757d2ebb1bd7f2f48564e24313fcfb
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f18
+    │   │   │   │        topic 2: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │   │           data: 0x00000000000000000000000000000000000000000000000000fdfbc6b6fe2000000000000000000000000000000000000000000000000000000000000fefd60b
+    │   │   │   └─ ← [Return]
+    │   │   ├─  emit topic 0: 0x01c953cf171a8c32b553c5b7e0964bae6b2123db065615e54e8425fec3ec16cd
+    │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000012f18
+    │   │   │        topic 2: 0x00000000000000000000000000000000000000000000000000000000000015dc
+    │   │   │        topic 3: 0x000000000000000000000000679860202fa99adb925e183c0e9e22cf20bea625
+    │   │   │           data: 0x0000000000000000000000007a50abab1af2c15fe9780f4f045820294e1a715c0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000c21f40eaf465804d00000000000000000000000000000000000000000000000000fdfbc6b6fe2000
+    │   │   ├─ emit OwnerFeesAccrued(: 649733827607042 [6.497e14])
+    │   │   ├─  emit topic 0: 0x165c0e5f0e97dd3e3dfd3c8020ff4218886edff2d8f53afa95c0dcd41f4456e0
+    │   │   │        topic 1: 0x000000000000000000000000000000000000000000000000000000000000ddff
+    │   │   │           data: 0x000000000000000000000000000000000000000000000000000044d36e6800210000000000000000000000000000000000000000000000000decb44c34147b13
+    │   │   ├─  emit topic 0: 0x08a7f93e5890701e3c2c75cd8ded274c4726ccd6ae826b502ecc88f515b692ed
+    │   │   │        topic 1: 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a
+    │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000011f28
+    │   │   │           data: 0x000000000000000000000000000000000000000000000000008028d525f1c519
+    │   │   ├─ [25807] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::onListingRemoved(73512 [7.351e4])
+    │   │   │   ├─  emit topic 0: 0xbbd78d9a5c69efac22e77715aa93dfa78e8e6c8bf7567f0180cca848d7a4d572
+    │   │   │   │        topic 1: 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a
+    │   │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000011f28
+    │   │   │   │           data: 0x0000000000000000000000000000000000000000000000019261def6a336d4e6
+    │   │   │   ├─ emit ListingRewardRemoved(param0: 73512 [7.351e4], param1: 0x184b487D36Aea8AA5990569C326c269DE246179A)
+    │   │   │   └─ ← [Return]
+    │   │   ├─  emit topic 0: 0xaf0d8c007926747ede4270a56f69d2e872c3f0d7e1ef7bbc643b3185c50f6758
+    │   │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000011f28
+    │   │   │        topic 3: 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2
+    │   │   │           data: 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a00000000000000000000000000000000000000000000000001ade0dbe1d28000000000000000000000000000000000000000000000000000000000000006f855
+    │   │   ├─ [101570] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::settleAcquisition{value: 114658910754183}(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76])
+    │   │   │   ├─ [3417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   │   │   │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 73512 [7.351e4], status: 2 })
+    │   │   │   ├─  emit topic 0: 0xe317d30e1a457ef8a7a644e7444567344d818080375676ae0d608e00914b12b4
+    │   │   │   │        topic 1: 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f
+    │   │   │   │        topic 2: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │   │           data: 0x000000000000000000000000000000000000000000000000000068481ba55587
+    │   │   │   └─ ← [Return]
+    │   │   ├─  emit topic 0: 0x63edc6f178d7041b96c564ba33fde66b3f2f3b215be8b2d5a785fee5231fbd57
+    │   │   │        topic 1: 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362
+    │   │   │        topic 2: 0x00000000000000000000000000000000000000000000000000000000000116a9
+    │   │   │        topic 3: 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2
+    │   │   │           data: 0x0000000000000000000000000000000000000000000000000000000000000002
+    │   │   └─ ← [Return] 1
+    │   └─ ← [Return]
+    ├─ [11417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 73512 [7.351e4], status: 2 })
+    ├─ [0] VM::assertEq(2, 2) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertGt(73512 [7.351e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return] 114658910754183 [1.146e14]
+    ├─ [0] VM::assertEq(114658910754183 [1.146e14], 114658910754183 [1.146e14]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [11417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 73512 [7.351e4], status: 2 })
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return] 114658910754183 [1.146e14]
+    ├─ [0] VM::recordLogs()
+    │   └─ ← [Return]
+    ├─ [214564] SorpheraVault::settle(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76])
+    │   ├─ [11417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 73512 [7.351e4], status: 2 })
+    │   ├─ [23359] 0x958C41181182e76F221331b2755b77D9e1426A98::listings(73512 [7.351e4]) [staticcall]
+    │   │   └─ ← [Return] Listing({ collection: 0xd774557b647330C91Bf44cfEAB205095f7E6c367, depositor: 0x184b487D36Aea8AA5990569C326c269DE246179A, purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, tokenId: 17174 [1.717e4], weight: 8264462809917355371 [8.264e18], value: 121000000000000000 [1.21e17], feeShare: 1, feeDebt: 3780394526599286044 [3.78e18], slot: 0, allocatedAt: 1791433067 [1.791e9], status: 2 })
+    │   ├─ [101958] 0x958C41181182e76F221331b2755b77D9e1426A98::acceptDepositorBid(73512 [7.351e4])
+    │   │   ├─ [2893] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::settlementBuilderReward(73512 [7.351e4], 12100000000000000 [1.21e16]) [staticcall]
+    │   │   │   └─ ← [Return] 0x000000000000000000000000000000000000000000000000000672bb9e447000
+    │   │   ├─ emit OwnerFeesAccrued(: 10285000000000000 [1.028e16])
+    │   │   ├─ [18523] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::settleListing{value: 1815000000000000}(73512 [7.351e4], 12100000000000000 [1.21e16])
+    │   │   │   ├─  emit topic 0: 0xee6a17501558738f5a698ada923e0f6da892b2fb772f49af0a9783141276705b
+    │   │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000011f28
+    │   │   │   │        topic 2: 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f
+    │   │   │   │           data: 0x000000000000000000000000000000000000000000000000002afce2c9c84000000000000000000000000000000000000000000000000000000672bb9e447000
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [27643] 0x958C41181182e76F221331b2755b77D9e1426A98::deliverNFT(0xd774557b647330C91Bf44cfEAB205095f7E6c367, 0x184b487D36Aea8AA5990569C326c269DE246179A, 17174 [1.717e4])
+    │   │   │   ├─ [22534] 0xd774557b647330C91Bf44cfEAB205095f7E6c367::transferFrom(0x958C41181182e76F221331b2755b77D9e1426A98, 0x184b487D36Aea8AA5990569C326c269DE246179A, 17174 [1.717e4])
+    │   │   │   │   ├─ emit Transfer(from: 0x958C41181182e76F221331b2755b77D9e1426A98, to: 0x184b487D36Aea8AA5990569C326c269DE246179A, amount: 17174 [1.717e4])
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   ├─ [801] 0xd774557b647330C91Bf44cfEAB205095f7E6c367::ownerOf(17174 [1.717e4]) [staticcall]
+    │   │   │   │   └─ ← [Return] 0x184b487D36Aea8AA5990569C326c269DE246179A
+    │   │   │   └─ ← [Stop]
+    │   │   ├─ [67] SorpheraVault::receive{value: 108900000000000000}()
+    │   │   │   └─ ← [Stop]
+    │   │   ├─  emit topic 0: 0x88ebc94b0ff4693b3d25995dc7c5c4e5683a8ca7de00836773ca24c8b69d78e3
+    │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000011f28
+    │   │   │        topic 2: 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2
+    │   │   │        topic 3: 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a
+    │   │   │           data: 0x0000000000000000000000000000000000000000000000000182e3f9180a4000000000000000000000000000000000000000000000000000002afce2c9c84000
+    │   │   ├─ [5462] 0x612dF3a344990F8E53499ec1bC79Be63cFa496D0::notifyPurchase(0x0000000000000000000000000000000000000000, 73512 [7.351e4], SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2], 121000000000000000 [1.21e17], 108900000000000000 [1.089e17], 1)
+    │   │   │   ├─ [3359] 0x958C41181182e76F221331b2755b77D9e1426A98::listings(73512 [7.351e4]) [staticcall]
+    │   │   │   │   └─ ← [Return] Listing({ collection: 0xd774557b647330C91Bf44cfEAB205095f7E6c367, depositor: 0x184b487D36Aea8AA5990569C326c269DE246179A, purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, tokenId: 17174 [1.717e4], weight: 8264462809917355371 [8.264e18], value: 121000000000000000 [1.21e17], feeShare: 1, feeDebt: 3780394526599286044 [3.78e18], slot: 0, allocatedAt: 1791433067 [1.791e9], status: 4 })
+    │   │   │   ├─ [984] 0xd774557b647330C91Bf44cfEAB205095f7E6c367::supportsInterface(0x91f3d79d) [staticcall]
+    │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   └─ ← [Stop]
+    │   │   └─ ← [Stop]
+    │   ├─ [1417] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitions(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   │   └─ ← [Return] Acquisition({ purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, requestBlock: 26145236 [2.614e7], priceEscrowed: 76439273836122546 [7.643e16], listingId: 73512 [7.351e4], status: 2 })
+    │   ├─ [3359] 0x958C41181182e76F221331b2755b77D9e1426A98::listings(73512 [7.351e4]) [staticcall]
+    │   │   └─ ← [Return] Listing({ collection: 0xd774557b647330C91Bf44cfEAB205095f7E6c367, depositor: 0x184b487D36Aea8AA5990569C326c269DE246179A, purchaser: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, tokenId: 17174 [1.717e4], weight: 8264462809917355371 [8.264e18], value: 121000000000000000 [1.21e17], feeShare: 1, feeDebt: 3780394526599286044 [3.78e18], slot: 0, allocatedAt: 1791433067 [1.791e9], status: 4 })
+    │   ├─ [801] 0xd774557b647330C91Bf44cfEAB205095f7E6c367::ownerOf(17174 [1.717e4]) [staticcall]
+    │   │   └─ ← [Return] 0x184b487D36Aea8AA5990569C326c269DE246179A
+    │   ├─ [4396] 0x958C41181182e76F221331b2755b77D9e1426A98::stuckNFTRecipient(73512 [7.351e4]) [staticcall]
+    │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000
+    │   ├─ emit Reconciled(requestId: 27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76], listingId: 73512 [7.351e4], status: 2)
+    │   └─ ← [Return]
+    ├─ [0] VM::getRecordedLogs()
+    │   └─ ← [Return] [([0xb7aff4cad926d9c399913a8cf025d83e4d685182e56c15689031f5f2866e4697], 0x00000000000000000000000000000000000000000000000000248a272b83d000, 0x958C41181182e76F221331b2755b77D9e1426A98), ([0xee6a17501558738f5a698ada923e0f6da892b2fb772f49af0a9783141276705b, 0x0000000000000000000000000000000000000000000000000000000000011f28, 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f], 0x000000000000000000000000000000000000000000000000002afce2c9c84000000000000000000000000000000000000000000000000000000672bb9e447000, 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516), ([0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef, 0x000000000000000000000000958c41181182e76f221331b2755b77d9e1426a98, 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a, 0x0000000000000000000000000000000000000000000000000000000000004316], 0x, 0xd774557b647330C91Bf44cfEAB205095f7E6c367), ([0x88ebc94b0ff4693b3d25995dc7c5c4e5683a8ca7de00836773ca24c8b69d78e3, 0x0000000000000000000000000000000000000000000000000000000000011f28, 0x0000000000000000000000004f81992fce2e1846dd528ec0102e6ee1f61ed3e2, 0x000000000000000000000000184b487d36aea8aa5990569c326c269de246179a], 0x0000000000000000000000000000000000000000000000000182e3f9180a4000000000000000000000000000000000000000000000000000002afce2c9c84000, 0x958C41181182e76F221331b2755b77D9e1426A98), ([0x2162aa338341b4f40e3e91c6cc2f94d2e144b89bc7a2265b6917f194e93c24ba, 0x3d1ef8687887b6f016927662b76d26f5280adebd96b717f04df2a4777f81e362], 0x0000000000000000000000000000000000000000000000000000000000011f280000000000000000000000000000000000000000000000000000000000000002, 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2)]
+    ├─ [3316] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::acquisitionBuilderRewardBps(27645803625144363412964486643664536890927811587992495461672977825730184471394 [2.764e76]) [staticcall]
+    │   └─ ← [Return] 1500
+    ├─ [0] VM::assertEq(1815000000000000 [1.815e15], 1815000000000000 [1.815e15]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return] 1929658910754183 [1.929e15]
+    ├─ [0] VM::assertEq(1929658910754183 [1.929e15], 1929658910754183 [1.929e15]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3086] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::settlementRewards(73512 [7.351e4]) [staticcall]
+    │   └─ ← [Return] SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 1500, true
+    ├─ [0] VM::assertEq(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertTrue(true) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3034] SorpheraVault::pending() [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::snapshotState()
+    │   └─ ← [Return] 0
+    ├─ [0] VM::prank(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f])
+    │   └─ ← [Return]
+    ├─ [255387] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::claimAccruedTokens(1)
+    │   ├─ [185221] 0x000000000004444c5dc75cB358380D2e3dE08A90::unlock(0x0000000000000000000000000000000000000000000000000006db03b9e9c5870000000000000000000000000000000000000000000000000000000000000001)
+    │   │   ├─ [183232] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::unlockCallback(0x0000000000000000000000000000000000000000000000000006db03b9e9c5870000000000000000000000000000000000000000000000000000000000000001)
+    │   │   │   ├─ [136350] 0x000000000004444c5dc75cB358380D2e3dE08A90::swap((0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (true, -1929658910754183 [-1.929e15], 4295128740 [4.295e9]), 0x)
+    │   │   │   │   ├─  emit topic 0: 0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f
+    │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │        topic 2: 0x000000000000000000000000a54b44c7a894aa19c49734a753d01f9b8c5f6516
+    │   │   │   │   │           data: 0xfffffffffffffffffffffffffffffffffffffffffffffffffff924fc46163a7900000000000000000000000000000000000000000000000e3cbb29c0a386a98f0000000000000000000000000000000000000170eb20d38163ac8f2d81c5a68a0000000000000000000000000000000000000000000010c4b0065cfb0a0c56cb000000000000000000000000000000000000000000000000000000000001cdc90000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   ├─ [105035] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444::afterSwap(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, (0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (true, -1929658910754183 [-1.929e15], 4295128740 [4.295e9]), -656628901501513347915344403088661735216993315772257905 [-6.566e53], 0x)
+    │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   ├─ [33937] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   ├─ [32349] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   ├─ emit Transfer(from: 0x000000000004444c5dc75cB358380D2e3dE08A90, to: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, amount: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   ├─  emit topic 0: 0x444083dce778da1269b63671912c00569a2a58fa85827911902301f91793ffd7
+    │   │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │   │        topic 2: 0x000000000000000000000000a54b44c7a894aa19c49734a753d01f9b8c5f6516
+    │   │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   │   ├─ [16807] 0x000000000004444c5dc75cB358380D2e3dE08A90::swap((0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (false, -2626305544022082625 [-2.626e18], 1461446703485210103287273052203988822378723970341 [1.461e48]), 0x)
+    │   │   │   │   │   │   ├─  emit topic 0: 0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f
+    │   │   │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │   │   │        topic 2: 0x0000000000000000000000002c67eba8a50af0db5fba55f725247a75cbda6444
+    │   │   │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000000118ce0936c4cffffffffffffffffffffffffffffffffffffffffffffffffdb8d7d05c0ecbbbf0000000000000000000000000000000000000170eb22fff14ea5b042012d5b580000000000000000000000000000000000000000000010c4b0065cfb0a0c56cb000000000000000000000000000000000000000000000000000000000001cdc90000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000118ce0936c4cffffffffffffffffdb8d7d05c0ecbbbf
+    │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   ├─ [2146] 0x000000000004444c5dc75cB358380D2e3dE08A90::sync(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845)
+    │   │   │   │   │   │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0x000000000004444c5dc75cB358380D2e3dE08A90) [staticcall]
+    │   │   │   │   │   │   │   └─ ← [Return] 40717025918549190035932110 [4.071e25]
+    │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   ├─ [5858] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0x000000000004444c5dc75cB358380D2e3dE08A90, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   ├─ emit Transfer(from: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, to: 0x000000000004444c5dc75cB358380D2e3dE08A90, amount: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   │   ├─ [2549] 0x000000000004444c5dc75cB358380D2e3dE08A90::settle()
+    │   │   │   │   │   │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0x000000000004444c5dc75cB358380D2e3dE08A90) [staticcall]
+    │   │   │   │   │   │   │   └─ ← [Return] 40717028544854734058014735 [4.071e25]
+    │   │   │   │   │   │   └─ ← [Return] 0x000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   │   ├─ [8190] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0x0000000000000000000000000000000000000000, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 19296760851532 [1.929e13])
+    │   │   │   │   │   │   ├─ [62] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444::receive{value: 19296760851532}()
+    │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   ├─ [1479] 0x1b83eb5D2377150D561C05F0475FCCD78c12645B::receive{value: 19296760851532}()
+    │   │   │   │   │   │   ├─ emit ETHReceived(param0: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, param1: 19296760851532 [1.929e13])
+    │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   ├─ [375] 0x000000000004444c5dc75cB358380D2e3dE08A90::extsload(0xc7aa4b1d619d4a6236dadf083292a24aaf5085a3917ae15ce8d9c73213b53b95) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000001cdc90000000000000170eb22fff14ea5b042012d5b58
+    │   │   │   │   │   ├─ emit Trade(: 29228735094689944805993618430808 [2.922e31], : -1929658910754183 [-1.929e15], : 262630554402208262543 [2.626e20])
+    │   │   │   │   │   └─ ← [Return] 0xb47b2fb100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   └─ ← [Return] 0xfffffffffffffffffff924fc46163a79000000000000000e1848a6c66473654e
+    │   │   │   ├─ [1273] 0x000000000004444c5dc75cB358380D2e3dE08A90::settle{value: 1929658910754183}()
+    │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   │   │   ├─ [12822] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, 260004248858186179918 [2.6e20])
+    │   │   │   │   ├─ [11249] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, 260004248858186179918 [2.6e20])
+    │   │   │   │   │   ├─ emit Transfer(from: 0x000000000004444c5dc75cB358380D2e3dE08A90, to: 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, amount: 260004248858186179918 [2.6e20])
+    │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000e1848a6c66473654e0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000e1848a6c66473654e0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   ├─ [27549] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 260004248858186179918 [2.6e20])
+    │   │   ├─ emit Transfer(from: 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, to: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], amount: 260004248858186179918 [2.6e20])
+    │   │   └─ ← [Return] true
+    │   ├─ emit AccruedTokensClaimed(param0: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], param1: 1929658910754183 [1.929e15], param2: 260004248858186179918 [2.6e20])
+    │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    ├─ [0] VM::revertToState(0)
+    │   └─ ← [Return] true
+    ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [489322] SorpheraRouter::claimBuilderRewards(0x958C41181182e76F221331b2755b77D9e1426A98, fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], 257404206369604318118 [2.574e20], 1791433667 [1.791e9])
+    │   ├─ [4399] 0x958C41181182e76F221331b2755b77D9e1426A98::token() [staticcall]
+    │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   ├─ [3563] 0x958C41181182e76F221331b2755b77D9e1426A98::rewards() [staticcall]
+    │   │   └─ ← [Return] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516
+    │   ├─ [1382] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::token() [staticcall]
+    │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   ├─ [3243] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::fwa() [staticcall]
+    │   │   └─ ← [Return] 0x958C41181182e76F221331b2755b77D9e1426A98
+    │   ├─ [2716] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::builderRewardBps() [staticcall]
+    │   │   └─ ← [Return] 1500
+    │   ├─ [392] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenPoolManager() [staticcall]
+    │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   ├─ [1074] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenHook() [staticcall]
+    │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   ├─ [1029] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::poolManager() [staticcall]
+    │   │   └─ ← [Return] 0x000000000004444c5dc75cB358380D2e3dE08A90
+    │   ├─ [652] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::hook() [staticcall]
+    │   │   └─ ← [Return] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444
+    │   ├─ [234] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::permit2() [staticcall]
+    │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   ├─ [171] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::permit2() [staticcall]
+    │   │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    │   ├─ [556] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::token() [staticcall]
+    │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   └─ ← [Return] true
+    │   ├─ [3028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516) [staticcall]
+    │   │   └─ ← [Return] true
+    │   ├─ [2474] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::depositsPaused() [staticcall]
+    │   │   └─ ← [Return] false
+    │   ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   │   └─ ← [Return] 1929658910754183 [1.929e15]
+    │   ├─ [222683] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::claimAccruedTokens(257404206369604318118 [2.574e20])
+    │   │   ├─ [180221] 0x000000000004444c5dc75cB358380D2e3dE08A90::unlock(0x0000000000000000000000000000000000000000000000000006db03b9e9c58700000000000000000000000000000000000000000000000df43371e83f9b33a6)
+    │   │   │   ├─ [178232] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::unlockCallback(0x0000000000000000000000000000000000000000000000000006db03b9e9c58700000000000000000000000000000000000000000000000df43371e83f9b33a6)
+    │   │   │   │   ├─ [131350] 0x000000000004444c5dc75cB358380D2e3dE08A90::swap((0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (true, -1929658910754183 [-1.929e15], 4295128740 [4.295e9]), 0x)
+    │   │   │   │   │   ├─  emit topic 0: 0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f
+    │   │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │   │        topic 2: 0x000000000000000000000000a54b44c7a894aa19c49734a753d01f9b8c5f6516
+    │   │   │   │   │   │           data: 0xfffffffffffffffffffffffffffffffffffffffffffffffffff924fc46163a7900000000000000000000000000000000000000000000000e3cbb29c0a386a98f0000000000000000000000000000000000000170eb20d38163ac8f2d81c5a68a0000000000000000000000000000000000000000000010c4b0065cfb0a0c56cb000000000000000000000000000000000000000000000000000000000001cdc90000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [102535] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444::afterSwap(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, (0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (true, -1929658910754183 [-1.929e15], 4295128740 [4.295e9]), -656628901501513347915344403088661735216993315772257905 [-6.566e53], 0x)
+    │   │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   │   ├─ [33937] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   ├─ [32349] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   │   ├─ emit Transfer(from: 0x000000000004444c5dc75cB358380D2e3dE08A90, to: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, amount: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   ├─  emit topic 0: 0x444083dce778da1269b63671912c00569a2a58fa85827911902301f91793ffd7
+    │   │   │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │   │   │        topic 2: 0x000000000000000000000000a54b44c7a894aa19c49734a753d01f9b8c5f6516
+    │   │   │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   │   │   ├─ [16807] 0x000000000004444c5dc75cB358380D2e3dE08A90::swap((0x0000000000000000000000000000000000000000, 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0, 60, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444), (false, -2626305544022082625 [-2.626e18], 1461446703485210103287273052203988822378723970341 [1.461e48]), 0x)
+    │   │   │   │   │   │   │   ├─  emit topic 0: 0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f
+    │   │   │   │   │   │   │   │        topic 1: 0x230ecd3c25b44af30db59c15f70df7794eb13f67a200f230b7400daa96fe804d
+    │   │   │   │   │   │   │   │        topic 2: 0x0000000000000000000000002c67eba8a50af0db5fba55f725247a75cbda6444
+    │   │   │   │   │   │   │   │           data: 0x0000000000000000000000000000000000000000000000000000118ce0936c4cffffffffffffffffffffffffffffffffffffffffffffffffdb8d7d05c0ecbbbf0000000000000000000000000000000000000170eb22fff14ea5b042012d5b580000000000000000000000000000000000000000000010c4b0065cfb0a0c56cb000000000000000000000000000000000000000000000000000000000001cdc90000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000118ce0936c4cffffffffffffffffdb8d7d05c0ecbbbf
+    │   │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   │   ├─ [2146] 0x000000000004444c5dc75cB358380D2e3dE08A90::sync(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845)
+    │   │   │   │   │   │   │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0x000000000004444c5dc75cB358380D2e3dE08A90) [staticcall]
+    │   │   │   │   │   │   │   │   └─ ← [Return] 40717025918549190035932110 [4.071e25]
+    │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   ├─ [5858] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0x000000000004444c5dc75cB358380D2e3dE08A90, 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   ├─ emit Transfer(from: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, to: 0x000000000004444c5dc75cB358380D2e3dE08A90, amount: 2626305544022082625 [2.626e18])
+    │   │   │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   │   │   ├─ [2549] 0x000000000004444c5dc75cB358380D2e3dE08A90::settle()
+    │   │   │   │   │   │   │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0x000000000004444c5dc75cB358380D2e3dE08A90) [staticcall]
+    │   │   │   │   │   │   │   │   └─ ← [Return] 40717028544854734058014735 [4.071e25]
+    │   │   │   │   │   │   │   └─ ← [Return] 0x000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   │   │   ├─ [8190] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0x0000000000000000000000000000000000000000, 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, 19296760851532 [1.929e13])
+    │   │   │   │   │   │   │   ├─ [62] 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444::receive{value: 19296760851532}()
+    │   │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   ├─ [1479] 0x1b83eb5D2377150D561C05F0475FCCD78c12645B::receive{value: 19296760851532}()
+    │   │   │   │   │   │   │   ├─ emit ETHReceived(param0: 0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444, param1: 19296760851532 [1.929e13])
+    │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   ├─ [2170] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::increaseTransferAllowance(260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   │   ├─ emit AllowanceIncreased(: 260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   │   ├─ [375] 0x000000000004444c5dc75cB358380D2e3dE08A90::extsload(0xc7aa4b1d619d4a6236dadf083292a24aaf5085a3917ae15ce8d9c73213b53b95) [staticcall]
+    │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000001cdc90000000000000170eb22fff14ea5b042012d5b58
+    │   │   │   │   │   │   ├─ emit Trade(: 29228735094689944805993618430808 [2.922e31], : -1929658910754183 [-1.929e15], : 262630554402208262543 [2.626e20])
+    │   │   │   │   │   │   └─ ← [Return] 0xb47b2fb100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247282fa3f134441
+    │   │   │   │   │   └─ ← [Return] 0xfffffffffffffffffff924fc46163a79000000000000000e1848a6c66473654e
+    │   │   │   │   ├─ [1273] 0x000000000004444c5dc75cB358380D2e3dE08A90::settle{value: 1929658910754183}()
+    │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   │   │   │   ├─ [12822] 0x000000000004444c5dc75cB358380D2e3dE08A90::take(0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, 260004248858186179918 [2.6e20])
+    │   │   │   │   │   ├─ [11249] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, 260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   ├─ emit Transfer(from: 0x000000000004444c5dc75cB358380D2e3dE08A90, to: 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, amount: 260004248858186179918 [2.6e20])
+    │   │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000e1848a6c66473654e0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000e1848a6c66473654e0000000000000000000000000000000000000000000000000006db03b9e9c587
+    │   │   ├─ [25549] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 260004248858186179918 [2.6e20])
+    │   │   │   ├─ emit Transfer(from: 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, to: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], amount: 260004248858186179918 [2.6e20])
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ emit AccruedTokensClaimed(param0: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], param1: 1929658910754183 [1.929e15], param2: 260004248858186179918 [2.6e20])
+    │   │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    │   ├─ [1382] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::token() [staticcall]
+    │   │   └─ ← [Return] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845
+    │   ├─ [325] 0x000000000022D473030F116dDEE9F6B43aC78BA3::DOMAIN_SEPARATOR() [staticcall]
+    │   │   └─ ← [Return] 0x866a5aba21966af95d6c7ab78eb2b2fc913915c28be3b9aa07cc04ff903e3f28
+    │   ├─ [98885] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::depositWithPermit2(PermitTransferFrom({ permitted: TokenPermissions({ token: 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, amount: 260004248858186179918 [2.6e20] }), nonce: 0, deadline: 1791433667 [1.791e9] }), 0x, fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349])
+    │   │   ├─ [1028] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::isDistributor(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   └─ ← [Return] true
+    │   │   ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   └─ ← [Return] 17048725161196257819237 [1.704e22]
+    │   │   ├─ [34123] 0x000000000022D473030F116dDEE9F6B43aC78BA3::permitTransferFrom(((0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, 260004248858186179918 [2.6e20]), 0, 1791433667 [1.791e9]), (0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B, 260004248858186179918 [2.6e20]), SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 0x)
+    │   │   │   ├─ [712] SorpheraRouter::isValidSignature(0x4e66cbfa677fa5b809bd60b2a78461782dcf159f20178251466aecdfc09c3e5c, 0x) [staticcall]
+    │   │   │   │   └─ ← [Return] 0x1626ba7e
+    │   │   │   ├─ [8246] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transferFrom(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B, 260004248858186179918 [2.6e20])
+    │   │   │   │   ├─ emit Transfer(from: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], to: 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B, amount: 260004248858186179918 [2.6e20])
+    │   │   │   │   └─ ← [Return] true
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   │   └─ ← [Return] 17308729410054443999155 [1.73e22]
+    │   │   ├─ emit Deposited(param0: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], param1: fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], param2: 260004248858186179918 [2.6e20], param3: 260004248858186179918 [2.6e20], param4: 26145237 [2.614e7])
+    │   │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    │   ├─ emit RewardQueued(token: 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845, recipient: fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], amount: 260004248858186179918 [2.6e20], nonce: 0)
+    │   ├─ emit BuilderRewardClaimed(rewards: 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516, allowance: 1929658910754183 [1.929e15], tokenOut: 260004248858186179918 [2.6e20])
+    │   └─ ← [Stop]
+    ├─ [3288] 0xA54b44C7a894AA19C49734A753D01f9B8C5f6516::tokenBuyAllowance(SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [4849] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::claims(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349]) [staticcall]
+    │   └─ ← [Return] 26145237 [2.614e7], 260004248858186179918 [2.6e20]
+    ├─ [0] VM::assertGt(260004248858186179918 [2.6e20], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::expectRevert(custom error 0xf4844814)
+    │   └─ ← [Return]
+    ├─ [31233] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::claim(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349])
+    │   └─ ← [Revert] ClaimDelayNotMet(26145237 [2.614e7])
+    ├─ [0] VM::roll(26145237 [2.614e7])
+    │   └─ ← [Return]
+    ├─ [83356] 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B::claim(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349])
+    │   ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   └─ ← [Return] 17308729410054443999155 [1.73e22]
+    │   ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349]) [staticcall]
+    │   │   └─ ← [Return] 0
+    │   ├─ [28349] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::transfer(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], 260004248858186179918 [2.6e20])
+    │   │   ├─ emit Transfer(from: 0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B, to: fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], amount: 260004248858186179918 [2.6e20])
+    │   │   └─ ← [Return] true
+    │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B) [staticcall]
+    │   │   └─ ← [Return] 17048725161196257819237 [1.704e22]
+    │   ├─ [773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349]) [staticcall]
+    │   │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    │   ├─ emit Claimed(param0: fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349], param1: SorpheraMainnetForkTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496], param2: 260004248858186179918 [2.6e20])
+    │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    ├─ [2773] 0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845::balanceOf(fork-only company treasury: [0x7e6478b645E9E2dA7bd9766c52A7221da5841349]) [staticcall]
+    │   └─ ← [Return] 260004248858186179918 [2.6e20]
+    ├─ [0] VM::assertEq(260004248858186179918 [2.6e20], 260004248858186179918 [2.6e20]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [47273] Sorphera::getRound(0, 1) [staticcall]
+    │   └─ ← [Return] Round({ status: 1, group: 1, price: 5000000000000000 [5e15], start: 1791433067 [1.791e9], cutoff: 1792037867 [1.792e9], earliestDraw: 1792041467 [1.792e9], settlementDeadline: 1792210667 [1.792e9], vault: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, sold: 100, fees: 50000000000000000 [5e16], requestId: 0, requestedAt: 0, randomWord: 0, ordered: [0, 0, 0], bonus: 0, winningKey: 0, matches: 0, winningTicket: 0, eligibleNFTs: 0, frozenNFTs: 0, tieBreakRequestId: 0, tieBreakWord: 0 })
+    ├─ [0] VM::warp(1792041467 [1.792e9])
+    │   └─ ← [Return]
+    ├─ [321422] Sorphera::requestDraw(0, 1)
+    │   ├─ emit RoundClosed(game: 0, round: 1, tickets: 100)
+    │   ├─ [95392] SorpheraVault::syncETH()
+    │   │   ├─ [35132] Sorphera::credit{value: 481420726163877454}(0, 1)
+    │   │   │   ├─ emit PrizeCredited(game: 0, originRound: 1, group: 1, amount: 481420726163877454 [4.814e17])
+    │   │   │   └─ ← [Return]
+    │   │   ├─ emit ETHExported(amount: 481420726163877454 [4.814e17])
+    │   │   └─ ← [Return]
+    │   ├─ [3034] SorpheraVault::pending() [staticcall]
+    │   │   └─ ← [Return] 0
+    │   ├─ [1122] SorpheraVault::budget() [staticcall]
+    │   │   └─ ← [Return] 0
+    │   ├─ [6667] SorpheraVault::refundCredit() [staticcall]
+    │   │   ├─ [2805] 0x958C41181182e76F221331b2755b77D9e1426A98::acquisitionRefundCredit(SorpheraVault: [0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2]) [staticcall]
+    │   │   │   └─ ← [Return] 0
+    │   │   └─ ← [Return] 0
+    │   ├─ [41937] 0xD7f86b4b8Cae7D942340FF628F82735b7a20893a::requestRandomWords(Request({ keyHash: 0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9, subId: 32325211015908035585574034918576073693840033365205427203438400000795598744953 [3.232e76], requestConfirmations: 3, callbackGasLimit: 200000 [2e5], numWords: 1, extraArgs: 0x92fd13380000000000000000000000000000000000000000000000000000000000000001 }))
+    │   │   ├─  emit topic 0: 0xeb0e3652e0f44f417695e6e90f2f42c99b65cd7169074c5a654b16b9748c3a4e
+    │   │   │        topic 1: 0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9
+    │   │   │        topic 2: 0x47776bcb3989224993d1de323907dc24cec721f16b047d925262074b34816d79
+    │   │   │        topic 3: 0x0000000000000000000000005991a2df15a8f6a256d3ec51e99254cd3fb576a9
+    │   │   │           data: 0x8ef267a3817dee3e972bca32d20722dc64a80b2de8bc9297d7db963836db4901640d07527e94178372d980955a43b2071754315bbee877ae550c84cbeea69baa00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000030d40000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000002492fd1338000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000
+    │   │   └─ ← [Return] 64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76]
+    │   ├─ emit DrawRequested(game: 0, round: 1, requestId: 64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76], frozenNFTs: 0)
+    │   └─ ← [Stop]
+    ├─ [47273] Sorphera::getRound(0, 1) [staticcall]
+    │   └─ ← [Return] Round({ status: 3, group: 1, price: 5000000000000000 [5e15], start: 1791433067 [1.791e9], cutoff: 1792037867 [1.792e9], earliestDraw: 1792041467 [1.792e9], settlementDeadline: 1792210667 [1.792e9], vault: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, sold: 100, fees: 50000000000000000 [5e16], requestId: 64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76], requestedAt: 1792041467 [1.792e9], randomWord: 0, ordered: [0, 0, 0], bonus: 0, winningKey: 0, matches: 0, winningTicket: 0, eligibleNFTs: 0, frozenNFTs: 0, tieBreakRequestId: 0, tieBreakWord: 0 })
+    ├─ [0] VM::prank(0xD7f86b4b8Cae7D942340FF628F82735b7a20893a)
+    │   └─ ← [Return]
+    ├─ [61113] Sorphera::rawFulfillRandomWords(64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76], [123])
+    │   ├─ emit RandomnessStored(game: 0, round: 1, requestId: 64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76], word: 123)
+    │   └─ ← [Stop]
+    ├─ [292029] Sorphera::finalize(0, 1)
+    │   ├─ emit FeesReleased(game: 0, round: 1, amount: 50000000000000000 [5e16])
+    │   ├─ emit DustCarried(game: 0, group: 2, amount: 54)
+    │   ├─ emit Result(game: 0, round: 1, ordered: [13, 10, 14], bonus: 2, combination: 80298 [8.029e4], matches: 100, winningTicket: 0)
+    │   └─ ← [Stop]
+    ├─ [47273] Sorphera::getRound(0, 1) [staticcall]
+    │   └─ ← [Return] Round({ status: 5, group: 1, price: 5000000000000000 [5e15], start: 1791433067 [1.791e9], cutoff: 1792037867 [1.792e9], earliestDraw: 1792041467 [1.792e9], settlementDeadline: 1792210667 [1.792e9], vault: 0x4f81992FCe2E1846dD528eC0102e6eE1f61ed3e2, sold: 100, fees: 0, requestId: 64656716776482312817197290519217051873158162680803220762118392094918820186369 [6.465e76], requestedAt: 1792041467 [1.792e9], randomWord: 123, ordered: [13, 10, 14], bonus: 2, winningKey: 80298 [8.029e4], matches: 100, winningTicket: 0, eligibleNFTs: 0, frozenNFTs: 0, tieBreakRequestId: 0, tieBreakWord: 0 })
+    ├─ [0] VM::prank(fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D])
+    │   └─ ← [Return]
+    ├─ [99306] Sorphera::claimETH(0, 1, [1], fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D])
+    │   ├─ [0] fork-only ticket holder::receive{value: 4814207261638774}()
+    │   │   └─ ← [Stop]
+    │   ├─ emit Claimed(game: 0, round: 1, ticket: 1, recipient: fork-only ticket holder: [0x8A615773CAaf754a24f490DcAF27a53B7043B60D], amount: 4814207261638774 [4.814e15])
+    │   └─ ← [Return]
+    ├─ [3376] Sorphera::totalLiabilities() [staticcall]
+    │   └─ ← [Return] 526606518902238680 [5.266e17]
+    ├─ [0] VM::assertEq(526606518902238680 [5.266e17], 526606518902238680 [5.266e17]) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Return]
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 815.45ms (397.86ms CPU time)
+
+Ran 1 test suite in 1.48s (815.45ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)

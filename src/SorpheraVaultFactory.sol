@@ -8,13 +8,14 @@ import {Owned} from "./lib/Security.sol";
 /// @dev Only the one registered lottery can create vaults, so `VaultCreated` is a trustworthy
 ///      discovery index. The lottery is deployed after the factory, so the owner binds it once.
 contract SorpheraVaultFactory is Owned {
+    error MissingRouterCode(address dependency, uint256 chainId);
     SorpheraRouter public immutable router;
     address public lottery;
     event LotteryRegistered(address indexed lottery);
     event VaultCreated(address indexed lottery, uint8 indexed game, uint256 indexed round, address vault);
 
     constructor(address router_, address owner_) Owned(owner_) {
-        require(router_.code.length != 0, "Sorphera: router");
+        if (router_.code.length == 0) revert MissingRouterCode(router_, block.chainid);
         router = SorpheraRouter(payable(router_));
     }
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+import {SimulatedSorphera} from "./helpers/SimulatedSorphera.sol";
 import {Test} from "forge-std/Test.sol";
 import {Sorphera} from "../src/Sorphera.sol";
 import {SorpheraVault} from "../src/SorpheraVault.sol";
@@ -59,7 +60,7 @@ contract SorpheraTest is Test {
     uint256 internal cutoff;
 
     function setUp() public {
-        vm.chainId(11155111);
+        vm.chainId(31337);
         vm.warp(10 days);
         vm.roll(100);
         MockPermit2 permit = new MockPermit2();
@@ -76,7 +77,7 @@ contract SorpheraTest is Test {
         router.configure(address(pool), address(helper));
         factory = new SorpheraVaultFactory(address(router), address(this));
         vrf = new MockVRF();
-        lottery = new Sorphera(address(this), address(factory), address(vrf));
+        lottery = new SimulatedSorphera(address(this), address(factory), address(vrf));
         factory.setLottery(address(lottery));
         vrf.setConsumer(address(lottery));
         cutoff = vm.getBlockTimestamp() + 7 days;
@@ -121,6 +122,23 @@ contract SorpheraTest is Test {
         lottery.requestDraw(game, id);
         vrf.fulfill(lottery.getRound(game, id).requestId, word);
         lottery.finalize(game, id);
+        if (lottery.getRound(game, id).status == Sorphera.Status.TieBreakNeeded) {
+            lottery.requestTieBreak(game, id);
+            vrf.fulfill(lottery.getRound(game, id).tieBreakRequestId, word + 1000);
+            lottery.finalizeTieBreak(game, id);
+        }
+    }
+
+    function _finishTie() internal {
+        if (lottery.getRound(1, 1).status == Sorphera.Status.TieBreakNeeded) {
+            lottery.requestTieBreak(1, 1);
+            vrf.fulfill(lottery.getRound(1, 1).tieBreakRequestId, 1234);
+            uint256 beforeGas = gasleft();
+            lottery.finalizeTieBreak(1, 1);
+            uint256 used = beforeGas - gasleft();
+            assertLt(used, 350000);
+            emit log_named_uint("tie-break finalize gas", used);
+        }
     }
 
     function _one(uint256 id) internal pure returns (uint256[] memory a) {
@@ -147,7 +165,7 @@ contract SorpheraTest is Test {
     }
 
     function testStartsDisabledUnconfiguredAndOwnerSettings() public {
-        Sorphera fresh = new Sorphera(address(this), address(factory), address(vrf));
+        Sorphera fresh = new SimulatedSorphera(address(this), address(factory), address(vrf));
         assertFalse(fresh.salesEnabled());
         vm.expectRevert("Sorphera: launch not validated");
         fresh.setSalesEnabled(true);
@@ -329,7 +347,9 @@ contract SorpheraTest is Test {
         _draw(1, 1, 23);
         Sorphera.Round memory r = lottery.getRound(1, 1);
         uint256 expected = Balls.uniform(
-            lottery.seedFor(1, 1, 23), keccak256("Sorphera NFT matching ticket tie-break v1"), 5
+            lottery.tieBreakSeedFor(1, 1, r.tieBreakRequestId, 1023),
+            keccak256("Sorphera NFT matching ticket tie-break v2"),
+            5
         ) + 1;
         assertEq(r.matches, 5);
         assertEq(r.winningTicket, expected);
@@ -583,6 +603,7 @@ contract SorpheraTest is Test {
         assertEq(vrf.requests(), 1);
         vrf.fulfill(1, 73);
         lottery.finalize(1, 1);
+        _finishTie();
         uint256 winner = lottery.getRound(1, 1).winningTicket;
         vm.prank(alice);
         v.claimNFTs(winner, _one(0), alice);
@@ -766,6 +787,8 @@ contract SorpheraTest is Test {
         lottery.finalize(1, 1);
         uint256 used = gasBefore - gasleft();
         assertLt(used, 350000);
+        emit log_named_uint("draw finalize gas, 2000 tickets / 104 NFTs", used);
+        _finishTie();
         Sorphera.Round memory r = lottery.getRound(1, 1);
         assertEq(r.matches, 2000);
         assertEq(r.frozenNFTs, 104);
@@ -832,6 +855,7 @@ contract SorpheraTest is Test {
         vrf.fulfill(2, 93);
         assertEq(uint256(lottery.getRound(0, 1).status), uint256(Sorphera.Status.Requested));
         lottery.finalize(1, 1);
+        _finishTie();
         vrf.fulfill(1, 0);
         lottery.finalize(0, 1);
         assertEq(lottery.getRound(0, 1).matches, 1);
@@ -871,6 +895,7 @@ contract SorpheraTest is Test {
         lottery.withdrawOperator(company, 1);
         vrf.fulfill(1, 92);
         lottery.finalize(1, 1);
+        _finishTie();
         lottery.withdrawOperator(company, 0.0015 ether);
         _conserved();
     }

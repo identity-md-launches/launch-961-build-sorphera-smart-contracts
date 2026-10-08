@@ -1,15 +1,29 @@
 {
   "project": "Sorphera",
   "tagline": "Weekly ETH & NFT lottery ball jackpots. Powered by FWA.",
-  "chainId": 11155111,
-  "status": "not-deployed-sales-disabled",
+  "chainId": 1,
+  "status": "mainnet-not-deployed-sales-disabled",
   "applications": {
-    "SorpheraRouter": {"address": null, "deploymentBlock": null},
-    "SorpheraVaultFactory": {"address": null, "deploymentBlock": null},
-    "Sorphera": {"address": null, "deploymentBlock": null}
+    "SorpheraRouter": {
+      "address": null,
+      "deploymentBlock": null
+    },
+    "SorpheraVaultFactory": {
+      "address": null,
+      "deploymentBlock": null
+    },
+    "Sorphera": {
+      "address": null,
+      "deploymentBlock": null
+    }
   },
   "roundVaultDiscoveryEvent": "VaultCreated(address,uint8,uint256,address)",
   "roundVaultDiscoveryFilter": "indexed lottery == Sorphera address; RoundOpened.vault is authoritative",
-  "dependencyEvidence": "../docs/reference/sepolia-readback.json",
-  "launchBlocker": "Published FWA Sepolia deployment lacks current builder attribution. Verify and configure a compatible pool and transfer helper before activation."
+  "dependencyEvidence": "../docs/reference/mainnet/snapshot.json",
+  "launchBlocker": "Independent review, private IMD gate rerun, company inputs and real Sepolia VRF canary; new mainnet launch required.",
+  "historicalParkedLaunch": {
+    "number": 961,
+    "chainId": 11155111,
+    "manifest": "../launch.json"
+  }
 }

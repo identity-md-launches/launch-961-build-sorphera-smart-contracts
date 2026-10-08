@@ -84,6 +84,7 @@ interface ITransferHelper {
         uint256 nonce;
         uint256 deadline;
     }
+    function depositsPaused() external view returns (bool);
     function token() external view returns (address);
     function permit2() external view returns (address);
     function depositWithPermit2(PermitTransferFrom calldata, bytes calldata, address)
@@ -100,6 +101,11 @@ interface IVRF {
         uint32 numWords;
         bytes extraArgs;
     }
+    function s_provingKeys(bytes32) external view returns (bool exists, uint64 maxGas);
+    function s_config()
+        external
+        view
+        returns (uint16, uint32, bool, uint32, uint32, uint32, uint32, uint8, uint8);
     function requestRandomWords(Request calldata) external returns (uint256);
     function getSubscription(uint256)
         external

@@ -1,0 +1,28 @@
+{
+  "status": "NOT RUN: separate controlled FWA canary, not the incompatible published pool",
+  "chainId": 11155111,
+  "owner": null,
+  "treasury": null,
+  "router": null,
+  "factory": null,
+  "lottery": null,
+  "salesEnabled": false,
+  "pool": null,
+  "helper": null,
+  "coordinator": "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B",
+  "randomness": {
+    "subscription": null,
+    "keyHash": null,
+    "confirmations": null,
+    "callbackGas": null,
+    "nativePayment": null,
+    "minimumFundingWei": null
+  },
+  "rules": {
+    "ETH": null,
+    "NFT": null
+  },
+  "gasPriceAssumptionWei": null,
+  "builderRewardMinOut": null,
+  "approvalForPublicSales": false
+}

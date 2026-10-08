@@ -1,0 +1,956 @@
+{
+  "chainId": 1,
+  "block": 26145236,
+  "blockData": {
+    "hash": "0xf7795aa3ff4975e1f907099acb0bdbefcead6ee7d85b0cca23584ce0704de179",
+    "parentHash": "0xda00907d423cb10d9c95720e1ee2c234116f5d988a079b7e6b0d7327b30f1dfa",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "miner": "0x396343362be2a4da1ce0c1c210945346fb82aa49",
+    "stateRoot": "0x91285f9178001f4165a7880a3a02629c910be0b8a7b3a0610769d5288088a5bb",
+    "transactionsRoot": "0xff60205c363109b0c52400624ea210d0e0dbd287beb721f1a6f157faebc5cec6",
+    "receiptsRoot": "0x0efca142c672d451870dd37d35c49c5d9c9112e19b91edce5441c5606cddf251",
+    "logsBloom": "0x13e9fbfed96bd4fef68290fdeff23fbf3ffa7ff4d72abbbaffcb53797fbcfad5196f4fefedbf67a74fb35ef7fab7ebfea7dee4acdc53bf7f39edafed37fcedd3df7779faf9dcef7fff5dfd4bbfd1dfeba5f72c1decfebbf61d7f4ffabe351eef7df7f7f7bfff625dfedffffb6e4fdf0587a3edfebdd7a7ed939cfd9d3bffbfffc6f99efdff5ae5b9c4f9bafdf5febfbfffff3fbdeb73ffbcdcfef75571b7db7d7fe577fbcff439ff735bfceeb9be7d5e66eefab7439dea7aaf6bfbbffe3fefd7fb7ddefe4fceff7fe9dfc6bbb9fffeff9eff7d7fb6edf7fdd1ff6df6f9fdff67d4fdfefc2bf3b7756ffdfbf7ebe7fff7bd3ef96fbdbff7fdeeb5b3b63f48ffbf",
+    "difficulty": "0x0",
+    "number": "0x18ef1d4",
+    "gasLimit": "0x3938700",
+    "gasUsed": "0x1a3fe55",
+    "timestamp": "0x6ac7196b",
+    "extraData": "0xe29ca82051756173617220287175617361722e77696e2920e29ca8",
+    "mixHash": "0x044fdfab113e084dd128b1bc77773beca067bbe6495b28040c655bddbd90909a",
+    "nonce": "0x0000000000000000",
+    "baseFeePerGas": "0xb9b768b",
+    "withdrawalsRoot": "0x1dab233e0f24545681a9138d7f12e55aa264a9dab732d7616426f816368f6752",
+    "blobGasUsed": "0x0",
+    "excessBlobGas": "0xb566ad7",
+    "parentBeaconBlockRoot": "0x0ac1aa51263dca1424ed84f6a376a9ce9dd3d29604eaca4d4f7621bd885c1385",
+    "requestsHash": "0x83dea0e84bb158ab1182abf69d1b2a935bb62d26d1712bbb55bb2e2ec75499ec",
+    "size": "0x29474",
+    "uncles": [],
+    "transactions": [
+      "0x4c97d37696064a3de1052c261edc8c0f342b25a1fa85483513b0bef1f2974f25",
+      "0xc636b8fb4cd01c13c936a6f5060844a8bca5df89ca508be0e4d45f49d5c52b70",
+      "0x33d273cb91fe89c50d2bbcba356749811609fa08427db89b02f97f38592c58ff",
+      "0x90dba90e2744479805be1503acbd2b9d8af62eabc7030ed277e3b9fd5914dcbc",
+      "0x7b3e8ccbc82b60aed80346c18417c6af67e6dffa85f93b02ce1716ff115935be",
+      "0x1880e0e280ee9443d123ad174c27e88eb85196b39b2edfc33410e8a4a9248969",
+      "0xc907f6069a1fcd7d32b2108ae8040d9615edddde0a8e78ca7fd9db26134c8ef7",
+      "0x5e288822f5cb16c725cdf3201a5950248868cbb530ce4984bd0c05a30b9a9751",
+      "0xbb37ec3e392d953b4bcf19ec32931435b70ddda62e643ae7f1718a44e330bf4f",
+      "0x387810f055a3d24c50205d965ed3bfc5f4a7767751426928aaa058786af45879",
+      "0xf2fc48ae2140ad07f336e6ece6f9ff30204fab850bd34ee5689cb18709cfc60a",
+      "0x041a56ca603a42c4c1374ee1c6d4609953c4552e1ad6c267d5bfbdf8640c2b98",
+      "0xf3e317ad42be26c88dd130da81082eeb9932058c2e93ca0a10fe02ff7b98bda3",
+      "0xc422f3f2cce39781006e1541517c6cdcf6faaca991b89b03fe684b2b256d6382",
+      "0x0f78759f700bea189d880060c1e9491aab03c678568633557d69c84f9202637f",
+      "0xd8afe867c0b4d710a424a97715e74a6782d3de76be45e732d8dc7434964264f8",
+      "0x3d51210a1cde69e22c6a09801bbb26d2cbbacff7561399e552e9502dfa9b4b62",
+      "0x72750a6010eff196a3c665fdc5d1dd184ed8ca02b64f877dcad0fd977fa8e9e7",
+      "0xb2da95b6b0f5b11089db7a6e1b413420d8a295d5984ee742acbbb87aa3b8d765",
+      "0xd538c1ac83d89df1ccfefee3dd8d807f1e7cc068bf505799836e7f2ec3c4f51d",
+      "0x68d57d03757b0a08685085aaefc1f357e6b3effeafa278d660ec5cd4f6dcb0f9",
+      "0x5c48ddd8cdaf588043024da4bc962d5f2006a6cf973d567170a520d49293b0c4",
+      "0xc5f0916ad6e7219b4f8560a0870373fc8dfb1847da2ccaa38f9ca2a62056d6da",
+      "0x27a6a79fe79d7adef70e08f2754a4d001980cfe854b95c808354f8caac11a4c2",
+      "0xc1460029598d36f4390e41e823377578bd25847a7e7e7deac5304d00eefacaff",
+      "0xa2bfe874f45bf4194d0568fcd06906a92c93af32ba5622f307199b70313bddf9",
+      "0x9e318d0097ea0ad05d6c2d8968b9fbe873c80709dff8e417c4c52a1a2abd3a7a",
+      "0x25337cf6f82a2e3eff73a4766175301cb825fb8ef16b6a89c7fa997d20a756d2",
+      "0x02b54f15c64a0bf69e1a70a19651550815439fea5f290e52ac5e6c201c8f8914",
+      "0xcef5a137ff874e86dafe97fa52444217ffa6c709bef0cb815767f56cbd626504",
+      "0x8c42903c696d723c73b881929f466b57e3ae4c54bfb0f9fcfe48b0fbd5f5b495",
+      "0x3563c261de7ba7bdd09e937948324ad66842fbeeaca1d9552c57ddf873ce3149",
+      "0x50258fbac75fb86ec77173e297389d173a0334fc64db82ae256e788b187791a4",
+      "0xc71715cffd6a00a6cc381ec7cb7b263c90bdd63e400f39f5dfa06625e301d41a",
+      "0x4030c75e419ed76c57945a9d349dc177e0259e91b47f314d1a18e90e9232110b",
+      "0xfe179e420aba567623aa182bc91a8ec597941fe108483ed185ac372c14e3fbf0",
+      "0xc6f68e7b1fc3b6435875231dd82e2a5cc001eebfb825ad5624b29e318adf8e44",
+      "0xefffcd0f38a229899ac557bc7a964318e543bd7fb36e2222692b601b9ccf59e2",
+      "0xe02b0323968ac31f810d65381b69e626a4bee8779ffa04058e08ae49ba9ff941",
+      "0x684163ed7258affa5dffb791c9f8cc0c39a4e01cf669bdd213b5b96ece42e00a",
+      "0xf97c2c641808a9c880bde17597a5853a1c2186711dbab81db2407f93b41464f9",
+      "0x85bb0fcbe3d37e1e51ec64c3005b76a54945cec327b1b51c27af1eb8c00853ca",
+      "0xeade94fa0062f01da9228b5404f8115158d716a56b49b50cb00225c55ee403bc",
+      "0x4a1b899811ec9807e84c6d3bdfa8b37e534233d9baae125080eaf6fd02e66b24",
+      "0x0675f8e235e39f229628df223300398b22c25eec89b351d68acb8aed8fda264d",
+      "0x2f351e5a27c276fb7f0947a657ea9b8977c7b8d66d67d97ede1638ebe74ec361",
+      "0x5dc2856dd580930b5e91bd64513b802c1b50b1a48d814fa857c413942023b2b2",
+      "0xf6c410f7cb5d2abbad58a0b6acf666ff614230bb20b71b64637132702a4a160b",
+      "0xfb5dd622b9795ac18c4cdd578180ad80713e2a3039e93a3e40e4883a1d944071",
+      "0x3f3bb70fe4a50fc3d498881e8a3677f73f86597aa4e4a39fd897a5302ea87a4a",
+      "0x626a55cdcdd7198bcdb428e6c99c21f424bfa958976cd592f2f9f5cc5b88880b",
+      "0x97bea2f4fdec6f512f8ff82fca474f91c0feda1a9939385b887e79d5ac351b80",
+      "0x673239151a16e6b55a3961c4e16ac03ca3734b3fa14328335fc464a16c17d076",
+      "0x40d5f3fa53e0c9dcf5e9fca08ed53c173e33ad737295e7a6402e6941615dcfc7",
+      "0x15c671a8e42334c237e69c88f06891581f2d4c840b793478afa4dff46f9e1d2d",
+      "0xa8b794e6e38dd4feb319e808f7982965a961d4f35b3097f65cc531b3a363e42d",
+      "0x1f2fe1d7f67f566ce8038d9796063f19f2f6989113bfd8ff0b8d7ab8edd27ba0",
+      "0xa0df8e1aaaa338f00a07a5d7cd50d565e6cb7f762783dc123383caf0ca61c272",
+      "0xa8fbf1062c2625d29eabfc4d7706226a7eb802f1da1ed0cc033e67e2c83ffe13",
+      "0x0cf0882eab15cadc2206cc78b78ef86e3307e43979ab9c028a085b30dadb0404",
+      "0x17d7d745853501f2410abcb7bd086304a66b81aeb9694325d9e020a7a006d739",
+      "0x5c5635bf6c73085a1e9cf6787567831bd3c6772e98e017904561b44d68e16e0a",
+      "0xefc053128d9d5c8266b81eedb8880758a1d60254dc7b18162c9aafd6f8270a6d",
+      "0x9e76c0cc4a8f714043d36866fef34a5135a623a2d6b60f9fb2d454cbb5d36c92",
+      "0x0e5b43deea0331e053c31713a88d75a536b74d85dfcba8646e8028b9238ce830",
+      "0xc4c30cea5da58cb947d592c6dd904bc1dee1de094139d02ccc752f396578ccd1",
+      "0x8f17862a282a4750c48cdf792f020bd000f76060f2a6703b2333022d10784975",
+      "0x57610c4837a107a0ab112037ea57ca55a27edbe8d1d69951ecf1525e6e8d9447",
+      "0x5282c302e4cf60479f4cf81e0dd00e1aea50588bd7827aaac5e7140116661c12",
+      "0x13bf7ef1ed50b576d77d97e380c97c247cdaeee2c54354caa08f7d8e13989789",
+      "0xd43198f6aff97f7daf6c0c38dbd4c19cbbfd0e74ec90eb90ce77b40a865588b5",
+      "0xf3d2d5b9362edd03f5f1004c94b079ffba4615411b3f11419a6bdc447e415281",
+      "0x59b5a10812bbb86c4c0e65b79d8b0f43519b5f719d3037f1a675d37490223b7b",
+      "0x4778944b269cb4b8e37ac8839be91547cb11ddb28e53fbb7c27d0d7568c35e2c",
+      "0xf4cff671587949ad03b2c07bc596b50237f03d8153c7ba31ccd8054a89ac12c7",
+      "0x453c2bd7da1e7ca974fdf772802cf5ce737cb46166e3c6516337e6b0894e55e9",
+      "0xe84d52f5af35792b20c12e7592bde54a60d3a13a34da482b01464da9ae78ea3d",
+      "0x770b0a0a7cf790c7709f62feb9de3b7379ec18097dccaef6e2acbad4fe999a1e",
+      "0xa2978ec2049a712976a36029513f8e3c8648829f5fdf6f5bcddc1730aa6cf7aa",
+      "0x5d9bfca133d1e43e4e7057bdf60a6359a8c9007d09b2adba0971c222726a1a4c",
+      "0xee253c08975c48e84128b21ae5851ad00610d355339516fd42051e0d139a1983",
+      "0xb6afde0748bb60962130f3c61e3a82df1ee54774b0502824789b07e941dc0791",
+      "0x8ccc373da25b37ea240d10adfd69772889a762cc6aaf5b5f732baad11431dc8b",
+      "0x953e3d00fc63fc3e4d689d746cdbb789480cce4d30b8f3f622c5da5f85382389",
+      "0xd8b91130bfc537a97831e7dbbb18be3b22fbe98f747c585a26de0128592857fc",
+      "0x2abe4410b9f3fc776945c047844084c0d46e0b9818746dc09a2ca9c1de9bf88d",
+      "0x6b1eb80df7189ce10709e57b818bdb67750d5a803e18ff3a98a41de246746a0e",
+      "0xe78bdc3136d3ec738fa161dbeed293c58b409bf1a2d69a86bee1fa4948921d26",
+      "0x5421aa333f6e153905e901dd32347477cddf947e26d34126950270f92a5da025",
+      "0xee006224fb98d7e6165d184d9591ae72fd90db0fdf6f1d2e44a88377fe932936",
+      "0x5da54a01a177944acf1ef2769c73396db6c70fc7f89a9777f7c177fba9229da9",
+      "0xdd5114f843243bd6ff717a4815052f0fb89211e45ed18c7f6f45a79f391169d9",
+      "0xdff36b98317f664a13d8aaaa5086f0a0e463c1e0ede768c94663e2c8a250a9e4",
+      "0x0ba0f75db6bf2f6edb26265b78103f99c561099f9246d19273646497cb6e0762",
+      "0xdf37ef268fdf8d7f31d9741cf5e034cc0b0f4d381c5416f04ecad5883628ab63",
+      "0xf59772f712374496814f9888e3edf9943f95b57c143dcfd9e8abe53eaf8c42ef",
+      "0xb4c992fe61a06856aacbda121620319cd8306582493a3e8e6271145e444025ab",
+      "0x009519941a8071e19dc377f809a62aa46c30e95a5fd5d16f6e1244d4e28a4751",
+      "0x0155b315a8e271d885dc350cc9b6b24f766d53379435c81c3eef751c294cb84c",
+      "0x025815e412e1caca6d1674f34d7cdace744ff4f4ef032b7868f650353a4dacea",
+      "0xa18a2f34bc86b6db008cccd2b2bcc1e6e3217f34538ea5c5f098f9fa7204000d",
+      "0x23be705c5f0f9cd61ce3ef28029d38aa79bc5e8a2c7c082ab756ff1dc794ecf6",
+      "0x05a57d8090fc5db004a386f4be2b7ced03f7a962b5a081463cde91454f3b2581",
+      "0x9b40365ffda466ade19c1772193a8c7802659d2fa0224b284a2fcaeb115ff861",
+      "0x624eeb360a653ae60858a876a1c7e9f153b1346e9c0b1b5c0aed59811fdd6b1b",
+      "0x68a063e40e655356e2f8b779ba812ac350f2e7e6ddae3ce7c30e784cb9450777",
+      "0x6a6e14143d1942faeb1a9cd502852803f097d3fe694c38bd9b0a17bddda6b538",
+      "0x0a72ed22be25e5776c8e4b7873dd8fce60b82f3942cf60c5e81952fe1bae9d1a",
+      "0x86d0c509229cdd7660517a15767c4861f0e61a31ca65472d1ddd498fa8aa360b",
+      "0xb04c15ad234035c4d22f4a4ed8ded1d2ff7c69218776daf3eb72fb0f2b778fdc",
+      "0x3dbfd4917069d96190e763cb1ed329c7454891a0d98f3a433396598b6d2763fe",
+      "0x6296f2d78fb5d9befa93a7c94e612e379392fc64998a4467bcc51cedb3198788",
+      "0x60a2453a692ac4f9aa3c23ac9d3242a9aad6a9b863dee30df37acb4e41711922",
+      "0xdb4dd5e575e79a278038237438dd165d2a60c14f384fc6f29f3c9a91809156f2",
+      "0x75efbfda7b0d6fc72a3154c4fa03c5c2dd3534946ddb0359a7fa7d984b75c6d0",
+      "0x4b8a7a3c7b1e3638456cf0de7ac6aba674479564e9de8a22a80010db5f918e30",
+      "0x93dee7626f8edc846efc43e01e79492004d9a3e651da3e5a822ecf6b05c311e8",
+      "0xcbe6057190da8a0e98f346b434ef4e2d55699a3857a349ea5f2ceb38798f1ffe",
+      "0x710509beda26531372856d297ad087a7b3e92e5b4d58850cec22abe58993e935",
+      "0x7c9925eeb7d50b21ecb067478fb5da53ec7dc62d92525335858cc186803fb7d7",
+      "0x31658b172e269581fd1fb6ec8419c01c960e26586cfd53199071c3895a665745",
+      "0x300169dd6bd14178701c4d1dfcde819ec149f95030d73cb0c006f88e8ded53ce",
+      "0x9b8e013c581bca47e766895bc2f351d582819f1890c94a24223ba28ce498884d",
+      "0x1762612bbc2923450b3db2a2643f973fe3cd84c3f28dc32d4e89e49d0c1fcd3a",
+      "0xc3eb57bb3238c92438e3aa894b3bfe80a9bfc7c081e347b439729689d5b01b50",
+      "0xa1ad7f2136d71e2f6d931f0baf74a0cd38a094238c5fe7e06d8c2c9b0bd25545",
+      "0x86933a8dc6f71a682faa8441ec7b607dad4ab252db670e6a43a3871d0b1b1318",
+      "0x46960721021751d0e4b0794ca97d787593a8bf3551eedfb2c20a69d70b4ca9a6",
+      "0xd783fff5aa530012bc180521f1afc849e8ae039fd8bd2561d6887f03e82e0636",
+      "0x7b0fb6d89069ba01879d400aeb2ddcba0519006c6115ba33371ab0ae726b7033",
+      "0x9d9d82c9b1de151a50b69654939ae41657a84fe2a029ee4e295bdb17548d8985",
+      "0x80c640e612118fb62e1d865f3b3dea0ac07aad979f550060ce3a84166c0db9f3",
+      "0x56ad8531e85171cb20ba46a496998daf3948380cc3d14d481e41672801885f8c",
+      "0xde74177926263541a1b89b1888501157b79a0b713d3ad131f49a8771b43e6ee0",
+      "0xabf64293b7b2f4cbcb43283543bf453a49fe36b344b3117c4f4871adc0280f93",
+      "0xf11f921ce6e83fa7ebb980320d0b8315f0e2bff5129f5d9b5ef4c9a1f7b0d966",
+      "0x3d4bc7b80211a19533ca40e8da22d5b431b455e52cfe751373d748e31b73032c",
+      "0x54160fc962fd9566365b7fd65af0d453f21dddb063a72808c81913805556bc63",
+      "0x995724315d9207856a688f6b293369256944eff6e4400f958c9a0606e9ed3156",
+      "0x0d6562cca6dbb3d8a4c5151855ca3353a36b8af744fa3b66fac40f7cff4ffb28",
+      "0x4a9a5d8d80e13a540922c4aca9ba1f48d566cc1b1307615027fd0656a4ec55af",
+      "0xc74c6e4b4d00b3332e75247e8d6b7edd6760e7c6d7d35356ef38654c1e5e4869",
+      "0x55ec5e10ee1772829a13b98a9fb1cef30fd37ff52c848f0548d3b40e4146648c",
+      "0xbbcc854d75c865ee40e302dbb9e5af155f4a9bd53ec667b9ce99cf82b34e74cd",
+      "0x6ea62ad36a094ece33967d152f414b05af3ff62fd9b5138d745e2b6cccc9fed9",
+      "0xf4a432430324875717a0359fd771e0501558f0bae50abbbe2e87dbc0e8971114",
+      "0x79f2fc1e18c03d16d66eb02ab6a597407049ba1d87321ee4d66fefd74253e512",
+      "0xc61353094ff4d16e53ddf918dad87eabd4d4caa93d311b819b9cf0010724edec",
+      "0xfe6652d192438828e17f6d911bbad208f5d96fd132dbf2804b6d11b4cf43c216",
+      "0xf1234785a7c9cbd6312ed7710e9c0dc7d5509ad43bc583869d1a81a7a76c6641",
+      "0xd558bc3397c774d3b97acc7ce590b521c88aaea4f92599055f9224722bb64b40",
+      "0x1557b8963e365a2f79f9cc6a91c07434e74efe6af4607d5e58806b82805bc682",
+      "0x2a7de543f49419242328eea029aa0b37eb6daa1a451595a35001f6d93604a11a",
+      "0x1904b24e719193c1e0156daed9c55ecfcd024044c8981f175b4bee26820ed4b8",
+      "0x446c46bf4e175087bc9a6666aab1d35d10add16c20a3de39cb0082e964b9b072",
+      "0xc76242ce278a99a34a3f914811143cce10836314c580407b9d38b3663d232a7e",
+      "0x6ba1c7849d6c0e4ecb0be468981dc34dc35411125bc5a3d63c297928cc5465b6",
+      "0x0af8b989a6086986a3b474eae7c9501fc45d6fbfe82712c5ad9bae88b9806ad3",
+      "0xc0a7e797c052e91170dbba3f2e0b12a470d904da9524773c260208652b4f3cc1",
+      "0xbf73c3475533dbe9c141d7d849b0c072a6ec3e9a5466a4aab4c6030f8d0c5bfc",
+      "0x0e8a40b3d38f459e9effca17f899b046e251de3e7a18543b135bba9fa03c54b3",
+      "0xe40bc0785d6f5d1c6bb20471fc925d522c4b685d4a202708beb8ec2883c26f6f",
+      "0x7b2650e65becc705f3779afa3529f9e42a495497315f78f667c8ae20b95bdde8",
+      "0x28b3a1fa04aa343dc587add98ba7ea60fbe0945b4f93ad11e1c579837ed19fdd",
+      "0xbf3fe2cb7a485384c842ec7c25cdc83f4a129b08a10624d4f3f8f239370add44",
+      "0x62378a4f8f574e2721c4eeecd5913ccf81694ef3259d2ab346ad869135691d22",
+      "0x3c00dc649326820c6151a11dbdd60e3ea4bdec0c04dc2322c40adac726889156",
+      "0x336f058c796073bf0e39558a0685668879191306a4b00507ca9a7be9427b5c05",
+      "0x6fcfa221591c4828248054e0057598b79ad28d4e40a7c787f82aec83a3ed758a",
+      "0xa6c7214ce1f7e80d9d2f8443d36d09c02b0fff585cd528df06dc1dd46b65e3a5",
+      "0xf93d17aa1729f8bd7f0064eaa2b1788a5acfe46da4c8f8d292c3fd02abf10f89",
+      "0xb757344520d590964a4f1c71850aa8c5b6277a5fc7e2622ae0c36899659be0d2",
+      "0xa9c7dbeb232ae6f6a6b32248ea616eff86b39c0e7da46c280c3ebe693d4b5c82",
+      "0x0188520f26bd16ac14664dafa5b3fe69afb7b8db79f395cb4ccae154c79d6665",
+      "0x69cbd874cded82c0c8117a024f3012b91c7fad77dba06f835c41345bb100b2cf",
+      "0x818edac34bcbb5c2c4e7852419b5b34990620232b4e14a11b9eec4f3b5f8b6aa",
+      "0x22ff5402838fdc03c2296d58586984e3d34877f7a858be8c3c1fae8d0c2300b3",
+      "0xa3c23954e33b69e13b3ffd8d4ec8e8b06ba12ac851d1972dfbb15a4796fb3c9a",
+      "0x11a3baa5d024f66b5261db93a449c1f6798356d87601d51268b6301020ce91ab",
+      "0x0de74eb56125ca52de7289015207269d221942f0b84c7e729c33067ce27b4335",
+      "0xc551cb85171bfbd66dcfaae9d5c14b08dfa5227ca5ba5e80618ed79175fb2c5a",
+      "0x7ae81a1b9216bde3fcd6462974d0466e0b9459eb6f22e02c8b81d0b7eda86872",
+      "0x9b18a55a59e73289a698300fe888fadf1914a4fa3c4cc3eb8964f81afb03e1ac",
+      "0x721b1975304861b0e36d77a1c4db62254c0d8a5a5e52664242d71ffbf3719349",
+      "0xdc1c99dc4f4341f637dc42f1fa6545a5a44c906d1dc716338c776400d4d191e9",
+      "0xdbe30482eb3d3fc058c8f24bdc4d8c43a835cfa3ef48cbbbd1dc5d599aee5128",
+      "0xa81520f3bf17f3986aea4c725cc4a1b594b0226f3ade2e2c48dfac249d920d85",
+      "0xdb731c49b2aae2c5ebee6ff76199ab26e7957e15074100bdb91eb17439373073",
+      "0x9d3babd4502f8cde2f7028e00fb836f8f4389dabb5fd7b0f2fb4b3ea89f0648e",
+      "0xfce85ae2e5d710111e2d8b221be31526a6fc208d5f7da3d8d74c8f3c36fcab06",
+      "0x7315cf32e73d622852b2d7f8c8d47d70c3ec9eb498d401411c084ced68991e86",
+      "0x910132167fe7e8aff2efa095537678569c7b56e80be8501ab17897daaffda923",
+      "0x40d5772909a98248588be4488bbdaeee4767ec148f1060db28f7025f949b2262",
+      "0x722b4f05215d1dfeb0b85e26a64abb4343ab18dc2ce47509e5a4e9c1c37a2d78",
+      "0xb89c18edff7b5feffadc8d670c6d00bff54ff985bede51b70eb2d2fb9bedad0a",
+      "0x1236f6f639646c0aaee50f84e06df89337aa98c774f352be3a03347583fb0fd2",
+      "0xb4cd902e37f23bafa7c34afe28e15869676d26c7fe7b3876bf45e1ef98ff01fa",
+      "0xb446330ac18572b008a168d7ff2c6252740ed39a3908539ac4abd91b1094fa1d",
+      "0x8aa67a5f8a689540be40ea609404f8050364fc18c98e662cb89aa90f243193bc",
+      "0x303263de29b998cdb8da00dc3bdb387c85411416948bb9377834329c66aad569",
+      "0x155010a88b7a7a84ce1092268f875df79ee97d663e58b3555c778f1a62c9e3b1",
+      "0x563ea7ee1a6079f3d2b556c8234bf33cd29eb263fd3e92843eead80883f8c0c0"
+    ],
+    "withdrawals": [
+      {
+        "index": "0x8b0302b",
+        "validatorIndex": "0x102beb",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4ab4a"
+      },
+      {
+        "index": "0x8b0302c",
+        "validatorIndex": "0x102bec",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0x3f8539a"
+      },
+      {
+        "index": "0x8b0302d",
+        "validatorIndex": "0x102bed",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4cbc1"
+      },
+      {
+        "index": "0x8b0302e",
+        "validatorIndex": "0x102bee",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4bc2a"
+      },
+      {
+        "index": "0x8b0302f",
+        "validatorIndex": "0x102bef",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd474bf"
+      },
+      {
+        "index": "0x8b03030",
+        "validatorIndex": "0x102bf0",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd47b80"
+      },
+      {
+        "index": "0x8b03031",
+        "validatorIndex": "0x102bf1",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd48b47"
+      },
+      {
+        "index": "0x8b03032",
+        "validatorIndex": "0x102bf2",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd48d15"
+      },
+      {
+        "index": "0x8b03033",
+        "validatorIndex": "0x102bf3",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd474fb"
+      },
+      {
+        "index": "0x8b03034",
+        "validatorIndex": "0x102bf4",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd474d5"
+      },
+      {
+        "index": "0x8b03035",
+        "validatorIndex": "0x102bf5",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4839f"
+      },
+      {
+        "index": "0x8b03036",
+        "validatorIndex": "0x102bf6",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd49b81"
+      },
+      {
+        "index": "0x8b03037",
+        "validatorIndex": "0x102bf7",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd45d34"
+      },
+      {
+        "index": "0x8b03038",
+        "validatorIndex": "0x102bf8",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd48b49"
+      },
+      {
+        "index": "0x8b03039",
+        "validatorIndex": "0x102bf9",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4b372"
+      },
+      {
+        "index": "0x8b0303a",
+        "validatorIndex": "0x102bfa",
+        "address": "0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f",
+        "amount": "0xd4b453"
+      }
+    ]
+  },
+  "gasPriceObservedWei": "200828488",
+  "quoteGasPriceWei": 0,
+  "dependencies": {
+    "service": {
+      "address": "0xCACBd874e24B533935176154E990Bf710F56693A",
+      "bytes": 6454,
+      "keccak256": "0x0927eea39fd413d3dfc31ee90e9a7bbac0e42a05b4f1e6a12265b33993e4cf61",
+      "reads": {
+        "requestFee()(uint256)": "0"
+      },
+      "sourceVerification": {
+        "status": "UNAVAILABLE",
+        "error": "HTTP Error 404: Not Found"
+      }
+    },
+    "notifier": {
+      "address": "0x612dF3a344990F8E53499ec1bC79Be63cFa496D0",
+      "bytes": 647,
+      "keccak256": "0xa197d2e99ac9aa46f3a88264781298e555c3a278743e35faa5e4bd9cad94890e",
+      "reads": {},
+      "sourceVerification": {
+        "status": "UNAVAILABLE",
+        "error": "HTTP Error 404: Not Found"
+      }
+    },
+    "buyback": {
+      "address": "0xaba91665cdf921F0f6B33A099337336B324c9793",
+      "bytes": 5338,
+      "keccak256": "0x737443521545e909ffbc5230391350d3c1580faf3b41fe30f6bfc26bfe3a20de",
+      "reads": {},
+      "sourceVerification": {
+        "status": "UNAVAILABLE",
+        "error": "HTTP Error 404: Not Found"
+      }
+    },
+    "floorOracle": {
+      "address": "0xaA4D9009a4664604b57644bF13e447E9036727DC",
+      "bytes": 8869,
+      "keccak256": "0x40015cdaf49cd320858b3182df9e50a89b7758f2a861d928c002c835a736d534",
+      "reads": {},
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.26+commit.8a97fa7a",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "cancun",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "solady-0.1.26/=lib/solady-0.1.26/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "CollectionFloorOracle",
+          "fullyQualifiedName": "src/FWAV2/CollectionFloorOracle.sol:CollectionFloorOracle"
+        },
+        "deployment": {
+          "transactionHash": "0x6776af1e7c9c0bec23d0ae4a989bcb77f464ebacac0e0ba60ab646ca9b6dd516",
+          "blockNumber": "25944565",
+          "transactionIndex": "136",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "48513809",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-09-10T08:12:26Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0xaA4D9009a4664604b57644bF13e447E9036727DC",
+        "url": "https://sourcify.dev/server/v2/contract/1/0xaA4D9009a4664604b57644bF13e447E9036727DC?fields=abi,compilation,deployment"
+      }
+    },
+    "pool": {
+      "address": "0x958C41181182e76F221331b2755b77D9e1426A98",
+      "bytes": 24390,
+      "keccak256": "0xaa6ab920a786de0480fe557a7e074ff86cae3e79cb26a9553e4e04e6da37e6a9",
+      "reads": {
+        "floorOracle()(address)": "0xaA4D9009a4664604b57644bF13e447E9036727DC",
+        "fwairLaunchRegistry()(address)": "0xD09c161c0972cbCaE8D6A68Da6a446025EB03351",
+        "rewards()(address)": "0xA54b44C7a894AA19C49734A753D01f9B8C5f6516",
+        "token()(address)": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+        "quoteAcquisitionPrice()(uint256,uint256,uint256)": "76489597901739825 [7.648e16]\n0\n76489597901739825 [7.648e16]",
+        "vrfCoordinatorAndSubId()(address,uint256)": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a\n105635216111862975908859364934260387362758947578681163548045548039867846446581 [1.056e77]",
+        "vrfRequestConfig()(bytes32,uint32)": "0x8077df514608a09f83e4e8d300645594e5d7234665448ba83f51a50f842bd3d9\n900000 [9e5]",
+        "callbackGasLimit()(uint32)": "900000 [9e5]",
+        "vrfServiceFee()(uint256)": "0",
+        "settlementWindow()(uint256)": "3600",
+        "finalizeWindow()(uint256)": "3600",
+        "selectionTimeoutBlocks()(uint256)": "30",
+        "selectionSlippageBps()(uint256)": "1000",
+        "activeListingCount()(uint256)": "3267",
+        "weightedBackingTotal()(uint256)": "3266999999999999999827660986732397965596 [3.266e39]",
+        "ownerAcquisitionFeeBps()(uint256)": "100",
+        "ownerSettlementFeeBps()(uint256)": "100",
+        "settlementDiscountBps()(uint256)": "9000",
+        "retainedToProtocol()(bool)": "true",
+        "pendingAcquisitionCount()(uint256)": "0",
+        "unsettledAcquisitionCount()(uint256)": "5",
+        "nextSequenceToProcess()(uint64)": "71332 [7.133e4]",
+        "lastIssuedSequence()(uint64)": "71336 [7.133e4]",
+        "isPurchaseBlackout()(bool)": "false"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.26+commit.8a97fa7a",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "cancun",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "solady-0.1.26/=lib/solady-0.1.26/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "FWAV2",
+          "fullyQualifiedName": "src/FWAV2/FWAV2.sol:FWAV2"
+        },
+        "deployment": {
+          "transactionHash": "0xad4616fe5122d17a3589fc7a565c9d8c8102a38d3e25cf8a326fcfcbd2deacfd",
+          "blockNumber": "25944609",
+          "transactionIndex": "44",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "48402322",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-09-10T04:43:43Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0x958C41181182e76F221331b2755b77D9e1426A98",
+        "url": "https://sourcify.dev/server/v2/contract/1/0x958C41181182e76F221331b2755b77D9e1426A98?fields=abi,compilation,deployment"
+      }
+    },
+    "rewards": {
+      "address": "0xA54b44C7a894AA19C49734A753D01f9B8C5f6516",
+      "bytes": 11751,
+      "keccak256": "0x012b8333aece62d007805524590c3de8e5e69394b4ae4305b85fe797a294ee91",
+      "reads": {
+        "fwa()(address)": "0x958C41181182e76F221331b2755b77D9e1426A98",
+        "token()(address)": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+        "tokenPoolManager()(address)": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "tokenHook()(address)": "0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444",
+        "builderRewardBps()(uint256)": "1500",
+        "tokenBuyAllowanceTotal()(uint256)": "244234113601246853 [2.442e17]",
+        "currentEpoch()(uint64)": "21",
+        "buyback()(address)": "0xaba91665cdf921F0f6B33A099337336B324c9793"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.26+commit.8a97fa7a",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "cancun",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "solady-0.1.26/=lib/solady-0.1.26/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "FWAV2Rewards",
+          "fullyQualifiedName": "src/FWAV2/FWAV2Rewards.sol:FWAV2Rewards"
+        },
+        "deployment": {
+          "transactionHash": "0xcf4e87223021b01c643a5e89a478f2e56aa0fe5c9ec3100cd9a9abe0d61d4289",
+          "blockNumber": "25944614",
+          "transactionIndex": "137",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "49054097",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-09-11T04:33:57Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0xA54b44C7a894AA19C49734A753D01f9B8C5f6516",
+        "url": "https://sourcify.dev/server/v2/contract/1/0xA54b44C7a894AA19C49734A753D01f9B8C5f6516?fields=abi,compilation,deployment"
+      }
+    },
+    "token": {
+      "address": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+      "bytes": 11394,
+      "keccak256": "0xd07b0280e4e25689956cff42290d843739714308e6fbe693017cede05c2c52fd",
+      "reads": {
+        "symbol()(string)": "\"FWA\"",
+        "decimals()(uint8)": "18",
+        "permit2()(address)": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+        "poolManager()(address)": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "hook()(address)": "0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444",
+        "pool()(address)": "0x6a1a1C0CfB3D3C538e13D36d608a5bcaa992fc78",
+        "launched()(bool)": "true",
+        "isDistributor(helper)": "true",
+        "isDistributor(rewards)": "true",
+        "isDistributor(poolManager)": "true"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.30+commit.73712a01",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "prague",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "FWAToken",
+          "fullyQualifiedName": "src/FWAToken.sol:FWAToken"
+        },
+        "deployment": {
+          "transactionHash": "0xac73f35b13ce6b80d517a1801d8b96ad92a1142f11555eed09da88106a85d178",
+          "blockNumber": "25546793",
+          "transactionIndex": "146",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "42878662",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-07-26T02:46:02Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+        "url": "https://sourcify.dev/server/v2/contract/1/0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845?fields=abi,compilation,deployment"
+      }
+    },
+    "helper": {
+      "address": "0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B",
+      "bytes": 3778,
+      "keccak256": "0xfa15fdd90dc7d1fca0896bb6800d6ae75718369e621fe65a2c652cb812ac9f60",
+      "reads": {
+        "token()(address)": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+        "permit2()(address)": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+        "depositsPaused()(bool)": "false",
+        "totalEscrowed()(uint256)": "17048725161196257819237 [1.704e22]"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.26+commit.8a97fa7a",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "cancun",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "FWATokenTransfer",
+          "fullyQualifiedName": "src/FWATokenTransfer.sol:FWATokenTransfer"
+        },
+        "deployment": {
+          "transactionHash": "0x335a3210381fea31a45164292e3334111524af3e98c98246c587e5f7d2511c30",
+          "blockNumber": "25805935",
+          "transactionIndex": "35",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "44942160",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-08-21T22:10:53Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B",
+        "url": "https://sourcify.dev/server/v2/contract/1/0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B?fields=abi,compilation,deployment"
+      }
+    },
+    "permit2": {
+      "address": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "bytes": 9152,
+      "keccak256": "0xc67d1657868aa5146eaf24fb879fb1fdec3d2d493b3683a61c9c2f4fb2851131",
+      "reads": {},
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.17+commit.8df45f5f",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "bytecodeHash": "none"
+            },
+            "libraries": {},
+            "optimizer": {
+              "runs": 1000000,
+              "enabled": true
+            },
+            "evmVersion": "london",
+            "remappings": [
+              ":ds-test/=lib/forge-std/lib/ds-test/src/",
+              ":forge-gas-snapshot/=lib/forge-gas-snapshot/src/",
+              ":forge-std/=lib/forge-std/src/",
+              ":openzeppelin-contracts/=lib/openzeppelin-contracts/",
+              ":solmate/=lib/solmate/"
+            ]
+          },
+          "name": "Permit2",
+          "fullyQualifiedName": "src/Permit2.sol:Permit2"
+        },
+        "deployment": {
+          "transactionHash": "0xf2f1fe96c16ee674bb7fcee166be52465a418927d124f5f1d231b36eae65d377",
+          "blockNumber": "15986406",
+          "transactionIndex": "6",
+          "deployer": "0xD32Ff78579352cA78f416120A9f68b65c410871b"
+        },
+        "matchId": "470861",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2024-08-08T11:26:06Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+        "url": "https://sourcify.dev/server/v2/contract/1/0x000000000022D473030F116dDEE9F6B43aC78BA3?fields=abi,compilation,deployment"
+      }
+    },
+    "hook": {
+      "address": "0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444",
+      "bytes": 7072,
+      "keccak256": "0x5eeafce23c30462750069d6313286eca9587da8ecffdff880288d31b75d41df0",
+      "reads": {
+        "token()(address)": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+        "poolManager()(address)": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "externalBuysEnabled()(bool)": "true"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.30+commit.73712a01",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "appendCBOR": false,
+              "bytecodeHash": "none",
+              "useLiteralContent": false
+            },
+            "optimizer": {
+              "runs": 1,
+              "enabled": true
+            },
+            "evmVersion": "prague",
+            "remappings": [
+              "solady/=lib/solady/",
+              "forge-std/=lib/forge-std/src/",
+              "@chainlink/contracts/=lib/chainlink-evm/contracts/",
+              "@uniswap/v4-core/=lib/v4-core/",
+              "@uniswap/v4-periphery/=lib/v4-periphery/",
+              "project/=/",
+              "@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              "@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              "chainlink-evm/=lib/chainlink-evm/",
+              "ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              "erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              "forge-gas-snapshot/=lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/src/",
+              "hardhat/=lib/v4-core/node_modules/hardhat/",
+              "openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              "permit2/=lib/v4-periphery/lib/permit2/",
+              "solmate/=lib/v4-core/lib/solmate/",
+              "v4-core/=lib/v4-core/src/",
+              "v4-periphery/=lib/v4-periphery/"
+            ]
+          },
+          "name": "FWATokenHook",
+          "fullyQualifiedName": "src/FWATokenHook.sol:FWATokenHook"
+        },
+        "deployment": {
+          "transactionHash": "0x56d1d67782ca72336fab33920c6f123481d29c9ea17aac59344b3465d866f2b8",
+          "blockNumber": "25546793",
+          "transactionIndex": "101",
+          "deployer": "0x019817aD02a31B990433542097bE29D97613E8Cb"
+        },
+        "matchId": "42878663",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2026-07-26T02:46:02Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444",
+        "url": "https://sourcify.dev/server/v2/contract/1/0x2C67ebA8A50AF0dB5Fba55F725247a75CbDA6444?fields=abi,compilation,deployment"
+      }
+    },
+    "poolManager": {
+      "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "bytes": 24009,
+      "keccak256": "0x785f1014552b7ce7d5fb7d0c970ca60edee94fd00425d7ca21609acac7ce1293",
+      "reads": {},
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.26+commit.8a97fa7a",
+          "compilerSettings": {
+            "viaIR": true,
+            "metadata": {
+              "bytecodeHash": "none"
+            },
+            "libraries": {},
+            "optimizer": {
+              "runs": 44444444,
+              "enabled": true
+            },
+            "evmVersion": "cancun",
+            "remappings": [
+              ":@ensdomains/=lib/v4-core/node_modules/@ensdomains/",
+              ":@openzeppelin/=lib/v4-core/lib/openzeppelin-contracts/",
+              ":@openzeppelin/contracts/=lib/v4-core/lib/openzeppelin-contracts/contracts/",
+              ":@uniswap/v4-core/=lib/v4-core/",
+              ":ds-test/=lib/v4-core/lib/forge-std/lib/ds-test/src/",
+              ":erc4626-tests/=lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests/",
+              ":forge-gas-snapshot/=lib/forge-gas-snapshot/src/",
+              ":forge-std/=lib/v4-core/lib/forge-std/src/",
+              ":hardhat/=lib/v4-core/node_modules/hardhat/",
+              ":openzeppelin-contracts/=lib/v4-core/lib/openzeppelin-contracts/",
+              ":permit2/=lib/permit2/",
+              ":solmate/=lib/v4-core/lib/solmate/",
+              ":v4-core/=lib/v4-core/src/"
+            ]
+          },
+          "name": "PoolManager",
+          "fullyQualifiedName": "lib/v4-core/src/PoolManager.sol:PoolManager"
+        },
+        "deployment": {
+          "transactionHash": "0x747e0e02b7590eed32cface28e83260884e0b80675f5ae223c6888053aa68528",
+          "blockNumber": "21688329",
+          "transactionIndex": "175",
+          "deployer": "0x6B93E3bB9C0780C0f9042346Ffc379530a5882c1"
+        },
+        "matchId": "6376919",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2025-05-22T08:41:50Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        "url": "https://sourcify.dev/server/v2/contract/1/0x000000000004444c5dc75cB358380D2e3dE08A90?fields=abi,compilation,deployment"
+      }
+    },
+    "coordinator": {
+      "address": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
+      "bytes": 24094,
+      "keccak256": "0xbe4ae0321fb1c74c80eea0c14c9c7b28c69ce17df15222e27b1e934cc98f5f61",
+      "reads": {
+        "s_config()(uint16,uint32,bool,uint32,uint32,uint32,uint32,uint8,uint8)": "3\n2500000 [2.5e6]\nfalse\n172800 [1.728e5]\n38900 [3.89e4]\n0\n0\n24\n20"
+      },
+      "sourceVerification": {
+        "compilation": {
+          "language": "Solidity",
+          "compiler": "solc",
+          "compilerVersion": "0.8.19+commit.7dd6d404",
+          "compilerSettings": {
+            "metadata": {
+              "bytecodeHash": "none"
+            },
+            "libraries": {},
+            "optimizer": {
+              "runs": 500,
+              "enabled": true
+            },
+            "evmVersion": "paris",
+            "remappings": [
+              ":#@openzeppelin/=node_modules/@openzeppelin/",
+              ":@eth-optimism/=node_modules/@eth-optimism/",
+              ":@openzeppelin/=src/v0.8/vendor/openzeppelin-solidity/v4.9.3/",
+              ":@scroll-tech/=node_modules/@scroll-tech/",
+              ":ds-test/=foundry-lib/forge-std/lib/ds-test/src/",
+              ":forge-std/=foundry-lib/forge-std/src/",
+              ":hardhat/=node_modules/hardhat/"
+            ]
+          },
+          "name": "VRFCoordinatorV2_5",
+          "fullyQualifiedName": "src/v0.8/vrf/dev/VRFCoordinatorV2_5.sol:VRFCoordinatorV2_5"
+        },
+        "deployment": {
+          "transactionHash": "0xd9dc6740988773e29bdd49cf9b9e5a84024affe8225b3b0237d02ec05e2d4ec7",
+          "blockNumber": "19584854",
+          "transactionIndex": "0",
+          "deployer": "0xeFF41C8725be95e66F6B10489B6bF34b08055853"
+        },
+        "matchId": "2586839",
+        "creationMatch": "match",
+        "runtimeMatch": "match",
+        "verifiedAt": "2024-08-08T15:53:38Z",
+        "match": "match",
+        "chainId": "1",
+        "address": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
+        "url": "https://sourcify.dev/server/v2/contract/1/0xD7f86b4b8Cae7D942340FF628F82735b7a20893a?fields=abi,compilation,deployment"
+      }
+    }
+  },
+  "quoteAt1Gwei": "76489597901739825 [7.648e16]\n1040000000000000 [1.04e15]\n77529597901739825 [7.752e16]",
+  "mainnet200GweiKey": "true\n200000000000 [2e11]",
+  "gasPriceReadAtUTC": "2026-10-08T04:53:44.116207+00:00",
+  "gasPriceScope": "latest RPC estimate at capture; all contract reads/code are at the pinned block; quoteAt1Gwei uses explicit legacy tx.gasprice"
+}

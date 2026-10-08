@@ -1,11 +1,91 @@
 {
+  "reviewedCommit": "b06997d42012b7ad7ffe943b3acdd816b2092c4e",
+  "changesSinceReviewedCommitAtStart": 0,
   "compiler": "0.8.26",
-  "foundry": "1.8.3",
-  "forgeBuild": "passed",
-  "forgeTest": {"passed": 40, "failed": 0, "skipped": 0, "fuzzTests": 3, "runsPerFuzzTest": 256},
-  "forgeFmtCheck": "passed",
-  "separateSepoliaForkChecks": {"block": 11866914, "passed": 2, "failed": 0, "purpose": "read-only wiring and explicit current-builder incompatibility"},
-  "deployment": "not performed",
-  "independentSecurityAudit": "not performed",
-  "notes": "Local checks are evidence only, not independent verification or a security audit. Public FWA Sepolia dependencies do not implement the current documented builder flow; sales cannot be enabled against them."
+  "forge": "1.8.5",
+  "build": "PASSED",
+  "fmtCheck": "PASSED",
+  "offline": {
+    "passed": 65,
+    "failed": 0,
+    "skipped": 0,
+    "testFunctions": 64,
+    "invariantProperties": 6,
+    "invariantReporting": "Forge 1.8.5 groups six invariant functions into one run",
+    "invariantRuns": 256,
+    "invariantDepth": 64
+  },
+  "mainnetFork": {
+    "chainId": 1,
+    "block": 26145236,
+    "blockHash": "0xf7795aa3ff4975e1f907099acb0bdbefcead6ee7d85b0cca23584ce0704de179",
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "externalBytecode": "unchanged",
+    "callbacks": "test-only coordinator impersonation for both FWA and lottery; no proofs/billing",
+    "walletFunding": "vm.deal fork-only",
+    "subscription": "created/funded/consumer registered on fork only",
+    "protocolOwnerSimulation": "only rate-change and drift-policy fault tests",
+    "oracleCoverage": "SIMULATED, NOT LIVE"
+  },
+  "sepoliaFork": {
+    "block": 11866914,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "coverage": "2 historical FWA compatibility reads + 1 actual coordinator constructor rehearsal; no live VRF"
+  },
+  "emptyChainConstructor": {
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "meaning": "expected MissingCoordinatorCode asserted, no dependency mocking"
+  },
+  "privateIMDGate": {
+    "lastPublicStatus": "FAILED",
+    "rerun": "NOT RUN; private harness unavailable",
+    "confirmedPrivateRootCause": null,
+    "publicReproduction": "empty chain has no coordinator code; unresolved factory/router code is separately diagnosed"
+  },
+  "realSepoliaVRF": "NOT RUN: requires requester-owned funded subscription and authorized test deployment",
+  "broadcasts": 0,
+  "publicSalesEnabled": false,
+  "independentAudit": "NOT RUN",
+  "slither": "NOT RUN",
+  "mythril": "NOT RUN",
+  "buildConfigurationChanged": false,
+  "gitCommit": "not created: user prohibits touching .git; workspace deliverable only",
+  "gasScaling": {
+    "command": "forge test --match-test testLargeSalesConstantFinalizationAndPartialLargeInventory -vv --gas-report",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "tickets": 2000,
+    "inventory": 104,
+    "drawFinalizeMeasuredGas": 138634,
+    "tieFinalizeMeasuredGas": 224049,
+    "buy100MaximumReportedGas": 5351848,
+    "acquire8MaximumMockReportedGas": 1593767,
+    "claimAssetIndex103ReportedGas": 108844,
+    "limits": "mock scaling fixture; multiple transactions, not a single block; not a mainnet gas quote"
+  },
+  "bytecodeSizes": {
+    "Sorphera": {
+      "runtimeBytes": 21485,
+      "initBytesWithoutArgs": 22054
+    },
+    "SorpheraRouter": {
+      "runtimeBytes": 8424,
+      "initBytesWithoutArgs": 8648
+    },
+    "SorpheraVaultFactory": {
+      "runtimeBytes": 15710,
+      "initBytesWithoutArgs": 16013
+    },
+    "SorpheraVault": {
+      "runtimeBytes": 12914,
+      "initBytesWithoutArgs": 14000
+    }
+  }
 }

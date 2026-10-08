@@ -1,0 +1,168 @@
+{
+  "id": "99bc23dd-15a8-4a58-9ce8-030ed7074f26",
+  "launchNumber": 961,
+  "kind": "evm_contracts",
+  "status": "parked",
+  "chainId": 11155111,
+  "sourceCommit": "b06997d42012b7ad7ffe943b3acdd816b2092c4e",
+  "parkedReason": "protected_invariants: invariants-11aebc2aca1e: [FAIL: application constructor failed] setUp() (gas: 0); [FAIL: application constructor failed] setUp() (gas: 0)",
+  "policyVersion": 13,
+  "admissionChecks": [
+    {
+      "name": "provenance",
+      "detail": "8 node(s) accepted at b06997d4",
+      "status": "passed"
+    },
+    {
+      "name": "findings",
+      "detail": "8 accepted submission(s), no unresolved blocking findings",
+      "status": "passed"
+    },
+    {
+      "name": "independent_review",
+      "detail": "1 independent review(s)",
+      "status": "passed"
+    },
+    {
+      "name": "bytecode",
+      "detail": "5 contract(s) clean and reproducible",
+      "status": "passed"
+    },
+    {
+      "name": "manifest",
+      "detail": "3 application contracts; no protocol token or pool",
+      "status": "passed"
+    },
+    {
+      "name": "protected_invariants",
+      "detail": "invariants-11aebc2aca1e: [FAIL: application constructor failed] setUp() (gas: 0); [FAIL: application constructor failed] setUp() (gas: 0)",
+      "status": "failed"
+    },
+    {
+      "name": "economics",
+      "detail": "policy explicitly selects no on-chain contributor rewards",
+      "status": "passed"
+    }
+  ],
+  "attestation": {
+    "treeHash": "8571f6f6acbb300bd423ea6703504ee176dec2eb",
+    "verifierVersion": "0.1.0+ad90ce4c",
+    "verifierKey": "68249df1f422fa72f61ca7f0ddaf9b62043959c5c134498441d5e552a9921782",
+    "toolchain": {
+      "solc": "0.8.26",
+      "forge": "forge Version: 1.8.3",
+      "viaIR": true,
+      "optimizer": true,
+      "evmVersion": "cancun",
+      "bytecodeHash": "none",
+      "optimizerRuns": 200
+    },
+    "contracts": [
+      {
+        "name": "Balls",
+        "path": "src/lib/Balls.sol",
+        "abiHash": "518674ab2b227e5f11e9084f615d57663cde47bce1ba168b4c19c7ee22a73d70",
+        "opcodes": {
+          "callcode": false,
+          "delegatecall": false,
+          "selfdestruct": false
+        },
+        "metadataHash": "c3704ad1fbd5fb4c03f1aafa1d5ca8c09fff4e7992faec6e6c2d24a4307bab36",
+        "creationCodeHash": "796634aa970ab164beb2be298b3ab1452786d411f081573a00c42fddcc896c48",
+        "deployedCodeHash": "19735bdf4d52c6f889cfd85f70fad899c9f4372c41ff8aa853bf043831e21b36",
+        "creationCodeBytes": 44,
+        "deployedCodeBytes": 16
+      },
+      {
+        "name": "Sorphera",
+        "path": "src/Sorphera.sol",
+        "abiHash": "871fac43d66f3a7a8c4f8fc5e021be3bd53ccec1fd6539aa0f6241132ceff071",
+        "opcodes": {
+          "callcode": false,
+          "delegatecall": false,
+          "selfdestruct": false
+        },
+        "metadataHash": "1c16a2b15a797781ffcec77bb6fc1a633db9f9d0a448453ba7988dbbca213414",
+        "creationCodeHash": "6b1f5fc1c555ae9c5c591398a216c46fa607cc52f2757ca8ef39b8dc5843ab2c",
+        "deployedCodeHash": "51f5ba3496879d21baa6435b7631e8ce660aa33fb0c69cf8d09185b13d8e6c25",
+        "creationCodeBytes": 18047,
+        "deployedCodeBytes": 17554
+      },
+      {
+        "name": "SorpheraRouter",
+        "path": "src/SorpheraRouter.sol",
+        "abiHash": "f73b63f79ce4e2ca4fe975d94650343be2f967fe0296ec6a3cb68ea03496a2cc",
+        "opcodes": {
+          "callcode": false,
+          "delegatecall": false,
+          "selfdestruct": false
+        },
+        "metadataHash": "2331a858a7c38e9cbd38eb112beb7e95096cacb9423cbb9f3114aac188cce5cf",
+        "creationCodeHash": "04bb6c1c5af683e57ea12f2777ecb0e6285b5221073e048bfac7788f25dd7b14",
+        "deployedCodeHash": "42478d9c34d6a1979bc6f691b6cc1c1f4294a08fc94754cf5ba68819994c1084",
+        "creationCodeBytes": 6978,
+        "deployedCodeBytes": 6781
+      },
+      {
+        "name": "SorpheraVault",
+        "path": "src/SorpheraVault.sol",
+        "abiHash": "47ec08945efbbeb9dd4148e381ea6fe234a80f317d8707109371be2cd1cb2b75",
+        "opcodes": {
+          "callcode": false,
+          "delegatecall": false,
+          "selfdestruct": false
+        },
+        "metadataHash": "4d3cc624cf2c8f5dc771bfbd0eb8ce32364c23241d819e0db28df5e4f13ee1c9",
+        "creationCodeHash": "6e9b0ead75c096f6b6ac8cce0917dd36b2311ee048aa7bba40b914d2b16a2352",
+        "deployedCodeHash": "f9e5d0a784ff733953e38e5d24c8c682cd8700acfad58bc003416e25fe26f9c0",
+        "creationCodeBytes": 14000,
+        "deployedCodeBytes": 12914
+      },
+      {
+        "name": "SorpheraVaultFactory",
+        "path": "src/SorpheraVaultFactory.sol",
+        "abiHash": "34b86809692b8170f29107dda7a7d141a6425d9b695988eb3cb5fa721e7378f8",
+        "opcodes": {
+          "callcode": false,
+          "delegatecall": false,
+          "selfdestruct": false
+        },
+        "metadataHash": "a935615aa1a31068e5170c364dde25eed763aa2a845aabff63c9f68f321c2eec",
+        "creationCodeHash": "8e96e147c667791b3f465ec26a3e1c2d5445a9a79b84f5bd792c56ca8c6060b2",
+        "deployedCodeHash": "608666b4865c8bc8606e1ac728ebf0c04472517062953f89a7482f2a6b99ad94",
+        "creationCodeBytes": 16033,
+        "deployedCodeBytes": 15710
+      }
+    ],
+    "manifest": {
+      "kind": "evm_contracts",
+      "notes": "Sorphera (weekly ETH & NFT lottery ball jackpots, powered by FWA) on Ethereum Sepolia. Three application contracts in constructor dependency order. SorpheraRouter(owner) is the builder router and immediate FWAV2.acquire caller. SorpheraVaultFactory(router, owner) requires the router to have code, so it must follow the router. Sorphera(owner, factory, coordinator) is the lottery; it requires both the factory and the coordinator to have code. The coordinator is Chainlink's verified VRF v2.5 Ethereum Sepolia coordinator from docs.chain.link (see docs/DEPENDENCIES.md), so constructor rehearsal must run against Sepolia chain state; it is not an owner value. $owner is an explicit owner argument on every contract; constructors never assign ownership to msg.sender (the factory) and send no ETH. Per-round purchaser prize vaults (SorpheraVault) are created at runtime by SorpheraVaultFactory and are not launch contracts; their addresses and creation blocks are emitted on-chain. Deployment starts with sales disabled, no FWA pool/helper registered and no VRF subscription configured. After deployment the owner must: bind the factory to the deployed lottery once with setLottery (the factory is deployed first, so this cannot be a constructor argument); register a compatible Sepolia FWA pool and transfer helper with router.configure, which rejects the published Sepolia pool read at block 11866914 because its rewards module lacks builder attribution; configure the company's own funded Chainlink VRF v2.5 subscription with configureRandomness; call validateLaunch; then enable sales. No wallet keys or broadcasts are used by workers.",
+      "contracts": [
+        {
+          "contract": "SorpheraRouter",
+          "constructorArgs": [
+            "$owner"
+          ]
+        },
+        {
+          "contract": "SorpheraVaultFactory",
+          "constructorArgs": [
+            "$contract:SorpheraRouter",
+            "$owner"
+          ]
+        },
+        {
+          "contract": "Sorphera",
+          "constructorArgs": [
+            "$owner",
+            "$contract:SorpheraVaultFactory",
+            "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B"
+          ]
+        }
+      ]
+    },
+    "manifestError": null
+  },
+  "observedAtUTC": "2026-10-08",
+  "source": "https://api.imd.fun/launches/99bc23dd-15a8-4a58-9ce8-030ed7074f26"
+}

@@ -216,14 +216,20 @@ contract SorpheraHandler is Test {
             recordedWord[game][id] = 42;
         } else if (r.status == Sorphera.Status.RandomReady) {
             lottery.finalize(game, id);
-        } else if (uint256(r.status) >= uint256(Sorphera.Status.Won) && id < 4) {
+        } else if (r.status == Sorphera.Status.TieBreakNeeded) {
+            lottery.requestTieBreak(game, id);
+        } else if (r.status == Sorphera.Status.TieBreakRequested) {
+            vrf.fulfill(r.tieBreakRequestId, 777);
+        } else if (r.status == Sorphera.Status.TieBreakReady) {
+            lottery.finalizeTieBreak(game, id);
+        } else if (lottery.isTerminal(r.status) && id < 4) {
             terminalStatus[game][id] = uint256(r.status);
             uint256 nextStart = r.cutoff;
             if (vm.getBlockTimestamp() < nextStart) vm.warp(nextStart);
             lottery.openRound(game);
         }
         r = lottery.getRound(game, id);
-        if (uint256(r.status) >= uint256(Sorphera.Status.Won)) terminalStatus[game][id] = uint256(r.status);
+        if (lottery.isTerminal(r.status)) terminalStatus[game][id] = uint256(r.status);
     }
 
     function claim(uint256 g, uint256 rawRound, uint256 rawTicket, bool wrongCaller) external {
@@ -460,7 +466,7 @@ contract SorpheraInvariantTest is SorpheraFixture {
                     assertEq(terminal, 0);
                     if (r.status == Sorphera.Status.Requested || r.status == Sorphera.Status.RandomReady) {
                         assertGt(r.requestId, 0);
-                        (uint8 boundGame, uint256 boundRound, bool exists) = lottery.requests(r.requestId);
+                        (uint8 boundGame, uint256 boundRound, bool exists,) = lottery.requests(r.requestId);
                         assertTrue(exists && boundGame == game && boundRound == id);
                     }
                 }
@@ -619,6 +625,9 @@ contract SorpheraInvariantTest is SorpheraFixture {
         handler.withdraw(type(uint256).max, false);
         handler.queueTokens(0, 1, 1, 0);
         handler.receiveTokens(0);
+        handler.advance(1, false);
+        handler.advance(1, false);
+        handler.advance(1, false);
         handler.advance(1, false);
         handler.advance(1, false);
         handler.advance(1, false);

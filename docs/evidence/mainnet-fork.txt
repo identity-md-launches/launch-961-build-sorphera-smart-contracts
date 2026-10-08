@@ -1,0 +1,22 @@
+Compiling 1 files with Solc 0.8.26
+Solc 0.8.26 finished in 52.44s
+Compiler run successful!
+
+Ran 11 tests for integration/mainnet/Mainnet.t.sol:SorpheraMainnetForkTest
+[PASS] testRealBuilderRateSnapshotsAtRequest() (gas: 12457166)
+[PASS] testRealDelayedOutOfOrderAllocationProgress() (gas: 14281925)
+[PASS] testRealETHLifecycleBuilderAllowanceAndNextBlockDelivery() (gas: 14162273)
+[PASS] testRealExpiredAcquisitionRefundAndNoBuilderCredit() (gas: 12862778)
+[PASS] testRealMissedETHSettlementWindowRecoversInKind() (gas: 13619076)
+[PASS] testRealNFTLifecycleIndependentTieBreakAndCustody() (gas: 14099613)
+[PASS] testRealNFTSingleWinningTicketSkipsTieRequest() (gas: 13996839)
+[PASS] testRealNoWinnerInventoryRollover() (gas: 16718461)
+[PASS] testRealPurchaserEpochRightsRemainWithVault() (gas: 13733832)
+Logs:
+  purchaser epoch entitlement at pin: 72496539568554303529
+
+[PASS] testRealSlippageRefundAfterEarlierAllocation() (gas: 13191961)
+[PASS] testRealStaleQuoteAndImmediateOverpaymentRefund() (gas: 6365786)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 2.74s (1.53s CPU time)
+
+Ran 1 test suite in 2.77s (2.74s CPU time): 11 tests passed, 0 failed, 0 skipped (11 total tests)

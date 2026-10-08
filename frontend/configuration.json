@@ -1,22 +1,58 @@
 {
-  "chainId": 11155111,
+  "chainId": 1,
   "salesEnabledOnDeployment": false,
-  "numberFormat": {"mainCount": 3, "mainMinimum": 1, "mainMaximum": 20, "distinctMain": true, "unorderedMatching": true, "bonusMinimum": 1, "bonusMaximum": 5},
+  "numberFormat": {
+    "mainCount": 3,
+    "mainMinimum": 1,
+    "mainMaximum": 20,
+    "distinctMain": true,
+    "unorderedMatching": true,
+    "bonusMinimum": 1,
+    "bonusMaximum": 5
+  },
   "defaultTicketPriceWei": "5000000000000000",
   "operatorFeeBps": 1000,
   "salesWindowSeconds": 604800,
-  "games": {"0": "Sorphera ETH Jackpot", "1": "Sorphera NFT Jackpot"},
-  "batches": {"tickets": 100, "acquisitions": 8, "reconciliation": 50, "nftClaims": 20, "rewardEpochs": 32},
+  "games": {
+    "0": "Sorphera ETH Jackpot",
+    "1": "Sorphera NFT Jackpot"
+  },
+  "batches": {
+    "tickets": 100,
+    "acquisitions": 8,
+    "reconciliation": 50,
+    "nftClaims": 20,
+    "rewardEpochs": 32
+  },
   "ownerMustConfigureBeforeActivation": [
     "factorySetLotteryToDeployedSorpheraAddress",
-    "compatibleSepoliaFWAPool",
-    "verifiedSepoliaFWATransferHelper",
+    "verifiedMainnetFWAPool",
+    "verifiedMainnetFWATransferHelper",
     "separateGameFirstCutoffs",
     "eachGameDrawDelayAndSettlementDelay",
     "eachGameMaxAcquisitionFeeMaxTotalMinWeightedValueAndSlippage",
     "companyOwnedFundedLotteryVRFSubscription",
     "verifiedVRFKeyHashConfirmationsCallbackGasAndPaymentCurrency"
   ],
-  "constructorCoordinator": "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B",
-  "configurationStatus": "unset-not-a-deployment-configuration"
+  "constructorCoordinator": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
+  "configurationStatus": "mainnet-preparation-unset-not-deployed",
+  "roundStatuses": {
+    "None": 0,
+    "Sales": 1,
+    "Closed": 2,
+    "Requested": 3,
+    "RandomReady": 4,
+    "Won": 5,
+    "Rolled": 6,
+    "Cancelled": 7,
+    "TieBreakNeeded": 8,
+    "TieBreakRequested": 9,
+    "TieBreakReady": 10
+  },
+  "terminalStatuses": [
+    5,
+    6,
+    7
+  ],
+  "nftTieBreak": "Separate VRF request, one winning ticket, all inventory; no claims before TieBreakResult"
 }

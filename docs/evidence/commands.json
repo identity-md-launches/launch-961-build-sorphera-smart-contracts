@@ -1,0 +1,49 @@
+{
+  "commands": [
+    {
+      "command": "forge build",
+      "result": "PASSED"
+    },
+    {
+      "command": "forge test --summary",
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "forge fmt --check",
+      "result": "PASSED"
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge fmt --check",
+      "result": "PASSED"
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract SorpheraMainnetForkTest --fork-url http://127.0.0.1:8548 --fork-block-number 26145236 -vv -j 1",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract 'SorpheraSepoliaIntegrationTest|ConstructorRehearsalTest' --fork-url https://one.valve.city/rpc/vk_demo/evm/11155111 --fork-block-number 11866914 -vvvv",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract ConstructorRehearsalTest -vvvv",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "forge test --match-test testLargeSalesConstantFinalizationAndPartialLargeInventory -vv --gas-report",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "mainnetCacheCommand": "python3 tools/read-only-rpc.py --upstream https://one.valve.city/rpc/vk_demo/evm/1 --port 8548 --cache /tmp/sorphera-valve.sqlite --interval 0.03",
+  "snapshotCommand": "python3 tools/snapshot-mainnet.py --rpc-url http://127.0.0.1:8548 --block 26145236",
+  "note": "Cache is optional; pass your own archive RPC directly. No dependency downloads required by offline tests."
+}

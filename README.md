@@ -2,9 +2,9 @@
 
 **Weekly ETH & NFT lottery ball jackpots. Powered by FWA.**
 
-Ethereum Sepolia contracts, offline Foundry tests, a separate live-fork compatibility suite, and frontend ABIs. No website, new ERC20, liquidity pool, proxy, key handling, or broadcast.
+Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. No website or new token/pool. No transaction was broadcast and public sales remain disabled.
 
-**Deployment is disabled pending a compatible FWA Sepolia deployment.** Read-only verification at Sepolia block **11,866,914** found that the [published pool](https://www.fwa.fun/docs/v2-sepolia) uses an older rewards integration without builder attribution. Its linked rewards module does not implement `builderRewardBps()`. The [current builder documentation](https://www.fwa.fun/docs/builder-revenue) and [reference implementation](https://github.com/adamlizek/fwa-examples) describe a newer interface. `SorpheraRouter.configure` rejects the published incompatible dependency. Mocks implement the intended newer interface explicitly; they are not substitutes for live validation. Details and raw evidence: [dependency verification](docs/DEPENDENCIES.md).
+Launch **961 remains parked on Sepolia**; this source continuation does not redeploy or retarget it. Mainnet dependencies are recorded at block **26,145,236**. See [mainnet evidence](docs/MAINNET.md), [constructor investigation](docs/REHEARSAL.md), [deployment preparation](docs/DEPLOYMENT.md), and [test report](docs/TESTING.md). Company owner/treasury, subscription and launch schedule remain explicit inputs; undeployed addresses are null.
 
 ## Build and check
 
@@ -17,15 +17,16 @@ forge fmt --check
 python3 tools/export.py
 ```
 
-The ordinary suite needs no network, environment variables, wallet, or RPC. It uses reproducible named mocks. Run real-dependency read checks separately:
+The ordinary suite needs no network, environment variables, wallet or RPC. Mock simulation uses a separately named test subclass on chain 31337; production validates chain/coordinator/key bindings. The integration profile must be filtered by chain:
 
 ```sh
-FOUNDRY_PROFILE=integration forge test \
-  --fork-url YOUR_SEPOLIA_RPC_URL \
-  --fork-block-number 11866914
+FOUNDRY_PROFILE=integration forge test --match-contract SorpheraMainnetForkTest \
+  --fork-url "$MAINNET_ARCHIVE_RPC" --fork-block-number 26145236 -vv -j 1
+FOUNDRY_PROFILE=integration forge test --match-contract SorpheraSepoliaIntegrationTest \
+  --fork-url "$SEPOLIA_ARCHIVE_RPC" --fork-block-number 11866914
 ```
 
-This pinned fork suite confirms wiring, quote/window reads, and the known incompatible builder ABI. It does **not** establish a working end-to-end FWA purchase or production VRF delivery. Revalidate a proposed replacement deployment and its verified source before activation. No live transactions were made.
+Mainnet tests use deployed FWA code unchanged and explicitly simulate oracle fulfillment on the fork. They do not prove live VRF proofs/billing. Published Sepolia FWA still represents the historical incompatible builder version, not a production alternative.
 
 ## Contracts
 
@@ -51,7 +52,7 @@ At cutoff the vault stops acquiring and exports unused budget and actual recover
 | Outcome | ETH jackpot | NFT jackpot |
 | --- | --- | --- |
 | One exact match | That ticket claims the entire ETH prize | That ticket claims all inventory and incidental ETH |
-| Multiple exact matches | Equal ETH amount per matching ticket, including duplicates | One matching ticket selected uniformly by a separate stream of the same verified round randomness wins everything |
+| Multiple exact matches | Equal ETH amount per matching ticket, including duplicates | A separate VRF request uniformly selects ONE matching ticket for all inventory; fees and claims wait for that result |
 | No exact match | ETH carries to the next round; old tickets expire | Inventory and residual funds carry to the next round; old tickets expire |
 | Zero tickets | No VRF request; carryover retained | No VRF request; carryover retained |
 
@@ -67,18 +68,18 @@ External FWA timeout settlements can defeat the desired asset choice. These exce
 
 ## After launch
 
-`launch.json` defines three factory-deployed application contracts, explicit `$owner` for the router, the vault factory and the lottery, backward references and Chainlink's verified Sepolia coordinator. Constructors send no ETH and assign no ownership to the deploying factory. Applications start with sales disabled; round vaults are created later on-chain. [Deployment export](frontend/deployment.json) intentionally has `null` addresses/blocks until a real deployment receipt exists.
+`launch.json` records the parked Sepolia launch. The separately labelled `deployments/mainnet.launch.json` describes mainnet constructor order, explicit `$owner`, backward references and the mainnet coordinator. Constructors send no ETH and assign no ownership to the deploying factory. Applications start with sales disabled; round vaults are created later on-chain. [Deployment export](frontend/deployment.json) intentionally has `null` addresses/blocks until a real deployment receipt exists.
 
 The owner must perform these steps with real deployment values; none was guessed:
 
 | Setter/action | Required value and source |
 | --- | --- |
 | Factory `setLottery(lottery)` | The deployed `Sorphera` address from the deployment receipt, once. The factory is deployed before the lottery, so the binding cannot be a constructor argument. Until it is set, `openRound` reverts `Sorphera: lottery not bound` and `validateLaunch` reverts `Sorphera: factory not bound`. Only the registered lottery can create vaults. |
-| Router `configure(pool, helper)` | A compatible **Sepolia** pool with verified builder attribution and a verified FWA transfer helper. Obtain addresses from the FWA deployment owner/release and verify live code, ABI, rewards, token, market, canonical Permit2 and distributor permissions. The currently published pool fails the check. Registration is permanent per pool; future pool registrations affect only newly opened vaults. |
+| Router `configure(pool, helper)` | The verified **mainnet** pool and helper in `deployments/mainnet.json`, or explicitly controlled Sepolia canary dependencies. Obtain addresses from the FWA deployment owner/release and verify live code, ABI, rewards, token, market, canonical Permit2 and distributor permissions. The published legacy Sepolia pool fails the check. Registration is permanent per pool; future pool registrations affect only newly opened vaults. |
 | Lottery `configureRules(game, rules)` | Configure each game separately. Use `0.005 ether` price by default; choose distinct initial cutoff timestamps, draw delay and settlement delay. Sales windows are exactly seven days. Pick documented fee/total/weighted-value/slippage bounds from live FWA quotes. Deadline and initial schedule choices are owner-settable before sale; no missing timestamp is fabricated. |
-| Lottery `configureRandomness(config)` | The company's own Chainlink v2.5 subscription ID, Sepolia key hash, confirmations, callback gas and payment currency. Get/create the subscription in [Chainlink's subscription manager](https://vrf.chain.link/sepolia). Key/coordinator references are in [dependencies](docs/DEPENDENCIES.md). Default operational suggestion: 3+ confirmations and 200,000 callback gas, validated in a test deployment. |
-| Chainlink subscription | Add `Sorphera` as consumer and fund with company LINK or Sepolia ETH. Never use FWA's subscription ID, a made-up ID or prize assets. |
-| Lottery `validateLaunch()` | Confirms Sepolia, configured FWA dependencies, nonzero VRF funding, registered consumer, both game rule sets and that the factory is bound to this lottery. This is a structural check; deployment review must also validate key hash, subscription adequacy, permissions, and an end-to-end canary. |
+| Lottery `configureRandomness(config)` | The company's own Chainlink v2.5 subscription ID, network-specific published key hash, confirmations, callback gas and payment currency. Get/create the subscription in [Chainlink's subscription manager](https://vrf.chain.link/). Key/coordinator references are in [mainnet evidence](docs/MAINNET.md) and [deployment preparation](docs/DEPLOYMENT.md). Default operational suggestion: 3+ confirmations and 200,000 callback gas, validated in a test deployment. |
+| Chainlink subscription | Add `Sorphera` as consumer and fund with company LINK or native ETH. Never use FWA's subscription ID, a made-up ID or prize assets. |
+| Lottery `validateLaunch()` | Confirms the deployment chain (1 or 11155111), published coordinator and active key, coordinator gas/confirmation limits, configured FWA dependencies, nonzero VRF funding, registered consumer, both game rule sets and that the factory is bound to this lottery. This is a structural check; deployment review must also validate key hash, subscription adequacy, permissions, and an end-to-end canary. |
 | Lottery `setSalesEnabled(true)` | Enable only after those dependency/configuration/funding checks and the release review. `false` pauses sales only; settlement, claims and recovery continue. |
 | Permissionless `openRound(game)` | At/after that game's seven-day window begins and after the previous round finishes. Creates its immutable vault and snapshots settings. |
 

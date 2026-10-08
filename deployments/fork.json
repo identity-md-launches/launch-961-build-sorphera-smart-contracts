@@ -1,0 +1,13 @@
+{
+  "status": "SIMULATED FORK ONLY",
+  "chainId": 1,
+  "block": 26145236,
+  "blockHash": "0xf7795aa3ff4975e1f907099acb0bdbefcead6ee7d85b0cca23584ce0704de179",
+  "FWABytecode": "unchanged deployed code",
+  "oracleFulfillment": "coordinator impersonation, no proofs or oracle billing",
+  "funding": "vm.deal test wallets; new fork-only subscription",
+  "broadcast": false,
+  "router": null,
+  "factory": null,
+  "lottery": null
+}

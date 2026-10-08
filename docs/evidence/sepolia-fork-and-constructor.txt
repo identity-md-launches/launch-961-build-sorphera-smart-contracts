@@ -1,0 +1,121 @@
+Compiling 30 files with Solc 0.8.26
+Solc 0.8.26 finished in 25.45s
+Compiler run successful!
+
+Ran 1 test for integration/rehearsal/Constructor.t.sol:ConstructorRehearsalTest
+[PASS] testResolvedManifestConstructorOrder() (gas: 91822)
+Traces:
+  [91822] ConstructorRehearsalTest::testResolvedManifestConstructorOrder()
+    ├─ [0] VM::addr(<pk>) [staticcall]
+    │   └─ ← [Return] explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa]
+    ├─ [0] VM::label(explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], "explicit rehearsal owner; not a deployment input")
+    │   └─ ← [Return]
+    ├─ [0] VM::deployCode("src/SorpheraRouter.sol:SorpheraRouter", 0x00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba)
+    │   ├─ [1898709] → new SorpheraRouter@0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+    │   │   └─ ← [Return] 8424 bytes of code
+    │   └─ ← [Return] SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    ├─ emit Resolved(name: "SorpheraVaultFactory", owner: explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], dependency: SorpheraRouter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], coordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, chain: 11155111 [1.115e7], blockNumber: 11866914 [1.186e7], dependencyCode: 8424, coordinatorCode: 24094 [2.409e4])
+    ├─ [0] VM::deployCode("src/SorpheraVaultFactory.sol:SorpheraVaultFactory", 0x0000000000000000000000005615deb798bb3e4dfa0139dfa1b3d433cc23b72f00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba)
+    │   ├─ [3464071] → new SorpheraVaultFactory@0x2e234DAe75C793f67A35089C9d99245E1C58470b
+    │   │   └─ ← [Return] 15710 bytes of code
+    │   └─ ← [Return] SorpheraVaultFactory: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]
+    ├─ emit Resolved(name: "Sorphera", owner: explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], dependency: SorpheraVaultFactory: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], coordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, chain: 11155111 [1.115e7], blockNumber: 11866914 [1.186e7], dependencyCode: 15710 [1.571e4], coordinatorCode: 24094 [2.409e4])
+    ├─ [0] VM::deployCode("src/Sorphera.sol:Sorphera", 0x00000000000000000000000035d11ad499f08dcd367e31dbf8b71c2db1ad7aba0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b0000000000000000000000009ddfaca8183c41ad55329bdeed9f6a8d53168b1b)
+    │   ├─ [4773372] → new Sorphera@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   │   └─ ← [Return] 21485 bytes of code
+    │   └─ ← [Return] Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a]
+    ├─ [2850] Sorphera::owner() [staticcall]
+    │   └─ ← [Return] explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa]
+    ├─ [0] VM::assertEq(explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa], explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3130] Sorphera::salesEnabled() [staticcall]
+    │   └─ ← [Return] false
+    ├─ [0] VM::assertFalse(false) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(explicit rehearsal owner; not a deployment input: [0x35D11AD499f08dcd367e31DBf8b71C2Db1ad7ABa])
+    │   └─ ← [Return]
+    ├─ [49842] SorpheraVaultFactory::setLottery(Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a])
+    │   ├─ emit LotteryRegistered(lottery: Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a])
+    │   └─ ← [Return]
+    ├─ [2354] SorpheraVaultFactory::lottery() [staticcall]
+    │   └─ ← [Return] Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a]
+    ├─ [0] VM::assertEq(Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], Sorphera: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a]) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Return]
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.57s (1.78s CPU time)
+
+Ran 2 tests for integration/Sepolia.t.sol:SorpheraSepoliaIntegrationTest
+[PASS] testPinnedPublicDeploymentLacksCurrentBuilderABI() (gas: 7739)
+Traces:
+  [7739] SorpheraSepoliaIntegrationTest::testPinnedPublicDeploymentLacksCurrentBuilderABI()
+    ├─ [0] VM::expectRevert(custom error 0xf4844814)
+    │   └─ ← [Return]
+    ├─ [1445] 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8::builderRewardBps() [staticcall]
+    │   └─ ← [Revert] EvmError: Revert
+    └─ ← [Return]
+
+[PASS] testPublishedDependencyWiringAndLiveQuote() (gas: 124386)
+Traces:
+  [124386] SorpheraSepoliaIntegrationTest::testPublishedDependencyWiringAndLiveQuote()
+    ├─ [0] VM::assertGt(24563 [2.456e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertGt(12056 [1.205e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertGt(11394 [1.139e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertGt(24094 [2.409e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3541] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::rewards() [staticcall]
+    │   └─ ← [Return] 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8
+    ├─ [0] VM::assertEq(0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8, 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8) [staticcall]
+    │   └─ ← [Return]
+    ├─ [4377] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::token() [staticcall]
+    │   └─ ← [Return] 0x14ea7A2087E32610C08c5210E16aD163353F5Fe5
+    ├─ [0] VM::assertEq(0x14ea7A2087E32610C08c5210E16aD163353F5Fe5, 0x14ea7A2087E32610C08c5210E16aD163353F5Fe5) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3397] 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8::fwa() [staticcall]
+    │   └─ ← [Return] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90
+    ├─ [0] VM::assertEq(0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90, 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90) [staticcall]
+    │   └─ ← [Return]
+    ├─ [392] 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8::tokenPoolManager() [staticcall]
+    │   └─ ← [Return] 0xE03A1074c86CFeDd5C142C4F04F1a1536e203543
+    ├─ [1029] 0x14ea7A2087E32610C08c5210E16aD163353F5Fe5::poolManager() [staticcall]
+    │   └─ ← [Return] 0xE03A1074c86CFeDd5C142C4F04F1a1536e203543
+    ├─ [0] VM::assertEq(0xE03A1074c86CFeDd5C142C4F04F1a1536e203543, 0xE03A1074c86CFeDd5C142C4F04F1a1536e203543) [staticcall]
+    │   └─ ← [Return]
+    ├─ [1162] 0xB013ec82d838a2e0f9AAF95847ccee2c89788fb8::tokenHook() [staticcall]
+    │   └─ ← [Return] 0xf86c9c7e3B4EB188ee351EE7304001ECdc40e444
+    ├─ [652] 0x14ea7A2087E32610C08c5210E16aD163353F5Fe5::hook() [staticcall]
+    │   └─ ← [Return] 0xf86c9c7e3B4EB188ee351EE7304001ECdc40e444
+    ├─ [0] VM::assertEq(0xf86c9c7e3B4EB188ee351EE7304001ECdc40e444, 0xf86c9c7e3B4EB188ee351EE7304001ECdc40e444) [staticcall]
+    │   └─ ← [Return]
+    ├─ [234] 0x14ea7A2087E32610C08c5210E16aD163353F5Fe5::permit2() [staticcall]
+    │   └─ ← [Return] 0x000000000022D473030F116dDEE9F6B43aC78BA3
+    ├─ [0] VM::assertEq(0x000000000022D473030F116dDEE9F6B43aC78BA3, 0x000000000022D473030F116dDEE9F6B43aC78BA3) [staticcall]
+    │   └─ ← [Return]
+    ├─ [14075] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::quoteAcquisitionPrice() [staticcall]
+    │   ├─ [7513] 0xaD6ad686e7fe60Dc582968EEFBAA6d3972A64dbA::requestFee() [staticcall]
+    │   │   └─ ← [Return] 0x000000000000000000000000000000000000000000000000000000f225b2cb00
+    │   └─ ← [Return] 0, 1040014560000 [1.04e12], 1040014560000 [1.04e12]
+    ├─ [0] VM::assertEq(1040014560000 [1.04e12], 1040014560000 [1.04e12]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3671] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::settlementWindow() [staticcall]
+    │   └─ ← [Return] 86400 [8.64e4]
+    ├─ [0] VM::assertGt(86400 [8.64e4], 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [3297] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::finalizeWindow() [staticcall]
+    │   └─ ← [Return] 604800 [6.048e5]
+    ├─ [3671] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::settlementWindow() [staticcall]
+    │   └─ ← [Return] 86400 [8.64e4]
+    ├─ [0] VM::assertGe(604800 [6.048e5], 86400 [8.64e4]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [4023] 0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90::selectionTimeoutBlocks() [staticcall]
+    │   └─ ← [Return] 30
+    ├─ [0] VM::assertGt(30, 0) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Return]
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 7.74s (6.80s CPU time)
+
+Ran 2 test suites in 8.62s (10.30s CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)

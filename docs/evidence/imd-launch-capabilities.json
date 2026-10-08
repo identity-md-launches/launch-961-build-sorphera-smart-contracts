@@ -1,0 +1,144 @@
+{
+  "source": "https://api.imd.fun/requests/capabilities",
+  "observedAtUTC": "2026-10-08",
+  "launches": {
+    "defaultChainId": 11155111,
+    "chains": [
+      {
+        "chainId": 11155111,
+        "name": "Sepolia",
+        "testnet": true,
+        "kinds": [
+          "univ4_hook",
+          "evm_project",
+          "custom_token",
+          "evm_contracts"
+        ],
+        "pairings": [
+          {
+            "pairWith": "eth",
+            "currency": "0x0000000000000000000000000000000000000000",
+            "symbol": "ETH",
+            "name": "Sepolia Ether",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "1000000000000000000",
+              "max": "1000000000000000000000"
+            }
+          }
+        ]
+      },
+      {
+        "chainId": 1,
+        "name": "Ethereum mainnet",
+        "testnet": false,
+        "kinds": [
+          "univ4_hook",
+          "evm_project",
+          "custom_token",
+          "evm_contracts"
+        ],
+        "pairings": [
+          {
+            "pairWith": "eth",
+            "currency": "0x0000000000000000000000000000000000000000",
+            "symbol": "ETH",
+            "name": "Ether",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "1000000000000000000",
+              "max": "1000000000000000000000"
+            }
+          },
+          {
+            "pairWith": "imd",
+            "currency": "0xd34a99bc0f67ae1bbd63c660e6d0b0dd03e263b7",
+            "symbol": "IMD",
+            "name": "Identity.md",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "250000000000000000000",
+              "max": "250000000000000000000000"
+            }
+          },
+          {
+            "pairWith": "fwa",
+            "currency": "0xa0df17b5ac76ababa36e1450e2cbcd18a620c845",
+            "symbol": "FWA",
+            "name": "Fake World Assets",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "200000000000000000000000",
+              "max": "200000000000000000000000000"
+            }
+          }
+        ]
+      },
+      {
+        "chainId": 4663,
+        "name": "Robinhood Chain",
+        "testnet": false,
+        "kinds": [
+          "univ4_hook",
+          "evm_project",
+          "custom_token",
+          "evm_contracts"
+        ],
+        "pairings": [
+          {
+            "pairWith": "eth",
+            "currency": "0x0000000000000000000000000000000000000000",
+            "symbol": "ETH",
+            "name": "Ether",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "1000000000000000000",
+              "max": "1000000000000000000000"
+            }
+          },
+          {
+            "pairWith": "imd",
+            "currency": "0x5f7bb59365ce557c26dbcaa4ee9d39a4b95b7127",
+            "symbol": "IMD",
+            "name": "Identity.md",
+            "decimals": 18,
+            "kinds": [
+              "univ4_hook",
+              "evm_project",
+              "custom_token"
+            ],
+            "customCap": {
+              "min": "250000000000000000000",
+              "max": "250000000000000000000000"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

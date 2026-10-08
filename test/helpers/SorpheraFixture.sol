@@ -48,9 +48,10 @@ abstract contract SorpheraFixture is Test {
         token.setDistributor(address(rewards));
         router = new SorpheraRouter(address(this));
         router.configure(address(pool), address(helper));
-        factory = new SorpheraVaultFactory(address(router));
+        factory = new SorpheraVaultFactory(address(router), address(this));
         vrf = new MockVRF();
         lottery = new Sorphera(address(this), address(factory), address(vrf));
+        factory.setLottery(address(lottery));
         vrf.setConsumer(address(lottery));
         cutoff = vm.getBlockTimestamp() + 7 days;
         lottery.configureRules(0, _rules(cutoff));

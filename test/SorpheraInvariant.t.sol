@@ -38,6 +38,9 @@ contract SorpheraHandler is Test {
     mapping(uint8 => uint256) public gameWithdrawals;
     mapping(uint8 => mapping(uint256 => uint256)) public terminalStatus;
     mapping(uint8 => mapping(uint256 => uint256)) public recordedWord;
+    uint256[] public stuck;
+    uint256 public forcedDeliveries;
+    uint256 public stuckRecoveries;
 
     constructor(Sorphera l, MockFWA p, MockVRF v, address admin, address a, address b, address c) {
         lottery = l;
@@ -125,6 +128,57 @@ contract SorpheraHandler is Test {
             recoveries += credit;
             gameRecoveries[game] += credit;
         }
+    }
+
+    /// @notice FWA resolves an allocation the vault never settled: forced cashout, forced NFT delivery, or a
+    ///         delivery the collection rejects, which FWA parks as stuck. The vault must stay consistent.
+    function forceSettlement(uint256 raw, uint256 mode) external {
+        if (pool.count() == 0) return;
+        uint256 id = bound(raw, 1, pool.count());
+        IFWA.Acquisition memory a = pool.acquisitions(id);
+        if (a.status != 2) return;
+        IFWA.Listing memory l = pool.listings(a.listingId);
+        if (l.status != 2) return;
+        SorpheraVault v = SorpheraVault(payable(a.purchaser));
+        uint8 game = v.game();
+        uint256 ready = uint256(l.allocatedAt) + pool.finalizeWindow();
+        if (vm.getBlockTimestamp() < ready) vm.warp(ready);
+        uint256 choice = bound(mode, 0, 2);
+        uint256 beforeBalance = address(v).balance;
+        if (choice == 0) {
+            pool.forcedCashout(a.listingId);
+        } else {
+            pool.nft().setRejected(l.tokenId, choice == 2);
+            pool.finalizeUnsettled(a.listingId);
+            if (choice == 2) stuck.push(id);
+        }
+        v.reconcile(_one(id));
+        assertEq(v.requestState(id), 2, "Sorphera: forced resolution must be terminal");
+        uint256 returned = address(v).balance - beforeBalance;
+        recoveries += returned;
+        gameRecoveries[game] += returned;
+        ++forcedDeliveries;
+    }
+
+    function recoverStuck(uint256 raw) external {
+        if (stuck.length == 0) return;
+        uint256 i = bound(raw, 0, stuck.length - 1);
+        uint256 id = stuck[i];
+        IFWA.Acquisition memory a = pool.acquisitions(id);
+        SorpheraVault v = SorpheraVault(payable(a.purchaser));
+        uint256 tokenId = pool.listings(a.listingId).tokenId;
+        uint256 securedBefore = v.securedCount();
+        pool.nft().setRejected(tokenId, false);
+        v.recoverNFT(id);
+        assertEq(pool.nft().ownerOf(tokenId), address(v));
+        assertEq(v.securedCount(), securedBefore + 1);
+        stuck[i] = stuck[stuck.length - 1];
+        stuck.pop();
+        ++stuckRecoveries;
+    }
+
+    function stuckCount() external view returns (uint256) {
+        return stuck.length;
     }
 
     function syncOrDonate(uint256 g, uint256 rawRound, uint256 amount, bool donate) external {
@@ -327,7 +381,7 @@ contract SorpheraInvariantTest is SorpheraFixture {
         address carol = makeAddr("Sorphera Carol");
         vm.deal(carol, 1000 ether);
         handler = new SorpheraHandler(lottery, pool, vrf, address(this), alice, bob, carol);
-        bytes4[] memory selectors = new bytes4[](14);
+        bytes4[] memory selectors = new bytes4[](16);
         selectors[0] = handler.buy.selector;
         selectors[1] = handler.acquire.selector;
         selectors[2] = handler.resolve.selector;
@@ -342,18 +396,82 @@ contract SorpheraInvariantTest is SorpheraFixture {
         selectors[11] = handler.queueTokens.selector;
         selectors[12] = handler.builderReward.selector;
         selectors[13] = handler.receiveTokens.selector;
+        selectors[14] = handler.forceSettlement.selector;
+        selectors[15] = handler.recoverStuck.selector;
         targetSelector(FuzzSelector(address(handler), selectors));
         targetContract(address(handler));
-        // Pin non-vacuous activity before each random sequence, including a secured NFT.
-        handler.buy(0, 0, 4, true);
+        // Pin non-vacuous activity before each random sequence, including a secured NFT and a stuck one.
+        handler.buy(0, 0, 8, true);
         handler.buy(1, 1, 4, true);
         handler.acquire(0, 1, false);
         handler.acquire(1, 1, false);
+        handler.acquire(0, 1, false);
         handler.resolve(1, false, 0.02 ether);
         handler.resolve(2, false, 0.02 ether);
+        pool.allocate(3, 0.02 ether);
+        handler.forceSettlement(3, 2);
         handler.rewardEpoch(0, 1, 103);
         handler.rewardEpoch(1, 1, 101);
         handler.builderReward(false);
+        assertEq(handler.stuckCount(), 1);
+    }
+
+    /// @notice Fixed outcomes: cancellation never requests randomness or releases fees, every drawn round
+    ///         with sales holds one request, held fees release exactly once, and winners are indexed tickets.
+    function invariant_roundOutcomesFollowFixedRules() public view {
+        for (uint8 game; game < 2; ++game) {
+            for (uint256 id = 1; id <= lottery.latestRound(game); ++id) {
+                Sorphera.Round memory r = lottery.getRound(game, id);
+                uint256 heldFees = r.sold * r.price / 10;
+                (, uint256 terminal,,,, uint256 inventory) = lottery.groups(game, r.group);
+                assertLe(r.eligibleNFTs, inventory, "Sorphera: eligible NFTs exceed group inventory");
+                if (r.status == Sorphera.Status.Cancelled) {
+                    assertEq(game, 1);
+                    assertEq(r.requestId, 0, "Sorphera: cancelled round requested randomness");
+                    assertEq(lottery.releasedFees(game, id), 0, "Sorphera: cancelled round released fees");
+                    assertEq(r.fees, 0);
+                    assertEq(terminal, id);
+                } else if (r.status == Sorphera.Status.Won || r.status == Sorphera.Status.Rolled) {
+                    assertEq(r.fees, 0);
+                    if (r.sold == 0) {
+                        assertEq(r.requestId, 0, "Sorphera: zero-ticket round used VRF");
+                        assertEq(r.matches, 0);
+                    } else {
+                        assertGt(r.requestId, 0);
+                        assertEq(lottery.releasedFees(game, id), heldFees, "Sorphera: fees released once");
+                        if (game == 1) assertGt(r.frozenNFTs, 0, "Sorphera: NFT draw without inventory");
+                    }
+                    if (r.status == Sorphera.Status.Won) {
+                        assertEq(terminal, id);
+                        assertGt(r.matches, 0);
+                        assertEq(lottery.matchCount(game, id, r.winningKey), r.matches);
+                        if (game == 1) {
+                            (, uint32 combination) = lottery.tickets(game, id, r.winningTicket);
+                            assertTrue(r.winningTicket >= 1 && r.winningTicket <= r.sold);
+                            assertEq(combination, r.winningKey, "Sorphera: tie-break outside matches");
+                        }
+                    } else {
+                        assertEq(r.matches, 0);
+                        assertEq(r.winningTicket, 0);
+                    }
+                } else {
+                    assertEq(r.fees, heldFees, "Sorphera: fees must be held until a result");
+                    assertEq(lottery.releasedFees(game, id), 0);
+                    assertEq(terminal, 0);
+                    if (r.status == Sorphera.Status.Requested || r.status == Sorphera.Status.RandomReady) {
+                        assertGt(r.requestId, 0);
+                        (uint8 boundGame, uint256 boundRound, bool exists) = lottery.requests(r.requestId);
+                        assertTrue(exists && boundGame == game && boundRound == id);
+                    }
+                }
+                SorpheraVault v = SorpheraVault(payable(r.vault));
+                for (uint256 i; i < v.assetCount(); ++i) {
+                    (address collection, uint256 tokenId,,,) = v.assets(i);
+                    uint256 receipt = v.receivedAt(collection, tokenId);
+                    assertTrue(receipt != 0 && receipt <= block.timestamp, "Sorphera: asset without receipt");
+                }
+            }
+        }
     }
 
     function invariant_externalFlowsConserveETH() public view {
@@ -506,11 +624,34 @@ contract SorpheraInvariantTest is SorpheraFixture {
         handler.advance(1, false);
         handler.claimNFT(1, 1, 0, true);
         handler.claimNFT(1, 1, 0, false);
-        assertGt(handler.successfulClaims(), 0);
+        handler.recoverStuck(0);
+        assertEq(handler.stuckCount(), 0);
+        assertEq(handler.stuckRecoveries(), 1);
+        handler.advance(1, false);
+        assertEq(lottery.latestRound(1), 2);
+        handler.buy(1, 2, 8, false);
+        handler.acquire(1, 1, false);
+        pool.allocate(pool.count(), 0.02 ether);
+        handler.forceSettlement(pool.count(), 0);
+        handler.acquire(1, 1, false);
+        uint256 requestsBefore = vrf.requests();
+        handler.advance(1, true);
+        assertEq(uint256(lottery.getRound(1, 2).status), uint256(Sorphera.Status.Cancelled));
+        assertEq(vrf.requests(), requestsBefore);
+        pool.allocate(pool.count(), 0.02 ether);
+        handler.forceSettlement(pool.count(), 1);
+        assertEq(handler.forcedDeliveries(), 3);
+        assertEq(lottery.getRound(1, 2).eligibleNFTs, 0);
+        (,,,,, uint256 inventory) = lottery.groups(1, lottery.groupOf(1, 2));
+        assertEq(inventory, 1, "Sorphera: late delivery is held for the refund cohort");
+        handler.claim(1, 2, 1, false);
+        handler.claim(1, 2, 1, true);
+        assertGt(handler.successfulClaims(), 1);
         invariant_externalFlowsConserveETH();
         invariant_liabilitiesEqualReservedFeesCashAndUnpaidTickets();
         invariant_gameAssetsNeverCrossSubsidize();
         invariant_vaultRequestsAndCustodyRemainBacked();
         invariant_purchaserAndBuilderTokensStayConserved();
+        invariant_roundOutcomesFollowFixedRules();
     }
 }

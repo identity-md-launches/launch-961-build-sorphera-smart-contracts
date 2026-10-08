@@ -48,5 +48,9 @@ balance=words[1 if config['nativePayment'] else 0]
 assert balance>=int(config['minimumFundingWei']),'subscription below company reserve'
 if c.get('lottery'):
  assert int(c['lottery'],16) in words[6:],'lottery consumer missing'
+ reserveGetter='minimumNativeBalance()(uint96)' if config['nativePayment'] else 'minimumLinkBalance()(uint96)'
+ configuredReserve=int(call(c['lottery'],reserveGetter).split()[0])
+ assert configuredReserve>=int(config['minimumFundingWei']),'configure onchain VRF reserve before opening rounds'
+ report['futureOnchainReserve']=configuredReserve
 else:report['consumer']='NOT YET DEPLOYED: add lottery as consumer after deployment'
 print(json.dumps(report,indent=2))

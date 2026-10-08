@@ -36,6 +36,7 @@ contract SorpheraVault is Guard, RewardTransfer {
     uint256 public spent;
     uint256 public pending;
     uint256 public requestCount;
+    uint256 public cancellationCursor;
     uint256 public securedCount;
     uint256 public exportedETH;
     uint256 public queuedTokens;
@@ -75,6 +76,7 @@ contract SorpheraVault is Guard, RewardTransfer {
     event RefundRecovered(uint256 amount);
     event PurchaserRewardsClaimed(uint256 amount);
     event SharedAssetVote(uint256 indexed index, uint256 indexed ticket, address indexed recipient);
+    event CancellationReviewed(uint256 cursor, uint256 requests);
 
     constructor(
         address lottery_,
@@ -167,6 +169,20 @@ contract SorpheraVault is Guard, RewardTransfer {
         }
     }
 
+    /// @notice Bounded post-deadline custody check before the lottery may cancel an NFT round.
+    /// @dev The lottery supplies its immutable deadline. A pending FWA request is inspected, not awaited.
+    function reviewCancellation(uint256 deadline) external onlyLottery nonReentrant returns (bool complete) {
+        require(game == 1 && block.timestamp >= deadline, "Sorphera: cancellation review time");
+        uint256 end = cancellationCursor + 50;
+        if (end > requestCount) end = requestCount;
+        while (cancellationCursor < end) {
+            _reconcile(requestAt[cancellationCursor]);
+            ++cancellationCursor;
+        }
+        emit CancellationReviewed(cancellationCursor, requestCount);
+        return cancellationCursor == requestCount;
+    }
+
     function _reconcile(uint256 id) internal {
         require(requestState[id] != 0, "Sorphera: unknown acquisition");
         IFWA.Acquisition memory a = pool.acquisitions(id);
@@ -178,7 +194,9 @@ contract SorpheraVault is Guard, RewardTransfer {
             terminal = l.status == 4;
             if (terminal && assetIndexPlusOne[a.listingId] == 0) {
                 bool held;
-                try IERC721(l.collection).ownerOf(l.tokenId) returns (address holder) {
+                // Collections are untrusted. In particular a mandatory cancellation sweep must
+                // not hand almost all remaining transaction gas to a hostile ownership getter.
+                try IERC721(l.collection).ownerOf{gas: 50000}(l.tokenId) returns (address holder) {
                     held = holder == address(this);
                 } catch {}
                 if (held) {

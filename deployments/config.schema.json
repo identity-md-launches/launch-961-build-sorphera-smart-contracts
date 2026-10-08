@@ -54,7 +54,8 @@
         },
         "minimumFundingWei": {
           "type": "string",
-          "pattern": "^[1-9][0-9]*$"
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Company-selected balance floor in native wei or LINK juels for the selected currency; set configureVRFReserve before opening rounds. Not a payment escrow or promise of fulfillment."
         }
       }
     },

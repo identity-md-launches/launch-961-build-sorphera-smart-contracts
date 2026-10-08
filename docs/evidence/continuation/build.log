@@ -1,0 +1,858 @@
+Compiling 42 files with Solc 0.8.26
+Solc 0.8.26 finished in 132.04s
+Compiler run successful!
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/Sorphera.sol:258:26
+    │
+258 │         (bool active,) = coordinator.s_provingKeys(c.keyHash);
+    │                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/Sorphera.sol:259:67
+    │
+259 │         (uint16 minimumConfirmations, uint32 maximumGas,,,,,,,) = coordinator.s_config();
+    │                                                                   ━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ src/Sorphera.sol:288:17
+    │
+288 │         require(present, "Sorphera: VRF consumer missing");
+    │                 ━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/Sorphera.sol:280:13
+    │
+280 │             coordinator.getSubscription(c.subscription);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[reentrancy-no-eth]: external call can be reentered before `latestRound` is updated
+    ╭▸ src/Sorphera.sol:320:13
+    │
+320 │ ┏             factory.create(
+321 │ ┃                 game,
+322 │ ┃                 id,
+323 │ ┃                 SorpheraVault.Settings(rules.maxFee, rules.maxTotal, rules.minValue, rules.slippage, cutoff)
+324 │ ┃             )
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:310:17
+    │
+310 │         require(block.timestamp >= cutoff - WEEK, "Sorphera: window not started");
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:332:9
+    │
+332 │ ┏         emit RoundOpened(
+333 │ ┃             game, id, r.group, r.vault, r.start, cutoff, r.earliestDraw, r.settlementDeadline, r.price
+334 │ ┃         );
+    │ ┗━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ src/Sorphera.sol:360:9
+    │
+360 │         SorpheraVault(payable(r.vault)).fund{value: msg.value - fee}();
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:340:57
+    │
+340 │             salesEnabled && r.status == Status.Sales && block.timestamp >= r.start
+    │                                                         ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:341:20
+    │
+341 │                 && block.timestamp < r.cutoff,
+    │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+  ╭▸ src/lib/Balls.sol:7:9
+  │
+7 │         require(bonus >= 1 && bonus <= 5, "Sorphera: bonus");
+  │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+  ╭▸ src/lib/Balls.sol:9:13
+  │
+9 │             require(a[i] >= 1 && a[i] <= 20, "Sorphera: ball");
+  │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ src/lib/Balls.sol:14:9
+   │
+14 │         require(a[0] != a[1] && a[1] != a[2], "Sorphera: distinct balls");
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:365:44
+    │
+365 │         return r.status == Status.Sales && block.timestamp < r.cutoff;
+    │                                            ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:370:45
+    │
+370 │         require(r.status == Status.Sales && block.timestamp >= r.cutoff, "Sorphera: cannot close");
+    │                                             ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-no-eth]: external call can be reentered before `groups` is updated
+    ╭▸ src/Sorphera.sol:417:29
+    │
+417 │             bool reviewed = v.reviewCancellation(r.settlementDeadline);
+    │                             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/Sorphera.sol:407:9
+    │
+407 │         v.syncETH();
+    │         ━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/Sorphera.sol:440:21
+    │
+440 │           requestId = coordinator.requestRandomWords(
+    │ ┏━━━━━━━━━━━━━━━━━━━━━┛
+441 │ ┃             IVRF.Request(
+442 │ ┃                 c.keyHash,
+443 │ ┃                 c.subscription,
+    ‡ ┃
+449 │ ┃         );
+    │ ┗━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:413:49
+    │
+413 │         if (game == 1 && r.eligibleNFTs == 0 && block.timestamp >= r.settlementDeadline) {
+    │                                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/Sorphera.sol:425:13
+    │
+425 │             block.timestamp >= r.earliestDraw && v.pending() == 0 && v.budget() == 0 && v.refundCredit() == 0,
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:553:9
+    │
+553 │         emit Rollover(game, id, r.group, g.cash, g.nftCount);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:565:9
+    │
+565 │         emit Cancelled(game, id, g.cash, r.sold);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:587:13
+    │
+587 │             emit DustCarried(game, currentGroup[game], dust);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:433:9
+    │
+433 │         emit DrawRequested(game, id, r.requestId, r.frozenNFTs);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[unsafe-typecast]: typecast can truncate values
+    ╭▸ src/Sorphera.sol:447:40
+    │
+447 │                 abi.encodeWithSelector(bytes4(keccak256("VRF ExtraArgsV1")), c.nativePayment)
+    │                                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ├ note: consider disabling this lint if you're certain the cast is safe
+    │       
+    │       // casting to 'bytes4' is safe because [explain why]
+    │       // forge-lint: disable-next-line(unsafe-typecast)
+    │       
+    │       
+    ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:460:9
+    │
+460 │         emit TieBreakRequested(game, id, r.tieBreakRequestId);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[divide-before-multiply]: division before multiplication may lose precision
+    ╭▸ src/Sorphera.sol:581:19
+    │
+581 │         g.cash -= share * g.divisor;
+    │                   ━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/divide-before-multiply
+
+warning[reentrancy-eth]: uncapped ETH transfer can be reentered before `entered` is updated
+   ╭▸ src/lib/Security.sol:15:22
+   │
+15 │         (bool ok,) = to.call{value: amount}("");
+   │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-eth
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ src/Sorphera.sol:625:13
+    │
+625 │             amount += delta;
+    │             ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:630:9
+    │
+630 │         emit Claimed(game, g.terminalRound, ids[0], recipient, amount);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/Sorphera.sol:598:9
+    │
+598 │         require(terminal != 0, "Sorphera: prize not finalized");
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/Sorphera.sol:601:9
+    │
+601 │         require(t.player == claimant && claimant != address(0), "Sorphera: ticket owner");
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/Sorphera.sol:603:13
+    │
+603 │ ┏             require(
+604 │ ┃                 t.combination == r.winningKey && (game == 0 || ticket == r.winningTicket),
+605 │ ┃                 "Sorphera: not winning ticket"
+606 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/Sorphera.sol:608:13
+    │
+608 │             require(r.status == Status.Cancelled, "Sorphera: prize state");
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[non-reentrant-not-first]: `nonReentrant` is not the first modifier
+    ╭▸ src/Sorphera.sol:633:85
+    │
+633 │     function withdrawOperator(address recipient, uint256 amount) external onlyOwner nonReentrant {
+    │                                                                                     ━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/non-reentrant-not-first
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/Sorphera.sol:638:9
+    │
+638 │         emit OperatorWithdrawal(recipient, amount);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[missing-zero-check]: address parameter is used in a state write or value transfer without a zero-address check
+   ╭▸ src/SorpheraVaultFactory.sol:22:25
+   │
+22 │     function setLottery(address lottery_) external onlyOwner {
+   │                         ━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/missing-zero-check
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+   ╭▸ src/SorpheraVaultFactory.sol:37:9
+   │
+37 │         emit VaultCreated(msg.sender, game, round, address(vault));
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[missing-zero-check]: address parameter is used in a state write or value transfer without a zero-address check
+   ╭▸ src/SorpheraRouter.sol:26:24
+   │
+26 │     function configure(address pool_, address helper_) external onlyOwner {
+   │                        ━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/missing-zero-check
+
+warning[missing-zero-check]: address parameter is used in a state write or value transfer without a zero-address check
+   ╭▸ src/SorpheraRouter.sol:26:39
+   │
+26 │     function configure(address pool_, address helper_) external onlyOwner {
+   │                                       ━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/missing-zero-check
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ src/SorpheraRouter.sol:106:15
+    │
+106 │         ids = IFWA(p).acquire{value: msg.value}(msg.sender, count, maxFee, minValue, slippage);
+    │               ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraRouter.sol:102:13
+    │
+102 │             block.timestamp <= deadline && maxFee > 0 && minValue > 0 && slippage <= 1000,
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraRouter.sol:110:9
+    │
+110 │         emit AcquisitionForwarded(msg.sender, p, ids, refund);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+   ╭▸ src/lib/Security.sol:15:22
+   │
+15 │         (bool ok,) = to.call{value: amount}("");
+   │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraRouter.sol:123:26
+    │
+123 │         uint256 amount = r.claimAccruedTokens(minOut);
+    │                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+   ╭▸ src/lib/RewardTransfer.sol:36:9
+   │
+36 │ ┏         ITransferHelper(helper)
+37 │ ┃             .depositWithPermit2(
+38 │ ┃                 ITransferHelper.PermitTransferFrom(
+39 │ ┃                     ITransferHelper.TokenPermissions(token, amount), nonce, deadline
+   ‡ ┃
+42 │ ┃                 recipient
+43 │ ┃             );
+   │ ┗━━━━━━━━━━━━━┛
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[non-reentrant-not-first]: `nonReentrant` is not the first modifier
+    ╭▸ src/SorpheraRouter.sol:116:9
+    │
+116 │         nonReentrant
+    │         ━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/non-reentrant-not-first
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraRouter.sol:119:31
+    │
+119 │         require(minOut > 0 && block.timestamp <= deadline, "Sorphera: reward bounds");
+    │                               ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+   ╭▸ src/lib/RewardTransfer.sol:45:9
+   │
+45 │         emit RewardQueued(token, recipient, amount, nonce);
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraRouter.sol:126:9
+    │
+126 │         emit BuilderRewardClaimed(address(r), allowance, amount);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraRouter.sol:132:9
+    │
+132 │         IRewards(rewardsForPool[p]).withdrawTokenBuyAllowanceAsETH();
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[non-reentrant-not-first]: `nonReentrant` is not the first modifier
+    ╭▸ src/SorpheraRouter.sol:129:87
+    │
+129 │     function recoverBuilderAllowance(address p, address recipient) external onlyOwner nonReentrant {
+    │                                                                                       ━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/non-reentrant-not-first
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/SorpheraRouter.sol:132:9
+    │
+132 │         IRewards(rewardsForPool[p]).withdrawTokenBuyAllowanceAsETH();
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ src/lib/Networks.sol:21:17
+   │
+21 │         require(valid, "Sorphera: network configuration");
+   │                 ━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[missing-events-arithmetic]: `budget` is changed without an event but is used in arithmetic
+    ╭▸ src/SorpheraVault.sol:104:9
+    │
+104 │         budget += msg.value;
+    │         ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/missing-events-arithmetic
+
+warning[missing-zero-check]: address parameter is used in a state write or value transfer without a zero-address check
+   ╭▸ src/SorpheraVault.sol:82:9
+   │
+82 │         address lottery_,
+   │         ━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/missing-zero-check
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraVault.sol:109:64
+    │
+109 │             ISorphera(lottery).acquisitionOpen(game, round) && block.timestamp < settings.cutoff
+    │                                                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraVault.sol:113:44
+    │
+113 │         require(count > 0 && count <= 8 && block.timestamp <= deadline, "Sorphera: acquisition batch");
+    │                                            ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:132:51
+    │
+132 │             IFWA.Acquisition memory acquisition = pool.acquisitions(ids[i]);
+    │                                                   ━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:136:13
+    │
+136 │             emit Acquisition(game, round, ids[i], acquisition.priceEscrowed, vrf, sw, fw);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:131:13
+    │
+131 │             require(ids[i] != 0 && requestState[ids[i]] == 0, "Sorphera: duplicate request");
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:133:13
+    │
+133 │             require(acquisition.purchaser == address(this), "Sorphera: purchaser");
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[reentrancy-no-eth]: external call can be reentered before `requestState` is updated
+    ╭▸ src/SorpheraVault.sol:152:17
+    │
+152 │                 pool.acceptDepositorBid(a.listingId);
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `requestState` is updated
+    ╭▸ src/SorpheraVault.sol:154:17
+    │
+154 │                 pool.keepNFT(a.listingId);
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `requestState` is updated
+    ╭▸ src/SorpheraVault.sol:209:21
+    │
+209 │                     ISorphera(lottery).recordNFT(game, round, securedAt);
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:210:21
+    │
+210 │                     emit CustodySecured(index, l.collection, l.tokenId, id, a.listingId);
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:216:21
+    │
+216 │                     emit DeliveryStuck(id, a.listingId);
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:223:13
+    │
+223 │             emit Reconciled(id, a.listingId, a.status);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+   ╭▸ src/lib/RewardTransfer.sol:19:32
+   │
+19 │         require(amount != 0 && block.timestamp <= deadline, "Sorphera: reward bounds");
+   │                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraVault.sol:162:9
+    │
+162 │         pool.processAcquisitions(count);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[unused-return]: return value of an external call is not used
+   ╭▸ src/lib/RewardTransfer.sol:36:9
+   │
+36 │ ┏         ITransferHelper(helper)
+37 │ ┃             .depositWithPermit2(
+38 │ ┃                 ITransferHelper.PermitTransferFrom(
+39 │ ┃                     ITransferHelper.TokenPermissions(token, amount), nonce, deadline
+   ‡ ┃
+42 │ ┃                 recipient
+43 │ ┃             );
+   │ ┗━━━━━━━━━━━━━┛
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[uninitialized-local]: local variable is read before being initialized
+   ╭▸ src/lib/Balls.sol:23:68
+   │
+23 │             uint256 x = uint256(keccak256(abi.encode(seed, domain, counter)));
+   │                                                                    ━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ src/lib/Balls.sol:20:9
+   │
+20 │         require(n != 0, "Sorphera: empty sample");
+   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+   ╭▸ src/lib/Balls.sol:26:9
+   │
+26 │         revert("unreachable");
+   │         ━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[unsafe-typecast]: typecast can truncate values
+   ╭▸ src/lib/Balls.sol:43:17
+   │
+43 │         bonus = uint8(uniform(seed, keccak256("Sorphera bonus"), 5) + 1);
+   │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'uint8' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/SorpheraVault.sol:162:9
+    │
+162 │         pool.processAcquisitions(count);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:188:37
+    │
+188 │         IFWA.Acquisition memory a = pool.acquisitions(id);
+    │                                     ━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:192:37
+    │
+192 │             IFWA.Listing memory l = pool.listings(a.listingId);
+    │                                     ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:199:21
+    │
+199 │                 try IERC721(l.collection).ownerOf{gas: 50000}(l.tokenId) returns (address holder) {
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:209:21
+    │
+209 │                     ISorphera(lottery).recordNFT(game, round, securedAt);
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:211:28
+    │
+211 │                 } else if (pool.stuckNFTRecipient(a.listingId) == address(this)) {
+    │                            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:187:9
+    │
+187 │         require(requestState[id] != 0, "Sorphera: unknown acquisition");
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:189:9
+    │
+189 │         require(a.purchaser == address(this), "Sorphera: purchaser");
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:193:13
+    │
+193 │             require(l.purchaser == address(this), "Sorphera: purchaser");
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+
+warning[non-reentrant-not-first]: `nonReentrant` is not the first modifier
+    ╭▸ src/SorpheraVault.sol:174:72
+    │
+174 │     function reviewCancellation(uint256 deadline) external onlyLottery nonReentrant returns (bool complete) {
+    │                                                                        ━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/non-reentrant-not-first
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraVault.sol:175:30
+    │
+175 │         require(game == 1 && block.timestamp >= deadline, "Sorphera: cancellation review time");
+    │                              ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[uninitialized-local]: local variable is read before being initialized
+    ╭▸ src/SorpheraVault.sol:202:21
+    │
+202 │                 if (held) {
+    │                     ━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/uninitialized-local
+
+warning[reentrancy-no-eth]: external call can be reentered before `requestState` is updated
+    ╭▸ src/SorpheraVault.sol:231:9
+    │
+231 │         pool.recoverStuckNFT(a.listingId);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraVault.sol:241:9
+    │
+241 │         pool.withdrawAcquisitionRefund();
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:242:9
+    │
+242 │         emit RefundRecovered(address(this).balance - beforeBalance);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/SorpheraVault.sol:241:9
+    │
+241 │         pool.withdrawAcquisitionRefund();
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ src/SorpheraVault.sol:250:13
+    │
+250 │         if (block.timestamp >= settings.cutoff) budget = 0;
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:255:13
+    │
+255 │             emit ETHExported(amount);
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraVault.sol:262:9
+    │
+262 │         rewards.claimEpochTokens(epochs);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:263:9
+    │
+263 │         emit PurchaserRewardsClaimed(prizeToken.balanceOf(address(this)) - beforeBalance);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[unused-return]: return value of an external call is not used
+    ╭▸ src/SorpheraVault.sol:262:9
+    │
+262 │         rewards.claimEpochTokens(epochs);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unused-return
+
+warning[reentrancy-no-eth]: external call can be reentered before `entered` is updated
+    ╭▸ src/SorpheraVault.sol:299:17
+    │
+299 │             try this.deliver{gas: 500000}(index, recipient) {
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-no-eth
+
+warning[calls-loop]: external call inside a loop
+    ╭▸ src/SorpheraVault.sol:299:17
+    │
+299 │             try this.deliver{gas: 500000}(index, recipient) {
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/calls-loop
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:300:17
+    │
+300 │                 emit NFTClaimed(index, recipient);
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:303:17
+    │
+303 │                 emit NFTClaimFailed(index, recipient);
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ src/SorpheraVault.sol:294:21
+    │
+294 │                     emit SharedAssetVote(index, ticket, recipient);
+    │                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[require-revert-in-loop]: `require` or `revert` inside a loop
+    ╭▸ src/SorpheraVault.sol:287:13
+    │
+287 │             require(!a.claimed, "Sorphera: NFT claimed");
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/require-revert-in-loop
+

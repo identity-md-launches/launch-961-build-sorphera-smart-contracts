@@ -22,7 +22,8 @@
     "acquisitions": 8,
     "reconciliation": 50,
     "nftClaims": 20,
-    "rewardEpochs": 32
+    "rewardEpochs": 32,
+    "cancellationReview": 50
   },
   "ownerMustConfigureBeforeActivation": [
     "factorySetLotteryToDeployedSorpheraAddress",
@@ -32,7 +33,8 @@
     "eachGameDrawDelayAndSettlementDelay",
     "eachGameMaxAcquisitionFeeMaxTotalMinWeightedValueAndSlippage",
     "companyOwnedFundedLotteryVRFSubscription",
-    "verifiedVRFKeyHashConfirmationsCallbackGasAndPaymentCurrency"
+    "verifiedVRFKeyHashConfirmationsCallbackGasAndPaymentCurrency",
+    "companySelectedVRFReserveFloorsBeforeOpeningRounds"
   ],
   "constructorCoordinator": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
   "configurationStatus": "mainnet-preparation-unset-not-deployed",
@@ -54,5 +56,7 @@
     6,
     7
   ],
-  "nftTieBreak": "Separate VRF request, one winning ticket, all inventory; no claims before TieBreakResult"
+  "nftTieBreak": "Separate VRF request, one winning ticket, all inventory; no claims before TieBreakResult",
+  "cancellationReview": "requestDraw may commit bounded custody review and remain Closed; observe CancellationReviewed and retry",
+  "oracleFailure": "Accepted draw/tie requests cannot be replaced or cancelled; permanent nonfulfillment remains unresolved"
 }

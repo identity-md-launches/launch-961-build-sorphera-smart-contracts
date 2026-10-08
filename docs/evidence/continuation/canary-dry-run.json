@@ -1,0 +1,30 @@
+{
+  "mode": "dry-run",
+  "broadcast": false,
+  "liveEvidence": "NOT RUN",
+  "chainId": 11155111,
+  "coordinator": "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B",
+  "dependencies": "controlled mock FWA; production Sorphera and real VRF coordinator",
+  "ticketPriceWei": 1000,
+  "tickets": {
+    "ETH": 5700,
+    "NFT": 11400
+  },
+  "ticketBatches": 171,
+  "ticketValueWei": 17100000,
+  "stages": [
+    "deploy controlled mocks/controller and production router/factory/lottery",
+    "bind; create/use company subscription; register and check funding",
+    "freeze small test price; validate; open two rounds",
+    "atomic enable/buy/disable batches; synthetic FWA acquisition/settlement",
+    "wait cutoff; request two draws; wait actual coordinator fulfillments",
+    "finalize; independent NFT tie request; wait fulfillment; finalize tie",
+    "claim ETH and NFT; collect canonical coordinator billing/callback receipts"
+  ],
+  "required": [
+    "company test-wallet authorization",
+    "dedicated company sender and secure signer",
+    "Sepolia RPC and test ETH for bounded gas/funding",
+    "company subscription owner access or create permission and billing reserve"
+  ]
+}

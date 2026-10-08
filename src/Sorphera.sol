@@ -105,11 +105,16 @@ contract Sorphera is Guard, Owned {
     bool public salesEnabled;
     bool public launchValidated;
     RandomConfig public randomConfig;
+    // Optional company-selected pre-request balances, in LINK juels / native wei. These are
+    // operational floors, not coordinator fee estimates or funds reserved against other consumers.
+    uint96 public minimumLinkBalance;
+    uint96 public minimumNativeBalance;
     mapping(uint8 => Rules) public futureRules;
     mapping(uint8 => uint256) public latestRound;
     mapping(uint8 => uint256) public currentGroup;
     mapping(uint8 => mapping(uint256 => Round)) private rounds;
     mapping(uint8 => mapping(uint256 => RandomConfig)) public roundRandomConfig;
+    mapping(uint8 => mapping(uint256 => uint96)) public roundMinimumVRFBalance;
     mapping(uint8 => mapping(uint256 => Group)) public groups;
     mapping(uint8 => mapping(uint256 => mapping(uint256 => Ticket))) public tickets;
     mapping(uint8 => mapping(uint256 => mapping(uint32 => uint256[]))) private matching;
@@ -120,6 +125,7 @@ contract Sorphera is Guard, Owned {
     uint256 public totalLiabilities;
     event RulesConfigured(uint8 indexed game, Rules rules);
     event RandomnessConfigured(RandomConfig config);
+    event VRFReserveConfigured(uint96 minimumLinkBalance, uint96 minimumNativeBalance);
     event SalesEnabled(bool enabled);
     event LaunchValidated();
     event RoundOpened(
@@ -228,10 +234,18 @@ contract Sorphera is Guard, Owned {
         emit SalesEnabled(false);
     }
 
+    /// @notice Applies only to future rounds. Existing draw and tie requests retain their sold terms.
+    /// @dev Zero leaves the legacy positive-balance check in place for that billing currency.
+    function configureVRFReserve(uint96 linkBalance, uint96 nativeBalance) external onlyOwner {
+        minimumLinkBalance = linkBalance;
+        minimumNativeBalance = nativeBalance;
+        emit VRFReserveConfigured(linkBalance, nativeBalance);
+    }
+
     function validateLaunch() external onlyOwner {
         _validateNetwork(randomConfig);
         factory.router().validate(factory.router().pool());
-        _checkFunding(randomConfig);
+        _checkFunding(randomConfig, _reserve(randomConfig));
         require(futureRules[0].price != 0 && futureRules[1].price != 0, "Sorphera: rules not configured");
         require(factory.lottery() == address(this), "Sorphera: factory not bound");
         launchValidated = true;
@@ -256,11 +270,17 @@ contract Sorphera is Guard, Owned {
         return status == Status.Won || status == Status.Rolled || status == Status.Cancelled;
     }
 
-    function _checkFunding(RandomConfig memory c) internal view {
+    function _reserve(RandomConfig memory c) internal view returns (uint96) {
+        return c.nativePayment ? minimumNativeBalance : minimumLinkBalance;
+    }
+
+    function _checkFunding(RandomConfig memory c, uint96 minimumBalance) internal view {
         require(c.subscription != 0, "Sorphera: VRF not configured");
         (uint96 link, uint96 nativeBalance,,, address[] memory consumers) =
             coordinator.getSubscription(c.subscription);
-        require(c.nativePayment ? nativeBalance > 0 : link > 0, "Sorphera: VRF unfunded");
+        uint96 balance = c.nativePayment ? nativeBalance : link;
+        require(balance > 0, "Sorphera: VRF unfunded");
+        require(balance >= minimumBalance, "Sorphera: VRF reserve");
         bool present;
         for (uint256 i; i < consumers.length; ++i) {
             if (consumers[i] == address(this)) present = true;
@@ -284,7 +304,7 @@ contract Sorphera is Guard, Owned {
         Rules memory rules = futureRules[game];
         require(rules.price != 0, "Sorphera: rules not configured");
         _validateNetwork(randomConfig);
-        _checkFunding(randomConfig);
+        _checkFunding(randomConfig, _reserve(randomConfig));
         id = previous + 1;
         uint256 cutoff = rules.firstCutoff + previous * WEEK;
         require(block.timestamp >= cutoff - WEEK, "Sorphera: window not started");
@@ -308,6 +328,7 @@ contract Sorphera is Guard, Owned {
         r.eligibleNFTs = g.nftCount;
         latestRound[game] = id;
         roundRandomConfig[game][id] = randomConfig;
+        roundMinimumVRFBalance[game][id] = _reserve(randomConfig);
         emit RoundOpened(
             game, id, r.group, r.vault, r.start, cutoff, r.earliestDraw, r.settlementDeadline, r.price
         );
@@ -390,8 +411,15 @@ contract Sorphera is Guard, Owned {
             return;
         }
         if (game == 1 && r.eligibleNFTs == 0 && block.timestamp >= r.settlementDeadline) {
-            _cancel(game, id);
-            return;
+            // FWA can deliver directly before the deadline without calling our reconciliation.
+            // Sweep the finite request list after the deadline before deciding there was no custody.
+            // Progress commits across bounded calls; unresolved FWA requests need not finish to cancel.
+            bool reviewed = v.reviewCancellation(r.settlementDeadline);
+            if (!reviewed) return;
+            if (r.eligibleNFTs == 0) {
+                _cancel(game, id);
+                return;
+            }
         }
         require(
             block.timestamp >= r.earliestDraw && v.pending() == 0 && v.budget() == 0 && v.refundCredit() == 0,
@@ -408,6 +436,7 @@ contract Sorphera is Guard, Owned {
     function _request(uint8 game, uint256 id, bool tieBreak) internal returns (uint256 requestId) {
         require(block.chainid == deploymentChainId, "Sorphera: chain changed");
         RandomConfig memory c = roundRandomConfig[game][id];
+        _checkFunding(c, roundMinimumVRFBalance[game][id]);
         requestId = coordinator.requestRandomWords(
             IVRF.Request(
                 c.keyHash,

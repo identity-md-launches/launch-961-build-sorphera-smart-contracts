@@ -1,0 +1,33 @@
+[Unit]
+Description=Sorphera permissionless keeper (dry-run default)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=sorphera
+Group=sorphera
+WorkingDirectory=/opt/sorphera
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PATH=/opt/foundry/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 /opt/sorphera/tools/keeper.py --config /etc/sorphera/keeper.json --state /var/lib/sorphera/keeper.json
+Restart=on-failure
+RestartSec=30
+RestartPreventExitStatus=2
+TimeoutStopSec=45
+KillSignal=SIGTERM
+StateDirectory=sorphera
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/sorphera /tmp
+# Shared /tmp is deliberate: per-sender locks must be visible across local instances.
+PrivateTmp=false
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

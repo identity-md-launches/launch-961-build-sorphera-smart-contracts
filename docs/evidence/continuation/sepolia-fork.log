@@ -1,0 +1,14 @@
+Compiling 30 files with Solc 0.8.26
+Solc 0.8.26 finished in 15.23s
+Compiler run successful!
+
+Ran 1 test for integration/rehearsal/Constructor.t.sol:ConstructorRehearsalTest
+[PASS] testResolvedManifestConstructorOrder() (gas: 91996)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 3.50s (2.33s CPU time)
+
+Ran 2 tests for integration/Sepolia.t.sol:SorpheraSepoliaIntegrationTest
+[PASS] testPinnedPublicDeploymentLacksCurrentBuilderABI() (gas: 7739)
+[PASS] testPublishedDependencyWiringAndLiveQuote() (gas: 124386)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 7.70s (6.31s CPU time)
+
+Ran 2 test suites in 11.03s (11.20s CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)

@@ -1,0 +1,174 @@
+{
+  "sourceBaselineCommit": "6a6b3e57adcbfac8063aaa0d734c055c4fcff940",
+  "candidate": "baseline plus delivered working-tree content; see source-content.json",
+  "compiler": "0.8.26",
+  "forge": "1.8.3",
+  "forgeCommit": "cae51ad458f6abb64852b7709eb784352429825d",
+  "settings": {
+    "evmVersion": "cancun",
+    "optimizer": true,
+    "optimizerRuns": 200,
+    "viaIR": true,
+    "bytecodeHash": "none"
+  },
+  "python": "3.12.3",
+  "commands": [
+    {
+      "command": "forge build",
+      "result": "PASS"
+    },
+    {
+      "command": "forge test --summary",
+      "passed": 75,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "forge fmt --check",
+      "result": "PASS"
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge fmt --check",
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools -p 'test_*.py' -v",
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/export.py",
+      "result": "PASS; ABI export and EIP-170/EIP-3860 size assertions"
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract SorpheraMainnetForkTest --fork-url http://127.0.0.1:18548 --fork-block-number 26145236 -vv -j 1",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract 'SorpheraSepoliaIntegrationTest|ConstructorRehearsalTest' --fork-url https://one.valve.city/rpc/vk_demo/evm/11155111 --fork-block-number 11866914 -vv",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "FOUNDRY_PROFILE=integration forge test --match-contract ConstructorRehearsalTest -vv",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/canary.py --config deployments/canary.example.json --mode dry-run",
+      "result": "PASS; no RPC/signing"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/keeper_smoke.py --rpc-url http://127.0.0.1:18547 --output /tmp/sorphera-keeper-smoke.json",
+      "result": "PASS; 5 end-to-end assertions; local Sepolia fork simulation only"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/source_manifest.py",
+      "result": "PASS; captures exact ordinary source and offline build inputs without git writes"
+    }
+  ],
+  "baselineBeforeChanges": {
+    "forgePassed": 65,
+    "failed": 0,
+    "skipped": 0
+  },
+  "invariants": {
+    "properties": 6,
+    "groupedRuns": 256,
+    "depth": 64,
+    "calls": 16384,
+    "reverts": 0
+  },
+  "mainnetFork": {
+    "block": 26145236,
+    "hash": "0xf7795aa3ff4975e1f907099acb0bdbefcead6ee7d85b0cca23584ce0704de179",
+    "unchangedDeployedDependencies": true,
+    "oracleEvidence": "SIMULATED callbacks and company funding; no live proof/billing"
+  },
+  "sepoliaFork": {
+    "block": 11866914,
+    "hash": "0x06d1c4d2944979bd9048d237637ab747cd808508b1ff83768d9ea178ba20dd99",
+    "oracleEvidence": "constructor/read tests; keeper smoke requests real coordinator on local fork, synthetic FWA, simulated callbacks"
+  },
+  "keeperSmoke": {
+    "passed": true,
+    "checks": 5,
+    "restartedEachTick": true,
+    "twoHourCallbackDelay": true,
+    "draws": 2,
+    "independentTieRequests": 1,
+    "claims": "ETH and NFT confirmed locally",
+    "evidence": "evidence/continuation/keeper-fork-simulation.json",
+    "startupCommand": "anvil --fork-url https://one.valve.city/rpc/vk_demo/evm/11155111 --fork-block-number 11866914 --chain-id 11155111 --port 18547 --silent",
+    "fixtureActors": "Anvil actor code/balances cleared/refunded locally because historical Sepolia dev accounts can have EIP-7702 delegation; no dependency bytecode replaced"
+  },
+  "runtimeSmoke": {
+    "passed": true,
+    "checks": 4,
+    "evidence": "evidence/continuation/runtime-simulation.json"
+  },
+  "transports": {
+    "publicnode": "both specified block queries returned HTTP403",
+    "mainnetArchive": "https://one.valve.city/rpc/vk_demo/evm/1",
+    "sepoliaArchive": "https://one.valve.city/rpc/vk_demo/evm/11155111",
+    "cacheCommand": "python3 tools/read-only-rpc.py --upstream https://one.valve.city/rpc/vk_demo/evm/1 --port 18548 --cache /tmp/sorphera-continuation-mainnet.sqlite --interval 0.03"
+  },
+  "realSepoliaVRF": {
+    "status": "NOT RUN",
+    "missing": [
+      "company test-wallet authorization",
+      "dedicated secure signer access",
+      "Sepolia test gas and subscription funds",
+      "company subscription control or authority to create"
+    ]
+  },
+  "privateIMDGate": {
+    "status": "NOT RERUN; private runner not exposed",
+    "lastPublicStatus": "FAILED",
+    "applicationRootCauseConfirmed": false,
+    "supportDraft": "IMD-SUPPORT-DRAFT.md",
+    "supportContacted": false
+  },
+  "publication": {
+    "status": "platform receipt pending; workspace artifacts prepared",
+    "finalCommit": null,
+    "workerGitWrites": false,
+    "noPublicationToolExposed": true
+  },
+  "liveBroadcasts": 0,
+  "publicSalesEnabled": false,
+  "mainnetDeployment": null,
+  "buildConfigurationAndDependenciesChanged": false,
+  "review": {
+    "separateAutomatedReviewer": true,
+    "roles": "independent initial contract review then remediation author; coordinator integration review; separate tooling review and canary author",
+    "professionalAudit": "NOT RUN",
+    "slither": "NOT RUN",
+    "mythril": "NOT RUN",
+    "unresolvedHighLivenessFinding": "accepted draw/tie VRF nonfulfillment can reserve assets indefinitely"
+  },
+  "bytecodeSizes": {
+    "Sorphera": {
+      "runtimeBytes": 22261,
+      "initBytesWithoutArgs": 22830
+    },
+    "SorpheraRouter": {
+      "runtimeBytes": 8424,
+      "initBytesWithoutArgs": 8648
+    },
+    "SorpheraVaultFactory": {
+      "runtimeBytes": 16188,
+      "initBytesWithoutArgs": 16491
+    },
+    "SorpheraVault": {
+      "runtimeBytes": 13378,
+      "initBytesWithoutArgs": 14478
+    }
+  },
+  "sourceContentSHA256": "887997e73655dcf68490eecf33bec65f04d146bb109a1cb8267a1558034d7340"
+}

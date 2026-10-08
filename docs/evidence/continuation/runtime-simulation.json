@@ -1,0 +1,17 @@
+{
+  "mode": "LOCAL_ANVIL_ONLY",
+  "chainId": 31337,
+  "client": "anvil/v1.8.3",
+  "transactionHash": "0xddf9b4a89a9b929e7e542f98a0156edcd44385f3288ddb2a63719d64027c0ffd",
+  "blockNumber": 1,
+  "blockHash": "0x4332b84167f29e33876469ca7691b3a22925da0e517d17d6d24aed1e0a16c826",
+  "status": "0x1",
+  "gasUsed": 21000,
+  "checks": [
+    "dry-run signed/sent zero transactions",
+    "accepted transaction followed by simulated RPC response loss",
+    "durable journal restart confirmed same transaction",
+    "idempotent same-action replay consumed exactly one nonce"
+  ],
+  "liveSepolia": "NOT RUN"
+}

@@ -339,6 +339,24 @@
   },
   {
     "type": "function",
+    "name": "configureVRFReserve",
+    "inputs": [
+      {
+        "name": "linkBalance",
+        "type": "uint96",
+        "internalType": "uint96"
+      },
+      {
+        "name": "nativeBalance",
+        "type": "uint96",
+        "internalType": "uint96"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "coordinator",
     "inputs": [],
     "outputs": [
@@ -886,6 +904,32 @@
   },
   {
     "type": "function",
+    "name": "minimumLinkBalance",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint96",
+        "internalType": "uint96"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "minimumNativeBalance",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint96",
+        "internalType": "uint96"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "name",
     "inputs": [
       {
@@ -1138,6 +1182,30 @@
         "name": "tieBreak",
         "type": "bool",
         "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "roundMinimumVRFBalance",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint96",
+        "internalType": "uint96"
       }
     ],
     "stateMutability": "view"
@@ -2071,6 +2139,25 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "VRFReserveConfigured",
+    "inputs": [
+      {
+        "name": "minimumLinkBalance",
+        "type": "uint96",
+        "indexed": false,
+        "internalType": "uint96"
+      },
+      {
+        "name": "minimumNativeBalance",
+        "type": "uint96",
+        "indexed": false,
+        "internalType": "uint96"
       }
     ],
     "anonymous": false

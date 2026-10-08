@@ -1,0 +1,154 @@
+No files changed, compilation skipped
+
+Ran 6 tests for test/SorpheraHardening.t.sol:SorpheraHardeningTest
+[PASS] testChangedChainStopsSalesAndRequests() (gas: 3907292)
+[PASS] testChangedHelperPermissionsStopNewRiskButPreserveCashClaims() (gas: 5035732)
+[PASS] testConstructorDiagnosticsEmptyChainAndUnresolvedDependencies() (gas: 6162)
+[PASS] testIndependentTieBreakLocksPrizesFeesAndNextRound() (gas: 6895025)
+[PASS] testProductionRejectsSimulationAndIncorrectGasLane() (gas: 150279)
+[PASS] testUnavailableInventoryDoesNotConsumeBudget() (gas: 5120931)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 6.52ms (4.51ms CPU time)
+
+Ran 2 tests for test/SepoliaCanary.t.sol:SepoliaCanaryTest
+[PASS] testControlledDependenciesAndNoPublicSalesWindow() (gas: 4096878)
+[PASS] testFullCoverageTwoGamesDelayedDrawAndIndependentTieClaims() (gas: 10701817)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 1.21s (1.21s CPU time)
+
+Ran 40 tests for test/Sorphera.t.sol:SorpheraTest
+[PASS] testApplicationSizeAndNoEscapeOpcodes() (gas: 17882420)
+[PASS] testBlackoutSlippageBudgetDeadlineAndFailedAcquireRollback() (gas: 4258887)
+[PASS] testBuilderAttributionOverpaymentAndPurchaserRewardsSeparated() (gas: 6141753)
+[PASS] testCallbackAuthenticationBindingDuplicateNoRerollOrCancellation() (gas: 4609800)
+[PASS] testCallbacksOutOfOrderAreBoundToSeparateGamesAndZeroWordValid() (gas: 10275859)
+[PASS] testCustodyBeforeDeadlineCountsEvenWhenReconciledAfter() (gas: 6279664)
+[PASS] testDelayedCashoutNFTGameRemainsIncidentalETHAndCancels() (gas: 4935161)
+[PASS] testETHForcedNFTCustodyIsReservedForWinners() (gas: 5958457)
+[PASS] testETHOneMatchFullPrizeAndOperatorReserve() (gas: 5950401)
+[PASS] testETHRolloverOldTicketsExpireCarryNeverSpent() (gas: 9384043)
+[PASS] testExpiredAcquisitionBlocksDrawUntilReconciled() (gas: 5389494)
+[PASS] testFactoryOnlyRegisteredLotteryCreatesVaults() (gas: 3560174)
+[PASS] testFixedETHSettlementEvenAfterExclusiveWindow() (gas: 4550787)
+[PASS] testForcedDeliveryAfterDeadlineStillCancels() (gas: 5236103)
+[PASS] testFuzzConservationAfterFWAChargesCashoutAndLateFunds(uint8,uint64) (runs: 256, μ: 7002794, ~: 6657868)
+[PASS] testFuzzConservationUnusedBudget(uint8,uint64) (runs: 256, μ: 6710760, ~: 6014999)
+[PASS] testFuzzSamplingRangeDistinctAndReplay(uint256) (runs: 256, μ: 33333, ~: 33288)
+[PASS] testLargeSalesConstantFinalizationAndPartialLargeInventory() (gas: 188056746)
+[PASS] testLateAllocationAfterCancellationSettlesToDivisibleETHRefund() (gas: 5392703)
+[PASS] testLateETHRecoveryGoesToOriginalWinnerNotNextRound() (gas: 8265490)
+[PASS] testLateNFTDoesNotRescueCancelledRoundAndSharedRecovery() (gas: 5644771)
+[PASS] testMultipleETHMatchesDuplicatesAndRounding() (gas: 5012549)
+[PASS] testNFTCancellationFeesPartialRefundAndLateRecovery() (gas: 5397864)
+[PASS] testNFTFeeReserveCannotBeWithdrawnUntilSuccess() (gas: 6140014)
+[PASS] testNFTOneWinnerAllAssetsAndFunds() (gas: 7977135)
+[PASS] testNFTRolloverInventoryAndResidualCannotRespin() (gas: 10237588)
+[PASS] testNFTTieBreakIncludesEveryDuplicateAndIsDomainSeparated() (gas: 7113122)
+[PASS] testNFTTransferFailuresAreIsolatedAndRetryable() (gas: 7512514)
+[PASS] testNoLateEntryAndBoundedTickets() (gas: 3635338)
+[PASS] testPermanentlyStuckNFTNeverFreezesETHGameAndLateRecoveryFollowsWinner() (gas: 9714225)
+[PASS] testRejectedETHAndReentrancyRetainLiabilities() (gas: 4977446)
+[PASS] testRewardHelperFailureRollsBackAllowanceAndClaims() (gas: 5071872)
+[PASS] testStartsDisabledUnconfiguredAndOwnerSettings() (gas: 5716865)
+[PASS] testStuckNFTCustodyRequiredAndRecoveryAfterWindow() (gas: 6816668)
+[PASS] testStuckOnlyNFTCancelsRoundAndLateRecoveryIsSharedByRefundCohort() (gas: 8999634)
+[PASS] testUnclaimedWinningsStayReservedAcrossNewRoundAndWithdrawals() (gas: 9446984)
+[PASS] testUnorderedNumbersIndexedNoTicketTransfer() (gas: 4110411)
+[PASS] testUnwithdrawnFWARefundPreventsDraw() (gas: 4786111)
+[PASS] testWeeklyGamesIndependentFreezeAndPauseClaims() (gas: 8616524)
+[PASS] testZeroTicketsSkipRandomnessAndSeparateGameDoesNotBlock() (gas: 10133660)
+Suite result: ok. 40 passed; 0 failed; 0 skipped; finished in 830.10ms (828.04ms CPU time)
+
+Ran 17 tests for test/SorpheraAdversarial.t.sol:SorpheraAdversarialTest
+[PASS] testBadCallbackShapeUnknownRequestAndFutureRulesCannotMutateActiveRound() (gas: 7974384)
+[PASS] testCancellationAccumulatesSubTicketLateRecoveriesWithoutFees() (gas: 4776016)
+[PASS] testDuplicateClaimIdsNeverMultiplyPayoutAndMixedOwnerBatchRollsBack() (gas: 4974642)
+[PASS] testEmptyAndOversizedMaintenanceAndClaimBatchesReject() (gas: 3865150)
+[PASS] testEmptyAndUnderpaidAndOverpaidSalesAreAtomic() (gas: 3596425)
+[PASS] testEveryCombinationHasUniqueKeyAndAllSixOrdersMatch() (gas: 355211609)
+[PASS] testForgedReceiptStampCannotRescueLateDeliveryAndDeadlineBoundaryIsStrict() (gas: 5667527)
+[PASS] testFuzzPriceEdgesKeepExactSplitAndFullBatchRefund(uint256,uint8) (runs: 1000, μ: 6314741, ~: 5427345)
+[PASS] testFuzzReceiptTimeNotReconcileTimeDecidesCancellation(uint256,bool) (runs: 512, μ: 5374161, ~: 5414908)
+[PASS] testInvalidTicketAtEndRollsBackEntireBatchAndBothAccounts() (gas: 8835365)
+[PASS] testMaximumTicketPriceFullBatchRefundsAllUnspentFunds() (gas: 12006836)
+[PASS] testMinimumTicketPriceSingleEntryRefundsAllUnspentFunds() (gas: 4164222)
+[PASS] testNFTReceiverCannotReenterClaimAnotherAsset() (gas: 7176177)
+[PASS] testPauseBlocksSaleButPreservesPermissionlessSettlement() (gas: 6453166)
+[PASS] testSecondLotteryCannotValidateAgainstBoundFactoryOrCreateVaults() (gas: 8794940)
+[PASS] testStuckAssetRecoveredIntoRolledRoundJoinsCarryoverForNextWinnerOnly() (gas: 11704233)
+[PASS] testVaultPrivilegeAndCrossRoundRequestBoundaries() (gas: 7764256)
+Suite result: ok. 17 passed; 0 failed; 0 skipped; finished in 1.91s (1.91s CPU time)
+
+Ran 8 tests for test/SorpheraReviewRegression.t.sol:SorpheraReviewRegressionTest
+[PASS] testFrozenReserveRejectsRequestBeforeAcceptanceThenTopupAllowsSameRound() (gas: 5189051)
+[PASS] testHostileOwnerOfCannotExhaustCancellationSweepGas() (gas: 5120692)
+[PASS] testInsufficientCallbackGasIsBilledAndCannotReplaceAcceptedDraw() (gas: 4311510)
+[PASS] testLargePendingCancellationReviewCommitsBoundedProgress() (gas: 21096668)
+[PASS] testPermanentTieNonfulfillmentLocksUntilOriginalDelayedCallback() (gas: 6554190)
+[PASS] testPredeadlineCustodyInLastCancellationBatchPreservesDraw() (gas: 24022019)
+[PASS] testReservePermissionsCurrencyAndConsumerRecheckedBeforeRequest() (gas: 4388171)
+[PASS] testUnreconciledPredeadlineCustodyCannotBeFrontRunByCancellation() (gas: 5463542)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 15.14ms (12.45ms CPU time)
+
+Ran 2 tests for test/SorpheraInvariant.t.sol:SorpheraInvariantTest
+[PASS]
+SorpheraInvariantTest invariants:
+[PASS] invariant_externalFlowsConserveETH
+[PASS] invariant_gameAssetsNeverCrossSubsidize
+[PASS] invariant_liabilitiesEqualReservedFeesCashAndUnpaidTickets
+[PASS] invariant_purchaserAndBuilderTokensStayConserved
+[PASS] invariant_roundOutcomesFollowFixedRules
+[PASS] invariant_vaultRequestsAndCustodyRemainBacked
+ SorpheraInvariantTest invariants (runs: 256, calls: 16384, reverts: 0)
+
+╭-----------------+-----------------+-------+---------+----------╮
+| Contract        | Selector        | Calls | Reverts | Discards |
++================================================================+
+| SorpheraHandler | acquire         | 998   | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | advance         | 1039  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | builderReward   | 999   | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | buy             | 2119  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | claim           | 1004  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | claimNFT        | 1031  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | forceSettlement | 1049  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | pause           | 1017  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | queueTokens     | 1030  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | receiveTokens   | 952   | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | recoverStuck    | 1007  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | resolve         | 1063  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | rewardEpoch     | 1014  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | syncOrDonate    | 1000  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| SorpheraHandler | withdraw        | 1062  | 0       | 0        |
+╰-----------------+-----------------+-------+---------+----------╯
+
+[PASS] testHandlerPinnedLifecycleExercisesClaimsAndLateRecoveries() (gas: 15403156)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 19.47s (19.47s CPU time)
+
+╭------------------------------+--------+--------+---------╮
+| Test Suite                   | Passed | Failed | Skipped |
++==========================================================+
+| SepoliaCanaryTest            | 2      | 0      | 0       |
+|------------------------------+--------+--------+---------|
+| SorpheraTest                 | 40     | 0      | 0       |
+|------------------------------+--------+--------+---------|
+| SorpheraAdversarialTest      | 17     | 0      | 0       |
+|------------------------------+--------+--------+---------|
+| SorpheraHardeningTest        | 6      | 0      | 0       |
+|------------------------------+--------+--------+---------|
+| SorpheraInvariantTest        | 2      | 0      | 0       |
+|------------------------------+--------+--------+---------|
+| SorpheraReviewRegressionTest | 8      | 0      | 0       |
+╰------------------------------+--------+--------+---------╯
+

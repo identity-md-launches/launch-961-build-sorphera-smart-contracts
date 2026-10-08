@@ -1,0 +1,21 @@
+{
+  "chainId": 11155111,
+  "salesEnabledOnDeployment": false,
+  "numberFormat": {"mainCount": 3, "mainMinimum": 1, "mainMaximum": 20, "distinctMain": true, "unorderedMatching": true, "bonusMinimum": 1, "bonusMaximum": 5},
+  "defaultTicketPriceWei": "5000000000000000",
+  "operatorFeeBps": 1000,
+  "salesWindowSeconds": 604800,
+  "games": {"0": "Sorphera ETH Jackpot", "1": "Sorphera NFT Jackpot"},
+  "batches": {"tickets": 100, "acquisitions": 8, "reconciliation": 50, "nftClaims": 20, "rewardEpochs": 32},
+  "ownerMustConfigureBeforeActivation": [
+    "compatibleSepoliaFWAPool",
+    "verifiedSepoliaFWATransferHelper",
+    "separateGameFirstCutoffs",
+    "eachGameDrawDelayAndSettlementDelay",
+    "eachGameMaxAcquisitionFeeMaxTotalMinWeightedValueAndSlippage",
+    "companyOwnedFundedLotteryVRFSubscription",
+    "verifiedVRFKeyHashConfirmationsCallbackGasAndPaymentCurrency"
+  ],
+  "constructorCoordinator": "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B",
+  "configurationStatus": "unset-not-a-deployment-configuration"
+}

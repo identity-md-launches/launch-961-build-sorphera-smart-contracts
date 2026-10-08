@@ -1,0 +1,21 @@
+{
+  "network": "Ethereum Sepolia",
+  "chainId": 11155111,
+  "checkedAtUTC": "2026-10-08",
+  "block": 11866914,
+  "pool": "0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90",
+  "explorerSource": {
+    "url": "https://sepolia.etherscan.io/address/0x8D62A3eb2AC9Fc0148f1A69CAC3Eb2c71623AA90#code",
+    "contractName": "FWAV2",
+    "compiler": "v0.8.26+commit.8a97fa7a",
+    "sourceSha256": "81a053050574d462fc27e26b9587b1ff4ac0108d989fece955671b275dbad919"
+  },
+  "builderReference": {
+    "url": "https://github.com/adamlizek/fwa-examples",
+    "commit": "a54aa65d47173cde00dd337d40e5f6d0a1b9b546",
+    "file": "FWAV2BuilderBase.sol",
+    "blob": "9c3b7453c7d265c195d07ae0ba937baebb4de1bf"
+  },
+  "finding": "The deployed pool calls registerAcquisition(requestId, purchaser, fee, surchargeBps), without builder caller. Its linked Rewards lacks builderRewardBps(). This cannot provide the current documented builder attribution. SorpheraRouter.configure rejects it.",
+  "deploymentStatus": "No deployment or transactions performed."
+}

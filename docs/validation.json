@@ -1,0 +1,11 @@
+{
+  "compiler": "0.8.26",
+  "foundry": "1.8.3",
+  "forgeBuild": "passed",
+  "forgeTest": {"passed": 34, "failed": 0, "skipped": 0, "fuzzTests": 3, "runsPerFuzzTest": 256},
+  "forgeFmtCheck": "passed",
+  "separateSepoliaForkChecks": {"block": 11866914, "passed": 2, "failed": 0, "purpose": "read-only wiring and explicit current-builder incompatibility"},
+  "deployment": "not performed",
+  "independentSecurityAudit": "not performed",
+  "notes": "Local checks are evidence only, not independent verification or a security audit. Public FWA Sepolia dependencies do not implement the current documented builder flow; sales cannot be enabled against them."
+}

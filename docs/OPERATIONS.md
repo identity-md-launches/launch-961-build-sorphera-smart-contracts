@@ -1,0 +1,47 @@
+# Sorphera operations and lifecycles
+
+## Timing and sales
+
+Each game's first cutoff anchors its independent weekly cadence. Round `r` sells in `[firstCutoff + (r-1)*7 days - 7 days, firstCutoff + (r-1)*7 days)`. No owner or keeper can extend an active cutoff. Earliest draw and NFT settlement deadline are cutoff plus the frozen per-game delays. The strict deadline boundary for securing an NFT is **before** `settlementDeadline`. Secured means verified and recorded by the vault: `settle` does both atomically. External deliveries must be reconciled before that deadline; an unrecorded earlier transfer cannot prove its historical custody time on-chain and can result in cancellation.
+
+Only one unresolved selling/drawing round per game is open at a time. The other game proceeds independently. If reconciliation/VRF delays overlap the next scheduled week, that next round opens late with its original cutoff, yielding a shorter actual selling period. Entirely missed windows must be opened/closed as zero-ticket rounds, one bounded transaction per round, without moving the weekly anchor or rolling old tickets forward. Ordinary operations therefore target two draws per week; external outages can delay them.
+
+Ticket price and FWA spending bounds are snapshotted on opening, before any sale. Main numbers are always 1–20, bonus 1–5, and fee always 10%; no administrator can change that format or fee in these immutable contracts. New price/delay/acquisition settings affect unopened rounds only. Pausing ticket sales leaves claims and keeper methods callable and does not alter published deadlines.
+
+## Keeper sequence
+
+1. Reconstruct vaults and schedules from `RoundOpened` / `VaultCreated`; verify chain ID and configured dependencies. Observe current FWA quote and backing conditions.
+2. While sales remain open, call each vault's `acquire(count, deadline)` with at most 8 pulls and a deadline no later than cutoff. The immutable round budget and caps govern permissionless spending. No keeper can choose another purchaser or another game's budget.
+3. Monitor FWA requests and `acquisitionMeta`/queue deadlines. Anyone may advance FWA's ordered queue via `vault.process(maxCount)` (at most 50); unrelated earlier FWA requests can delay processing. Expired requests refund only what FWA actually credits, not its VRF charge.
+4. As soon as an allocation appears, call `vault.settle(requestId)`. ETH vaults always call `acceptDepositorBid`; NFT vaults always call `keepNFT`. Read the pool's current settlement/finalize windows, measured from `allocatedAt`, and settle well before either window opens to others. Allocation/settlement is asynchronous; a purchase event alone does not create an NFT prize.
+5. Use `reconcile(ids)` in batches of at most 50 after external settlements/refunds. Reconciliation is idempotent and verifies purchaser, listing state and NFT custody. `recoverNFT(requestId)` retries FWA's purchaser-only stuck-asset path. Verify `ownerOf` and `CustodySecured` afterward. Calling an untracked request reverts.
+6. Call `recoverRefund()` when credit exists, then `syncETH()`. Overpayments and received ETH above the unspent acquisition budget can be exported earlier; at cutoff the entire remaining budget becomes prize funds. Exported funds can never return to the acquisition budget.
+7. At cutoff close the round. Once its earliest request time passes, `requestDraw` performs the remaining checks and freezes inventory. Every acquisition must be terminal, every known refund credit withdrawn, and unspent budget exported. With zero tickets it skips VRF and rolls; with no NFT secured by the NFT deadline it cancels before checking pending FWA requests, preserving their eventual refunds/assets for the cancellation cohort.
+8. Wait for Chainlink, then call `finalize`. Callbacks only authenticate and store the word. Finalization derives the balls, reads the matching-ticket index and records the result; it neither transfers inventory nor iterates tickets.
+9. Winners/refund holders claim ETH using their ticket IDs and a receiving address. NFT winners call the originating vaults with asset indices; repeat for partial inventory. Collect purchaser epoch rewards and queue each eligible ticket's share through the helper. A nominated compatible recipient need not be the ticket owner. Open the next weekly round when the previous round is terminal.
+
+No keeper payment comes out of the prize. Company-operated keepers should monitor all vaults, maintain gas resources and alerts, and keep the lottery subscription adequately funded. A nonzero subscription balance is necessary but not proof of sufficient funding at future gas prices. Request gas lane/confirmations and callback gas require canary validation; the mock does not model a cryptographic proof or Chainlink billing.
+
+## Deadlines, outages and exceptional recoveries
+
+There is no manual result, fallback randomness, retry request, replacement request, reveal secret, post-request cancellation or claim timeout. A lottery VRF delay leaves the already closed round in `Requested`; keep assets reserved and investigate coordinator/subscription operation. The owner cannot use a new subscription to reroll that round. If a request callback can never be delivered, assets remain reserved indefinitely; this liveness risk is an explicit tradeoff required by the no-reroll/no-cancellation rule.
+
+FWA's [settlement rules](https://www.fwa.fun/docs/winning) allow depositor resolution after its settlement window and public default resolution after its finalize window. Purchasers can still exercise their choice while a listing remains allocated, even after those windows. Keeper timeliness is essential:
+
+- A missed NFT keep can become a forced ETH cashout. Record it only as incidental NFT-round ETH, not as an NFT or guaranteed resale value. If no other eligible NFT exists by the deadline, cancel and refund available assets.
+- A missed ETH cashout can become forced NFT delivery. Reconciliation recovers/verifies that custody and assigns it no ETH value. This involuntary asset remains an in-kind recovery right of the round's exact-match winners (or rollover group). The actual ETH prize still includes only cash. Sorphera has no authority to sell, substitute or voluntarily choose an NFT for that game.
+- A cancelled NFT round can receive an NFT later from a request already outside its control. Cancellation never reverses and no new randomness is drawn. The recovered asset is held in equal ticket shares for that cancellation cohort. Cash and token refunds remain independently claimable.
+
+For the latter two shared-asset cases, an indivisible NFT requires unanimous nomination by every entitled ticket, one vote per ticket per asset. `claimNFTs` records/replaces a ticket's recipient vote; once every eligible ticket names the same recipient the vault attempts delivery. This is custodial co-ownership, **not a cash refund or a new lottery**. Holdouts can delay that indivisible asset indefinitely; no administrator can break the tie or seize it. For the normal NFT jackpot, there is always exactly one entitled ticket, so this mechanism adds no votes or delay. No-match old tickets have no vote in the next round.
+
+A rejected NFT transfer is isolated through an external self-call with a 500,000 gas ceiling, rolls back that asset's effects and emits `NFTClaimFailed`. Other indices may succeed. Retry to a receiver that supports ERC721 and fits that gas budget. Deliberately incompatible/malicious collection behavior can still prevent delivery. Batch size and overall gas remain the caller's responsibility.
+
+## Accounting and conservation
+
+Vaults physically separate acquisition money, aggregated purchaser refunds, tokens and NFTs by origin. The lottery's `Group` joins only consecutive rounds of **one game** that rolled over; it avoids an ever-growing traversal of old rounds. A terminal group points to its winning/cancelled round forever. Core groups receive only attributable transfers from their registered vaults. Unexpected forced ETH in a vault is exported to that vault's origin group; forced ETH directly in the lottery is unaccounted surplus and has no admin sweep.
+
+`totalLiabilities` equals ordinary lottery ETH receipts minus successful payouts and operator withdrawals. It includes held fees, released company fees, unclaimed per-ticket allocations and cash/dust still in groups. Normally `address(lottery).balance == totalLiabilities`; externally forced ETH can make balance larger. Operator withdrawals subtract only from `operatorFees`, which increases only after a noncancelled result. Unspent budget in vaults is a separate liability backed by that vault's balance, never the core's available fees.
+
+For a terminal winning group, each new ETH receipt adds `floor(receipt/divisor)` to every eligible ticket's cumulative entitlement, with division remainder sent to the current unresolved group of that game. Claims subtract only previously paid entitlement. For cancellation the remainder stays in the same group and combines with future receipts; no operator fee is released. Per-ticket purchaser-token entitlements use cumulative received tokens divided by the same divisor; token dust stays reserved in that origin vault for later token receipts, never company funds.
+
+FWA rewards can fail or arrive late. Zero allowance earns zero company revenue. No assumed token emission, market price or NFT sale value appears in prize math. Full refunds after third-party charges are not promised.

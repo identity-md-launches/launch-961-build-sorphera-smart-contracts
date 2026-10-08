@@ -44,6 +44,9 @@ contract SorpheraVault is Guard, RewardTransfer {
     mapping(uint256 => uint256) public assetIndexPlusOne;
     Asset[] public assets;
     mapping(uint256 => uint256) public tokenClaimed;
+    // Physical receipt time per (collection, tokenId), written by the ERC721 receive hook. Reconciliation
+    // uses it so an NFT delivered before the settlement deadline counts even when recorded afterwards.
+    mapping(address => mapping(uint256 => uint256)) public receivedAt;
     // For exceptional forced NFT delivery in an ETH round, or late NFT in a cancelled round:
     // equal ticket owners may unanimously nominate a recipient, without admin discretion or a sale.
     mapping(uint256 => mapping(address => uint256)) public releaseVotes;
@@ -58,6 +61,7 @@ contract SorpheraVault is Guard, RewardTransfer {
         uint256 finalizeWindow
     );
     event Reconciled(uint256 indexed requestId, uint256 listingId, uint8 status);
+    event DeliveryStuck(uint256 indexed requestId, uint256 listingId);
     event CustodySecured(
         uint256 indexed index,
         address indexed collection,
@@ -133,6 +137,8 @@ contract SorpheraVault is Guard, RewardTransfer {
     }
 
     /// @notice Fixed settlement: only ETH for game 0, only keepNFT for game 1. No caller choice.
+    /// @dev An allocation that lands after the NFT round was already cancelled has no jackpot to join;
+    ///      it settles to the ETH bid so the refund cohort receives divisible cash, not a shared NFT.
     function settle(uint256 id) external nonReentrant {
         require(requestState[id] != 0, "Sorphera: unknown acquisition");
         IFWA.Acquisition memory a = pool.acquisitions(id);
@@ -140,8 +146,11 @@ contract SorpheraVault is Guard, RewardTransfer {
         IFWA.Listing memory l = pool.listings(a.listingId);
         require(l.purchaser == address(this), "Sorphera: purchaser");
         if (l.status == 2) {
-            if (game == 0) pool.acceptDepositorBid(a.listingId);
-            else pool.keepNFT(a.listingId);
+            if (game == 0 || ISorphera(lottery).isCancelled(game, round)) {
+                pool.acceptDepositorBid(a.listingId);
+            } else {
+                pool.keepNFT(a.listingId);
+            }
         }
         _reconcile(id);
     }
@@ -177,11 +186,17 @@ contract SorpheraVault is Guard, RewardTransfer {
                     assets.push(Asset(l.collection, l.tokenId, id, a.listingId, false));
                     assetIndexPlusOne[a.listingId] = index + 1;
                     ++securedCount;
-                    ISorphera(lottery).recordNFT(game, round);
+                    uint256 securedAt = receivedAt[l.collection][l.tokenId];
+                    if (securedAt == 0) securedAt = block.timestamp;
+                    ISorphera(lottery).recordNFT(game, round, securedAt);
                     emit CustodySecured(index, l.collection, l.tokenId, id, a.listingId);
+                } else if (pool.stuckNFTRecipient(a.listingId) == address(this)) {
+                    // A Settled flag is not custody, so nothing is recorded. The request is still terminal
+                    // for pending accounting: FWA will not change it again, and waiting on a collection that
+                    // rejects the vault would freeze this round and every later round of the game. A later
+                    // recoverNFT records the asset as a late in-kind recovery of this round's entitlements.
+                    emit DeliveryStuck(id, a.listingId);
                 }
-                // Stuck delivery remains pending; a notification or Settled flag is not custody.
-                if (pool.stuckNFTRecipient(a.listingId) == address(this)) terminal = false;
             }
         }
         if (terminal && requestState[id] == 1) {
@@ -284,7 +299,8 @@ contract SorpheraVault is Guard, RewardTransfer {
         return assets.length;
     }
 
-    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+    function onERC721Received(address, address, uint256 tokenId, bytes calldata) external returns (bytes4) {
+        receivedAt[msg.sender][tokenId] = block.timestamp;
         return 0x150b7a02;
     }
     receive() external payable {}

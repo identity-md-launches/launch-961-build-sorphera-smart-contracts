@@ -19,6 +19,8 @@ Use Sepolia chain ID 11155111 and label **test ETH**. Show **Sorphera ETH Jackpo
 | `claimedETH(game, group, ticket)` / `entitlement(game, originRound, ticket, owner)` | Already-claimed ETH and eligibility/divisor for the terminal round's ticket |
 | Vault `requestCount()` / `requestAt(index)` / `requestState(id)` | Page through acquisition IDs and reconciliation status |
 | Vault `assets(index)` / `assetCount()` | Collection, token ID, originating acquisition/listing and claimed flag |
+| Vault `receivedAt(collection, tokenId)` | Physical receipt timestamp from the ERC721 hook; zero if never received through `safeTransferFrom` |
+| Factory `lottery()` | The one registered lottery allowed to create vaults |
 | Vault `pending()` / `budget()` / `spent()` / `refundCredit()` | Required reconciliation and actual net acquisition spend |
 | Vault `settings()` / `pool()` / `rewards()` / `helper()` | Origin's immutable settings and dependencies |
 
@@ -28,9 +30,9 @@ Claim ETH with `claimETH(game, originRound, ticketIds, recipient)`. For a rolled
 
 ## Replay and reconnection
 
-Index logs from the actual deployment block. Use `(chainId, lotteryAddress, game, round)` for a round; add ticket/index/request ID to form resource IDs. Track block hashes and confirmations; on reorg, roll back logs then reload contract state. `RoundOpened` plus `VaultCreated` discovers every vault and its creation block. Read-only views allow recovery if a notification was missed. Never use an FWA notification as proof of NFT custody.
+Index logs from the actual deployment block. Use `(chainId, lotteryAddress, game, round)` for a round; add ticket/index/request ID to form resource IDs. Track block hashes and confirmations; on reorg, roll back logs then reload contract state. `RoundOpened` plus `VaultCreated` discovers every vault and its creation block. Filter `VaultCreated` by its indexed `lottery` argument equal to the deployed `Sorphera` address, and treat `RoundOpened.vault` (equivalently `getRound(game, round).vault`) as the authoritative vault for a round; the factory only lets the registered lottery create vaults. Read-only views allow recovery if a notification was missed. Never use an FWA notification as proof of NFT custody; the vault's `receivedAt(collection, tokenId)` and `CustodySecured` are the custody evidence.
 
-Process the following persistent event families: `RulesConfigured`, `RandomnessConfigured`, `SalesEnabled`, `LaunchValidated`, `RoundOpened`, `TicketBought`, `RoundClosed`, vault `Acquisition`, `Reconciled`, `CustodySecured`, `RefundRecovered`, `ETHExported`, core `PrizeCredited`, `DrawRequested`, `RandomnessStored`, `Result`, `Rollover`, `DustCarried`, `Cancelled`, `Claimed`, `NFTClaimed`, `NFTClaimFailed`, `RewardQueued`, `FeesReleased`, and ownership/company-fee events. Transaction receipt and originating contract address supply context for vault-local events.
+Process the following persistent event families: `RulesConfigured`, `RandomnessConfigured`, `SalesEnabled`, `LaunchValidated`, factory `LotteryRegistered` / `VaultCreated`, `RoundOpened`, `TicketBought`, `RoundClosed`, vault `Acquisition`, `Reconciled`, `DeliveryStuck`, `CustodySecured`, `RefundRecovered`, `ETHExported`, core `PrizeCredited`, `DrawRequested`, `RandomnessStored`, `Result`, `Rollover`, `DustCarried`, `Cancelled`, `Claimed`, `NFTClaimed`, `NFTClaimFailed`, `RewardQueued`, `FeesReleased`, and ownership/company-fee events. Transaction receipt and originating contract address supply context for vault-local events.
 
 Status enum values: `0 None`, `1 Sales`, `2 Closed`, `3 Requested`, `4 RandomReady`, `5 Won`, `6 Rolled`, `7 Cancelled`. At cutoff a round can still store `Sales` until somebody closes it; the timestamp already prevents purchases. Pending oracle/delivery is not a failed claim or an invitation to reroll.
 

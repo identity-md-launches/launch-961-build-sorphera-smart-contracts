@@ -212,6 +212,7 @@ contract Sorphera is Guard, Owned {
         factory.router().validate(factory.router().pool());
         _checkFunding(randomConfig);
         require(futureRules[0].price != 0 && futureRules[1].price != 0, "Sorphera: rules not configured");
+        require(factory.lottery() == address(this), "Sorphera: factory not bound");
         launchValidated = true;
         emit LaunchValidated();
     }
@@ -318,14 +319,20 @@ contract Sorphera is Guard, Owned {
         emit PrizeCredited(game, id, r.group, msg.value);
     }
 
-    function recordNFT(uint8 game, uint256 id) external {
+    /// @param securedAt When the vault physically received the asset (its ERC721 hook time, else now).
+    ///        Custody before the active round's settlement deadline counts even if reconciled afterwards.
+    function recordNFT(uint8 game, uint256 id, uint256 securedAt) external {
         Round storage r = rounds[game][id];
         require(msg.sender == r.vault, "Sorphera: vault only");
         Group storage g = groups[game][r.group];
         ++g.nftCount;
         Round storage active = rounds[game][g.currentRound];
-        if (g.terminalRound == 0 && block.timestamp < active.settlementDeadline) ++active.eligibleNFTs;
+        if (g.terminalRound == 0 && securedAt < active.settlementDeadline) ++active.eligibleNFTs;
         emit InventoryRecorded(game, id, r.group, g.nftCount);
+    }
+
+    function isCancelled(uint8 game, uint256 id) external view returns (bool) {
+        return rounds[game][id].status == Status.Cancelled;
     }
 
     /// @notice Closes, reconciles and freezes before one immutable lottery request. Zero-ticket rounds skip VRF.

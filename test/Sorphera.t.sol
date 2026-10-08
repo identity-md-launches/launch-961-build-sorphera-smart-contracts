@@ -74,9 +74,10 @@ contract SorpheraTest is Test {
         token.setDistributor(address(rewards));
         router = new SorpheraRouter(address(this));
         router.configure(address(pool), address(helper));
-        factory = new SorpheraVaultFactory(address(router));
+        factory = new SorpheraVaultFactory(address(router), address(this));
         vrf = new MockVRF();
         lottery = new Sorphera(address(this), address(factory), address(vrf));
+        factory.setLottery(address(lottery));
         vrf.setConsumer(address(lottery));
         cutoff = vm.getBlockTimestamp() + 7 days;
         lottery.configureRules(0, _rules(cutoff));
@@ -158,6 +159,36 @@ contract SorpheraTest is Test {
         vrf.setFunding(0);
         vm.expectRevert("Sorphera: VRF unfunded");
         lottery.validateLaunch();
+        vrf.setFunding(1 ether);
+        fresh.configureRules(0, _rules(cutoff));
+        fresh.configureRules(1, _rules(cutoff + 1 hours));
+        fresh.configureRandomness(Sorphera.RandomConfig(123, keccak256("mock key"), 3, 200000, true));
+        vrf.setConsumer(address(fresh));
+        vm.expectRevert("Sorphera: factory not bound");
+        fresh.validateLaunch();
+    }
+
+    function testFactoryOnlyRegisteredLotteryCreatesVaults() public {
+        SorpheraVault.Settings memory s = SorpheraVault.Settings(1, 1, 1, 1, cutoff);
+        vm.prank(alice);
+        vm.expectRevert("Sorphera: lottery only");
+        factory.create(0, 1, s);
+        vm.expectRevert("Sorphera: lottery only");
+        factory.create(0, 1, s);
+        vm.expectRevert("Sorphera: lottery bound");
+        factory.setLottery(alice);
+        SorpheraVaultFactory unbound = new SorpheraVaultFactory(address(router), address(this));
+        vm.expectRevert("Sorphera: lottery not bound");
+        unbound.create(0, 1, s);
+        vm.prank(alice);
+        vm.expectRevert("Sorphera: owner only");
+        unbound.setLottery(address(lottery));
+        vm.expectRevert("Sorphera: lottery code");
+        unbound.setLottery(alice);
+        unbound.setLottery(address(lottery));
+        assertEq(unbound.lottery(), address(lottery));
+        SorpheraVault v = _open(0);
+        assertEq(v.lottery(), address(lottery));
     }
 
     function testWeeklyGamesIndependentFreezeAndPauseClaims() public {
@@ -451,15 +482,151 @@ contract SorpheraTest is Test {
         v.settle(1);
         vm.warp(vm.getBlockTimestamp() + 3 hours);
         pool.finalizeUnsettled(1);
+        vm.expectEmit(true, false, false, true);
+        emit SorpheraVault.DeliveryStuck(1, 1);
         v.reconcile(_one(1));
-        assertEq(v.pending(), 1);
+        assertEq(v.pending(), 0);
         assertEq(v.securedCount(), 0);
+        assertEq(lottery.getRound(1, 1).eligibleNFTs, 0);
+        vm.warp(lottery.getRound(1, 1).earliestDraw);
+        vm.expectRevert("Sorphera: no secured NFT");
+        lottery.requestDraw(1, 1);
+        vm.expectRevert("mock NFT rejected");
+        v.recoverNFT(1);
         nft.setRejected(1, false);
         v.recoverNFT(1);
-        assertEq(v.pending(), 0);
+        assertEq(v.securedCount(), 1);
         assertEq(nft.ownerOf(1), address(v));
         _draw(1, 1, 7);
         assertEq(lottery.getRound(1, 1).frozenNFTs, 1);
+    }
+
+    function testPermanentlyStuckNFTNeverFreezesETHGameAndLateRecoveryFollowsWinner() public {
+        SorpheraVault v = _open(0);
+        _buy(0, 1, alice, _pick(0, 1, 70), 1);
+        _buy(0, 1, bob, _pick(0, 1, 71), 3);
+        v.acquire(1, vm.getBlockTimestamp() + 1);
+        pool.allocate(1, 0.02 ether);
+        nft.setRejected(1, true);
+        vm.warp(vm.getBlockTimestamp() + 3 hours);
+        pool.finalizeUnsettled(1);
+        assertEq(pool.stuckNFTRecipient(1), address(v));
+        v.reconcile(_one(1));
+        assertEq(v.pending(), 0);
+        assertEq(v.securedCount(), 0);
+        vm.warp(cutoff + 365 days);
+        _draw(0, 1, 70);
+        assertEq(uint256(lottery.getRound(0, 1).status), uint256(Sorphera.Status.Won));
+        uint256 beforeBalance = alice.balance;
+        _claim(0, 1, alice, 1, alice);
+        assertEq(alice.balance - beforeBalance, 0.008 ether);
+        lottery.withdrawOperator(company, 0.002 ether);
+        assertEq(lottery.openRound(0), 2);
+        nft.setRejected(1, false);
+        v.recoverNFT(1);
+        assertEq(v.securedCount(), 1);
+        assertEq(lottery.getRound(0, 2).eligibleNFTs, 0);
+        vm.prank(bob);
+        vm.expectRevert("Sorphera: not winning ticket");
+        v.claimNFTs(2, _one(0), bob);
+        vm.prank(alice);
+        v.claimNFTs(1, _one(0), alice);
+        assertEq(nft.ownerOf(1), alice);
+        _conserved();
+    }
+
+    function testStuckOnlyNFTCancelsRoundAndLateRecoveryIsSharedByRefundCohort() public {
+        SorpheraVault v = _open(1);
+        _buy(1, 1, alice, _pick(1, 1, 72), 3);
+        v.acquire(1, vm.getBlockTimestamp() + 1);
+        pool.allocate(1, 0.02 ether);
+        nft.setRejected(1, true);
+        vm.warp(vm.getBlockTimestamp() + 3 hours);
+        pool.finalizeUnsettled(1);
+        v.reconcile(_one(1));
+        assertEq(v.pending(), 0);
+        vm.warp(lottery.getRound(1, 1).settlementDeadline);
+        lottery.requestDraw(1, 1);
+        assertEq(uint256(lottery.getRound(1, 1).status), uint256(Sorphera.Status.Cancelled));
+        assertEq(vrf.requests(), 0);
+        assertEq(lottery.openRound(1), 2);
+        nft.setRejected(1, false);
+        v.recoverNFT(1);
+        assertEq(v.securedCount(), 1);
+        assertEq(lottery.getRound(1, 2).eligibleNFTs, 0);
+        vm.prank(alice);
+        v.claimNFTs(1, _one(0), alice);
+        vm.prank(alice);
+        v.claimNFTs(2, _one(0), alice);
+        assertEq(nft.ownerOf(1), address(v));
+        vm.prank(alice);
+        v.claimNFTs(3, _one(0), alice);
+        assertEq(nft.ownerOf(1), alice);
+    }
+
+    function testCustodyBeforeDeadlineCountsEvenWhenReconciledAfter() public {
+        SorpheraVault v = _open(1);
+        _buy(1, 1, alice, _pick(1, 1, 73), 3);
+        v.acquire(1, vm.getBlockTimestamp() + 1);
+        pool.allocate(1, 0.02 ether);
+        uint256 deadline = lottery.getRound(1, 1).settlementDeadline;
+        vm.warp(deadline - 1);
+        pool.finalizeUnsettled(1);
+        assertEq(nft.ownerOf(1), address(v));
+        assertEq(v.receivedAt(address(nft), 1), deadline - 1);
+        vm.warp(deadline + 1);
+        v.reconcile(_one(1));
+        assertEq(v.securedCount(), 1);
+        assertEq(lottery.getRound(1, 1).eligibleNFTs, 1);
+        lottery.requestDraw(1, 1);
+        assertEq(uint256(lottery.getRound(1, 1).status), uint256(Sorphera.Status.Requested));
+        assertEq(vrf.requests(), 1);
+        vrf.fulfill(1, 73);
+        lottery.finalize(1, 1);
+        uint256 winner = lottery.getRound(1, 1).winningTicket;
+        vm.prank(alice);
+        v.claimNFTs(winner, _one(0), alice);
+        assertEq(nft.ownerOf(1), alice);
+    }
+
+    function testForcedDeliveryAfterDeadlineStillCancels() public {
+        SorpheraVault v = _open(1);
+        _buy(1, 1, alice, _pick(1, 1, 74), 3);
+        v.acquire(1, vm.getBlockTimestamp() + 1);
+        pool.allocate(1, 0.02 ether);
+        vm.warp(lottery.getRound(1, 1).settlementDeadline + 1);
+        pool.finalizeUnsettled(1);
+        v.reconcile(_one(1));
+        assertEq(v.securedCount(), 1);
+        assertEq(lottery.getRound(1, 1).eligibleNFTs, 0);
+        lottery.requestDraw(1, 1);
+        assertEq(uint256(lottery.getRound(1, 1).status), uint256(Sorphera.Status.Cancelled));
+        assertEq(vrf.requests(), 0);
+    }
+
+    function testLateAllocationAfterCancellationSettlesToDivisibleETHRefund() public {
+        SorpheraVault v = _open(1);
+        _buy(1, 1, alice, _pick(1, 1, 75), 2);
+        _buy(1, 1, bob, _pick(1, 1, 76), 2);
+        v.acquire(1, vm.getBlockTimestamp() + 1);
+        vm.warp(lottery.getRound(1, 1).settlementDeadline);
+        lottery.requestDraw(1, 1);
+        assertEq(uint256(lottery.getRound(1, 1).status), uint256(Sorphera.Status.Cancelled));
+        (,,, uint256 perTicketBefore,,) = lottery.groups(1, 1);
+        assertEq(perTicketBefore, 0.0025 ether);
+        pool.allocate(1, 0.02 ether);
+        v.settle(1);
+        assertEq(nft.ownerOf(1), address(pool));
+        assertEq(v.securedCount(), 0);
+        assertEq(v.pending(), 0);
+        v.syncETH();
+        (,,, uint256 perTicketAfter,,) = lottery.groups(1, 1);
+        assertEq(perTicketAfter, 0.0025 ether + 0.0045 ether);
+        uint256 beforeBalance = bob.balance;
+        _claim(1, 1, bob, 3, bob);
+        assertEq(bob.balance - beforeBalance, 0.007 ether);
+        assertEq(lottery.operatorFees(), 0);
+        _conserved();
     }
 
     function testDelayedCashoutNFTGameRemainsIncidentalETHAndCancels() public {

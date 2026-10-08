@@ -9,6 +9,7 @@
     "Sorphera": {"address": null, "deploymentBlock": null}
   },
   "roundVaultDiscoveryEvent": "VaultCreated(address,uint8,uint256,address)",
+  "roundVaultDiscoveryFilter": "indexed lottery == Sorphera address; RoundOpened.vault is authoritative",
   "dependencyEvidence": "../docs/reference/sepolia-readback.json",
   "launchBlocker": "Published FWA Sepolia deployment lacks current builder attribution. Verify and configure a compatible pool and transfer helper before activation."
 }

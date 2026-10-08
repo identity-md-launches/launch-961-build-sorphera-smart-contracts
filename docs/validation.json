@@ -2,7 +2,7 @@
   "compiler": "0.8.26",
   "foundry": "1.8.3",
   "forgeBuild": "passed",
-  "forgeTest": {"passed": 34, "failed": 0, "skipped": 0, "fuzzTests": 3, "runsPerFuzzTest": 256},
+  "forgeTest": {"passed": 40, "failed": 0, "skipped": 0, "fuzzTests": 3, "runsPerFuzzTest": 256},
   "forgeFmtCheck": "passed",
   "separateSepoliaForkChecks": {"block": 11866914, "passed": 2, "failed": 0, "purpose": "read-only wiring and explicit current-builder incompatibility"},
   "deployment": "not performed",

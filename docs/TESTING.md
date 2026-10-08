@@ -12,6 +12,10 @@ The application suite exercises:
 - NFT exact-match tie-break over ticket indices, custody before inventory registration, frozen inventory, individual/partial claims, nominated recipients, rejecting receivers, token-specific transfer failure and retry, double claims.
 - Real-cost quote/VRF bounds, blackout, expired deadline, insufficient budget, reverted acquisitions, timed-out FWA requests, known-but-unwithdrawn refund credit blocking a draw, late ETH refunds and cancellation fee refunds.
 - Delayed settlement, forced ETH in the NFT game, stuck NFT recovery after timeout, involuntary ETH-game NFT custody, late NFT after the published cancellation deadline and unanimous co-owner recovery.
+- A permanently stuck FWA delivery that leaves no request pending: the ETH draw, fee release and next round proceed, an NFT round with nothing else secured cancels, and a much later recovery is claimable by the original winner or refund cohort only.
+- Forced delivery before the settlement deadline that is reconciled after it still counts as secured (receipt-time stamp), while forced delivery after the deadline still cancels.
+- A late allocation settled after cancellation becomes ETH refund cash shared pro rata rather than a shared NFT.
+- Vault factory binding: anyone-but-the-lottery creation reverts, the binding is owner-only and one-time, and launch validation refuses an unbound factory.
 - Authenticated/mapped asynchronous VRF, out-of-order callbacks across games, unknown/duplicate/stale callbacks, zero word acceptance, no new request after delay, and separate finalization.
 - Builder immediate caller vs purchaser, overpayments, allowance-bounded builder rewards, purchaser token entitlements, restricted FWA transfers, scoped Permit2 signatures, helper failure rolling back allowance consumption.
 - ETH receiver rejection and reentry attempts, conservation under fuzzed ticket counts/recovery amounts, unbiased sampler bounds/distinctness/replay, application runtime size and forbidden opcode checks.
@@ -33,7 +37,7 @@ No Slither/Mythril report or independent contributor audit is claimed. A separat
 
 1. Chainlink's configured coordinator verifies proofs and issues globally distinct asynchronous request IDs; the subscription owner preserves consumer registration/funding. Sorphera cannot recover by rerolling after permanent callback failure.
 2. FWA/rewards/helper implementations and their upgrade/owner powers can change behavior or liveness. New round dependencies are snapshotted, but external protocol state and fee/windows remain mutable. Settlement keepers must react promptly.
-3. NFT `ownerOf` and transfer methods obey ERC721 semantics. Malicious collections can lie or permanently reject transfer; no owner rescue bypass exists.
+3. NFT `ownerOf` and transfer methods obey ERC721 semantics. Malicious collections can lie or permanently reject transfer; no owner rescue bypass exists. A permanently rejecting collection costs that one asset, not the round or the game. FWA's forced deliveries are assumed to use `safeTransferFrom` (its stuck-recipient bookkeeping implies a receiver check); a plain `transferFrom` would merely fall back to the reconciliation time for the deadline test.
 4. Helper/Permit2/token permissions and liquidity remain available. Token amounts are actual claimed amounts, not fixed emissions. Shared indivisible recovery assets can require unanimous ticket-holder cooperation.
 5. Permissionless acquisitions use a frozen company-selected price/slippage policy. Execution timing within those bounds is not optimized for guaranteed value. External charges/losses can reduce prizes/refunds.
 6. Sales are scheduled weekly but serialized within each game; severe delays can shorten/skip subsequent sales windows without allowing late entry or a schedule rewrite.

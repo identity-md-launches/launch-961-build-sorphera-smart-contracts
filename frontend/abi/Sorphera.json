@@ -707,6 +707,30 @@
   },
   {
     "type": "function",
+    "name": "isCancelled",
+    "inputs": [
+      {
+        "name": "game",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "latestRound",
     "inputs": [
       {
@@ -952,6 +976,11 @@
       },
       {
         "name": "id",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "securedAt",
         "type": "uint256",
         "internalType": "uint256"
       }

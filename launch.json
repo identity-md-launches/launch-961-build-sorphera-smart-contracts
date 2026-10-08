@@ -2,8 +2,8 @@
   "kind": "evm_contracts",
   "contracts": [
     {"contract": "SorpheraRouter", "constructorArgs": ["$owner"]},
-    {"contract": "SorpheraVaultFactory", "constructorArgs": ["$contract:SorpheraRouter"]},
+    {"contract": "SorpheraVaultFactory", "constructorArgs": ["$contract:SorpheraRouter", "$owner"]},
     {"contract": "Sorphera", "constructorArgs": ["$owner", "$contract:SorpheraVaultFactory", "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B"]}
   ],
-  "notes": "Sorphera Sepolia application contracts. Sales are disabled and dependencies/settings are unset. Public FWA Sepolia pool read at block 11866914 predates builder attribution; do not activate against it. Configure a separately verified compatible FWA pool/helper and an operator-owned, funded lottery VRF subscription through the documented setters. No wallet keys or broadcasts are used. Immutable per-round purchaser vaults are created at runtime by SorpheraVaultFactory; their addresses and creation blocks are emitted, not guessed."
+  "notes": "Sorphera Sepolia application contracts. Sales are disabled and dependencies/settings are unset. Public FWA Sepolia pool read at block 11866914 predates builder attribution; do not activate against it. Configure a separately verified compatible FWA pool/helper and an operator-owned, funded lottery VRF subscription through the documented setters. No wallet keys or broadcasts are used. Immutable per-round purchaser vaults are created at runtime by SorpheraVaultFactory; their addresses and creation blocks are emitted, not guessed. After deployment the owner binds the factory to the deployed Sorphera address once with setLottery; only that lottery can create vaults."
 }

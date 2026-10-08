@@ -8,6 +8,7 @@
   "games": {"0": "Sorphera ETH Jackpot", "1": "Sorphera NFT Jackpot"},
   "batches": {"tickets": 100, "acquisitions": 8, "reconciliation": 50, "nftClaims": 20, "rewardEpochs": 32},
   "ownerMustConfigureBeforeActivation": [
+    "factorySetLotteryToDeployedSorpheraAddress",
     "compatibleSepoliaFWAPool",
     "verifiedSepoliaFWATransferHelper",
     "separateGameFirstCutoffs",

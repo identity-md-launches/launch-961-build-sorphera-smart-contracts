@@ -110,7 +110,8 @@ interface IVRF {
 interface ISorphera {
     function acquisitionOpen(uint8 game, uint256 round) external view returns (bool);
     function credit(uint8 game, uint256 round) external payable;
-    function recordNFT(uint8 game, uint256 round) external;
+    function recordNFT(uint8 game, uint256 round, uint256 securedAt) external;
+    function isCancelled(uint8 game, uint256 round) external view returns (bool);
     function entitlement(uint8 game, uint256 round, uint256 ticket, address claimant)
         external
         view

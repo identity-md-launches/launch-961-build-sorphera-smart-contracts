@@ -1,0 +1,45 @@
+
+> sorphera-web@1.0.0 test
+> tsx --test src/core.test.ts
+
+✔ number validation rejects repeats, out-of-range and fractional numbers (1.89182ms)
+✔ all 5,700 Solidity packed combinations round-trip exactly (17.515048ms)
+✔ Quick Pick selects only valid entries and cannot mutate confirmed fixtures (59.65466ms)
+✔ ticket expansion is unordered, allows duplicate combinations and respects 100 (1.513504ms)
+✔ ETH totals stay exact in wei, including sub-micro ETH (0.928733ms)
+✔ recheck rejects cutoff, price, round, game, paused sales and invalid status (0.624855ms)
+✔ terminal statuses match the baseline exactly; appended ties stay nonterminal (0.283809ms)
+✔ NFT tie remains provisional through both oracle phases (0.58932ms)
+✔ unbound randomness and premature result cannot reveal a winner (0.504532ms)
+✔ cancellation review is progress, not cancellation or draw request (0.58462ms)
+✔ oracle and tie delays remain indefinite and do not release claims (0.279843ms)
+✔ replay and skip end in identical deterministic contract-derived results (0.446574ms)
+✔ both rollover fixtures expire old tickets and never name an NFT winner (0.237603ms)
+✔ claim batching is capped at 20 and preserves every asset (0.421647ms)
+✔ failed NFT delivery is per asset; retry excludes delivered assets (0.722278ms)
+✔ demo adapter never has a wallet transport or transaction hash (1.029832ms)
+✔ activation fails closed for missing inputs, wrong chain and read-only mode (0.368759ms)
+✔ ABI copies preserve all canonical contract exports (1.630673ms)
+✔ metadata refuses active and non-HTTPS images; treats names as text (0.345364ms)
+✔ cache identities separate chains, lotteries, games, rounds and requests (0.19301ms)
+✔ log indexer pages, caches, deduplicates concurrent reads and rebuilds after reorg (8.702216ms)
+✔ actual ETH/refund claim uses entitlement and simulation even if sales are paused (1.165535ms)
+✔ finalized receipt failure cannot become a confirmed claim (0.375431ms)
+✔ ABI fingerprint is stable and nonempty (24.602101ms)
+✔ NFT receipt processing distinguishes delivery, failure and shared votes (6.354597ms)
+✔ reward queueing is never mistaken for delivery; helper Claimed is required (2.877037ms)
+✔ a shared vote followed by delivery reports one final delivered asset (2.530111ms)
+✔ receipt timeouts stay pending after broadcast and cannot imply a safe repurchase (1.140789ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2884.471232
+npm notice
+npm notice New major version of npm available! 11.19.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

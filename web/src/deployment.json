@@ -1,0 +1,13 @@
+{
+  "mode": "demo",
+  "transactionsActivated": false,
+  "chainId": 1,
+  "rpcUrl": null,
+  "lottery": null,
+  "router": null,
+  "factory": null,
+  "deploymentBlock": null,
+  "runtimeCodeHashes": null,
+  "abiSha256": null,
+  "confirmations": 12
+}

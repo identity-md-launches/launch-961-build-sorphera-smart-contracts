@@ -2,7 +2,25 @@
 
 **Weekly ETH & NFT lottery ball jackpots. Powered by FWA.**
 
-Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. No website or new token/pool. No transaction was broadcast and public sales remain disabled.
+
+## Website demo
+
+The Sorphera website source is in **[web/](web/README.md)** and its finished static export is in **[dist/](dist/index.html)**. It defaults to **Demo - no real tickets or prizes**. All deployment addresses remain null; this work deploys no contracts and enables no public sales.
+
+```sh
+cd web
+npm ci
+npm run typecheck
+npm test
+npm run build
+npm run preview
+```
+
+`npm run build` writes root `dist/`. Publish that complete directory with the Website workflow or any static/IPFS host; assets are relative and routes use hashes. No Website publishing tool was available to this worker, so **public publication is still pending**. The local preview and exported pages were tested; no public preview URL is invented.
+
+See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [actual checks and limitations](web/evidence/validation.md), and [screenshots](web/evidence/). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
+
+Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. A labelled demo website is now included; no new token/pool. No transaction was broadcast and public sales remain disabled.
 
 Launch **961 remains parked on Sepolia**; this source continuation does not redeploy or retarget it. Mainnet dependencies are recorded at block **26,145,236**. See [mainnet evidence](docs/MAINNET.md), [constructor investigation](docs/REHEARSAL.md), [deployment preparation](docs/DEPLOYMENT.md), and [test report](docs/TESTING.md). Company owner/treasury, subscription and launch schedule remain explicit inputs; undeployed addresses are null.
 

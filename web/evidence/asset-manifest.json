@@ -1,0 +1,62 @@
+[
+  {
+    "source": "sorphera-banner-ice-blue.png",
+    "sourceSha256": "58b972239101b2ccf0510e8d6fcedbc2719534119882a807b7a9c33a4a6c9319",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "originalMode": "RGB",
+    "optimized": "web/public/brand/sorphera-banner-ice-blue.webp",
+    "optimizedSize": [
+      1400,
+      467
+    ],
+    "bytes": 102460
+  },
+  {
+    "source": "sorphera-brand-board-ice-blue.png",
+    "sourceSha256": "e7eb30f32297ab0219046ee7026b9c6e900c138e7174f67c00bf51907c0a4f91",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "originalMode": "RGB",
+    "optimized": "web/public/brand/sorphera-brand-board-ice-blue.webp",
+    "optimizedSize": [
+      1100,
+      733
+    ],
+    "bytes": 102548
+  },
+  {
+    "source": "sorphera-globe-icon-ice-blue.png",
+    "sourceSha256": "57feb76b47dec05441a980b3e07daaab8de3b56f418b9918c0eacc25e075b3d0",
+    "originalSize": [
+      1254,
+      1254
+    ],
+    "originalMode": "RGBA",
+    "optimized": "web/public/brand/sorphera-globe-icon-ice-blue.webp",
+    "optimizedSize": [
+      128,
+      128
+    ],
+    "bytes": 4652
+  },
+  {
+    "source": "sorphera-wordmark-ice-blue.png",
+    "sourceSha256": "04e281982d98156fc9510b30474edbd04df77e069cb53a5e0200a3a020d9481e",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "originalMode": "RGBA",
+    "optimized": "web/public/brand/sorphera-wordmark-ice-blue.webp",
+    "optimizedSize": [
+      1000,
+      333
+    ],
+    "bytes": 58708
+  }
+]

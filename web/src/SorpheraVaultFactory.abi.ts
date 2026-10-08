@@ -1,0 +1,158 @@
+// Derived verbatim from frontend/abi/SorpheraVaultFactory.json. Do not edit the contract export.
+export const sorpheraVaultFactoryAbi = [
+  {
+    type: "constructor",
+    inputs: [
+      { name: "router_", type: "address", internalType: "address" },
+      { name: "owner_", type: "address", internalType: "address" },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "acceptOwner",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "create",
+    inputs: [
+      { name: "game", type: "uint8", internalType: "uint8" },
+      { name: "round", type: "uint256", internalType: "uint256" },
+      {
+        name: "settings",
+        type: "tuple",
+        internalType: "struct SorpheraVault.Settings",
+        components: [
+          { name: "maxFee", type: "uint256", internalType: "uint256" },
+          { name: "maxTotal", type: "uint256", internalType: "uint256" },
+          { name: "minValue", type: "uint256", internalType: "uint256" },
+          { name: "slippage", type: "uint256", internalType: "uint256" },
+          { name: "cutoff", type: "uint256", internalType: "uint256" },
+        ],
+      },
+    ],
+    outputs: [
+      {
+        name: "vault",
+        type: "address",
+        internalType: "contract SorpheraVault",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "lottery",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "pendingOwner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "proposeOwner",
+    inputs: [{ name: "next", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "router",
+    inputs: [],
+    outputs: [
+      { name: "", type: "address", internalType: "contract SorpheraRouter" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "setLottery",
+    inputs: [{ name: "lottery_", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "event",
+    name: "LotteryRegistered",
+    inputs: [
+      {
+        name: "lottery",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipAccepted",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipProposed",
+    inputs: [
+      { name: "next", type: "address", indexed: true, internalType: "address" },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "VaultCreated",
+    inputs: [
+      {
+        name: "lottery",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      { name: "game", type: "uint8", indexed: true, internalType: "uint8" },
+      {
+        name: "round",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "vault",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "error",
+    name: "MissingRouterCode",
+    inputs: [
+      { name: "dependency", type: "address", internalType: "address" },
+      { name: "chainId", type: "uint256", internalType: "uint256" },
+    ],
+  },
+] as const;

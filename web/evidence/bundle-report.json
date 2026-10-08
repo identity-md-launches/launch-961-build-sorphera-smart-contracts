@@ -1,0 +1,14 @@
+{
+  "limitBytes": 8388608,
+  "gitEligibleFileCountExcludingThisReport": 221,
+  "payloadBytesExcludingThisReport": 7094777,
+  "exportBytes": 993077,
+  "evidenceBytesExcludingThisReport": 2717298,
+  "dependencyDirectoriesRemaining": [],
+  "gitSubmodules": 0,
+  "ignoreFilesChanged": false,
+  "protectedTrackedPathsChanged": [],
+  "note": "Complete current Git-eligible baseline plus source, lockfile, export, documentation and five screenshots. The runner already excludes attachment originals in artifacts/; identical copies are included once under web/evidence/. test/scratch and removed input data are excluded by assignment. Uncompressed tar measurement includes file/path headers, but is not the platform Git transport pack.",
+  "uncompressedTarBytes": 7505920,
+  "passesLocalArchiveBudget": true
+}

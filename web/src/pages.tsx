@@ -9,6 +9,8 @@ import {
 } from "./components";
 import { demoRounds, scenarios } from "./fixtures";
 import { eth, replay } from "./core";
+import { demoQuote, localTime, usd } from "./budget";
+import { customerStatus } from "./reveal";
 export function Countdown({ cutoff }: { cutoff: number }) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -83,7 +85,7 @@ export function Home() {
         <div className="section-heading compact">
           <h2 id="jackpots-title">Two jackpots. Endless possibility.</h2>
           <span className="fine">
-            Independent weekly draws · synthetic amounts
+            Independent weekly draws · synthetic amounts · {demoQuote.label}
           </span>
         </div>
         <div className="jackpot-grid">
@@ -93,7 +95,7 @@ export function Home() {
                 <span className="eyebrow">
                   {r.game === 0 ? "ETH jackpot" : "NFT jackpot"}
                 </span>
-                <span className="open-pill">Demo round #{String(r.id)}</span>
+                <span className="open-pill">Demo round {String(r.id)}</span>
               </div>
               <div className="jackpot-amount">
                 <div>
@@ -103,8 +105,12 @@ export function Home() {
                   </h3>
                   <p>
                     {r.game === 0
-                      ? "One prize. Shared by matching tickets."
+                      ? `≈ ${usd(r.actualETH)} · one prize, shared equally by matching tickets.`
                       : "One winning ticket. The whole collection."}
+                  </p>
+                  <p className="price-line">
+                    Ticket {eth(r.price)} ETH{" "}
+                    <small>≈ {usd(r.price)} illustrative</small>
                   </p>
                 </div>
                 <Globe kind={r.game === 0 ? "eth" : "nft"} size="large" />
@@ -115,16 +121,7 @@ export function Home() {
                   <strong>
                     <Countdown cutoff={r.cutoff} />
                   </strong>
-                  <span className="cutoff">
-                    {new Date(r.cutoff * 1000).toLocaleString("en-GB", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      timeZone: "UTC",
-                    })}{" "}
-                    UTC
-                  </span>
+                  <span className="cutoff">{localTime(r.cutoff)}</span>
                 </div>
                 <a
                   className={`button ${r.game === 0 ? "ice" : "pink-button"}`}
@@ -138,11 +135,12 @@ export function Home() {
                 <summary>What’s in this jackpot?</summary>
                 <p>
                   {r.game === 0
-                    ? "18.42 ETH in actual prize cash; 1 pending pull excluded."
-                    : "6 secured NFTs. 2 pending pulls are excluded. 0.012 ETH incidental funds are separate."}{" "}
+                    ? "18.42 ETH in actual prize cash; 1 pending pull excluded. Every ticket matching all four numbers takes an equal share."
+                    : "6 secured NFTs. 2 pending pulls are excluded. 0.012 ETH incidental funds are separate. Several matching tickets go to a separate tie-break that picks one winner."}{" "}
                   These are synthetic fixture values, not live balances.
                   Purchaser rewards are separate; company revenue is excluded.
-                  No NFT valuation is assumed.
+                  No NFT valuation is assumed. Closing time is when entries
+                  stop; the draw result can take longer.
                 </p>
               </details>
             </article>
@@ -341,7 +339,7 @@ export function History() {
                   <details>
                     <summary>Result details</summary>
                     <p>
-                      Status: {state.stage}. Matches:{" "}
+                      Status: {customerStatus(state.stage, s.game)}. Matches:{" "}
                       {state.main ? state.matches : "Not determined"}.{" "}
                       {state.winningTicket && state.winningTicket !== "0"
                         ? `Winning ticket: #${state.winningTicket}.`
@@ -379,6 +377,10 @@ export const faqs = [
   [
     "How do I play?",
     "Choose the ETH or NFT game. Each ticket enters one round of one game. Pick 3 distinct unordered main numbers from 1–20 and 1 bonus from 1–5. Match all four. Quick Pick only chooses an entry; you still review and approve it. The default ticket price is 0.005 ETH, but a live round’s frozen price, eligibility and deadline are authoritative.",
+  ],
+  [
+    "What does my budget buy?",
+    "Set a total spending limit on the Play page, for example US$30. The demo converts ETH to USD at a fixed illustrative rate of US$2,500 per ETH and estimates one network fee per purchase of about US$1.00. Those are not live quotes. The page shows how many whole tickets fit after the fee, the subtotal, the estimated fee, the all-in total and what remains. Nothing is added or bought for you.",
   ],
   [
     "What are the odds?",

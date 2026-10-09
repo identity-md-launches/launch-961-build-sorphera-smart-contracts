@@ -2,11 +2,24 @@ import { useState } from "react";
 import { Balls, Globe, Modal, PageHead } from "./components";
 import { fixture, type DemoTicket } from "./fixtures";
 import type { ClaimResult } from "./core";
+import { gameName } from "./Play";
+import { localTime } from "./budget";
+import { demoRounds } from "./fixtures";
 export interface ClaimMemory {
   results: Record<string, ClaimResult[]>;
   claimed: string[];
   queued: string[];
 }
+const kindLabel = (t: DemoTicket) =>
+  t.kind === "entry"
+    ? "Entered"
+    : t.kind === "expired"
+      ? "Expired"
+      : t.kind === "refund"
+        ? "Refund available"
+        : t.kind === "reward"
+          ? "Purchaser reward"
+          : "Winning ticket";
 export default function Tickets({
   tickets,
   memory,
@@ -25,6 +38,7 @@ export default function Tickets({
   const setClaimed = (claimed: string[]) => onMemory({ ...memory, claimed });
   const setQueued = (queued: string[]) => onMemory({ ...memory, queued });
   const [compatible, setCompatible] = useState(true);
+  const [faulty, setFaulty] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -33,6 +47,8 @@ export default function Tickets({
       (game === "all" || String(t.game) === game) &&
       (round === "all" || String(t.round) === round),
   );
+  const mine = filtered.filter((t) => t.source === "mine");
+  const samples = filtered.filter((t) => t.source === "sample");
   const key = (t: DemoTicket) => `${t.game}:${t.round}:${t.id}`;
   async function submit() {
     if (!claim) return;
@@ -44,7 +60,7 @@ export default function Tickets({
       const indices = previous.length
         ? previous.filter((r) => r.state !== "delivered").map((r) => r.index)
         : [0, 1, 2, 3, 4, 5];
-      const next = await fixture.claimNFTs(indices, compatible, attempt);
+      const next = await fixture.claimNFTs(indices, compatible, attempt, faulty);
       const merged = [
         ...previous.filter((r) => r.state === "delivered"),
         ...next,
@@ -54,7 +70,7 @@ export default function Tickets({
       setMessage(
         merged.some((r) => r.state === "failed")
           ? "Some assets could not be delivered. Successful assets stay delivered. Retry the remaining assets to a compatible recipient."
-          : "All 6 demo NFTs delivered.",
+          : "Demo receipt: all 6 NFTs delivered to the sample wallet. No real assets moved.",
       );
     } else if (claim.kind === "reward") {
       setQueued([...queued, key(claim)]);
@@ -63,10 +79,66 @@ export default function Tickets({
       );
     } else {
       setClaimed([...claimed, key(claim)]);
-      setMessage("Demo claim confirmed. No real funds moved.");
+      setMessage(
+        `Demo receipt: ${claim.amount} credited to the sample wallet. No real funds moved.`,
+      );
     }
     setBusy(false);
   }
+  const rounds = [...new Set(tickets.map((t) => String(t.round)))]
+    .sort()
+    .reverse();
+  function card(t: DemoTicket) {
+    const done = claimed.includes(key(t));
+    const nftDone = results[key(t)]?.every((r) => r.state === "delivered");
+    const open = demoRounds.find(
+      (r) => r.game === t.game && r.id === t.round,
+    );
+    return (
+      <article className={`my-ticket game-${t.game}`} key={key(t)}>
+        <div className="ticket-identity">
+          <span className="eyebrow">
+            {gameName(t.game)} / Round {String(t.round)}
+          </span>
+          <h3>
+            {t.source === "mine"
+              ? "Your demo entry"
+              : `Sample ticket #${t.id}`}
+          </h3>
+          <span className="pill">{kindLabel(t)}</span>
+        </div>
+        <Balls pick={t.pick} />
+        <div className="claim-summary">
+          <strong>{t.amount}</strong>
+          {t.kind === "entry" && open && (
+            <span className="fine">
+              Entries close {localTime(open.cutoff)}. Results follow the
+              confirmed draw; no result time is promised.
+            </span>
+          )}
+          {t.kind !== "entry" && t.kind !== "expired" && (
+            <button
+              className="button"
+              onClick={() => {
+                setClaim(t);
+                setMessage("");
+                setAttempt(results[key(t)]?.length ? 1 : 0);
+              }}
+            >
+              {done || nftDone
+                ? "View demo receipt"
+                : queued.includes(key(t))
+                  ? "Check delivery"
+                  : t.kind === "refund"
+                    ? "Claim demo refund"
+                    : "Claim demo prize"}
+            </button>
+          )}
+        </div>
+      </article>
+    );
+  }
+  const myRounds = [...new Set(mine.map((t) => `${t.game}:${String(t.round)}`))];
   return (
     <>
       <PageHead
@@ -75,8 +147,7 @@ export default function Tickets({
         description="Your entries, results and claimable prizes, all in one place."
       />
       <p className="notice">
-        Sample wallet · synthetic tickets and entitlements. Local entries reset
-        when you reload.
+        Demo - no real tickets or prizes. Your entries reset when you reload.
       </p>
       <div className="filters">
         <label>
@@ -91,91 +162,73 @@ export default function Tickets({
           Round
           <select value={round} onChange={(e) => setRound(e.target.value)}>
             <option value="all">All rounds</option>
-            {[...new Set(tickets.map((t) => String(t.round)))]
-              .sort()
-              .reverse()
-              .map((r) => (
-                <option key={r}>{r}</option>
-              ))}
+            {rounds.map((r) => (
+              <option key={r}>{r}</option>
+            ))}
           </select>
         </label>
         <p className="muted">
           {filtered.length} ticket{filtered.length === 1 ? "" : "s"}
         </p>
       </div>
-      <div className="my-ticket-list">
-        {filtered.map((t) => {
-          const done = claimed.includes(key(t));
-          const nftDone = results[key(t)]?.every(
-            (r) => r.state === "delivered",
-          );
-          return (
-            <article className={`my-ticket game-${t.game}`} key={key(t)}>
-              <div className="ticket-identity">
-                <span className="eyebrow">
-                  {t.game === 0 ? "ETH" : "NFT"} jackpot / Round{" "}
-                  {String(t.round)}
-                </span>
-                <h2>
-                  Ticket{" "}
-                  {t.id.startsWith("local") ? "· your entry" : `#${t.id}`}
-                </h2>
-                <span className="pill">
-                  {t.kind === "entry"
-                    ? "Entered"
-                    : t.kind === "expired"
-                      ? "Expired"
-                      : t.kind === "refund"
-                        ? "Refund available"
-                        : t.kind === "reward"
-                          ? "Purchaser reward"
-                          : "Winning ticket"}
-                </span>
-              </div>
-              <Balls pick={t.pick} />
-              <div className="claim-summary">
-                <strong>{t.amount}</strong>
-                {t.kind !== "entry" && t.kind !== "expired" && (
-                  <button
-                    className="button"
-                    onClick={() => {
-                      setClaim(t);
-                      setMessage("");
-                      setAttempt(results[key(t)]?.length ? 1 : 0);
-                    }}
-                  >
-                    {done || nftDone
-                      ? "View demo receipt"
-                      : queued.includes(key(t))
-                        ? "Check delivery"
-                        : t.kind === "refund"
-                          ? "Claim demo refund"
-                          : "Review demo claim"}
-                  </button>
-                )}
-              </div>
-            </article>
-          );
-        })}
-        {!filtered.length && (
-          <div className="empty-state">
-            <Globe size="large" />
-            <h2>No tickets in this view.</h2>
-            <button
-              className="button"
-              onClick={() => {
-                setGame("all");
-                setRound("all");
-              }}
-            >
-              Clear filters
-            </button>
-            <a className="button primary" href="#play">
-              Pick your first numbers
-            </a>
+      <section aria-labelledby="mine-title" className="ticket-section">
+        <div className="section-heading compact">
+          <h2 id="mine-title">Your demo entries</h2>
+          <span className="fine">Created in this session</span>
+        </div>
+        {myRounds.length > 0 && (
+          <div className="advance-row">
+            {myRounds.map((gr) => {
+              const [g, r] = gr.split(":");
+              return (
+                <a
+                  key={gr}
+                  className="button primary"
+                  href={`#draw?scenario=${g === "0" ? "eth-mine" : "nft-mine"}`}
+                >
+                  Did my ticket win? Replay {gameName(Number(g) as 0 | 1)} round{" "}
+                  {r} as a fixture ↗
+                </a>
+              );
+            })}
+            <p className="fine">
+              The replay advances your open round with simulated time and a
+              fixed sample outcome. It does not favour your picks.
+            </p>
           </div>
         )}
-      </div>
+        <div className="my-ticket-list">
+          {mine.map(card)}
+          {!mine.length && (
+            <div className="empty-state">
+              <Globe size="large" />
+              <h3>No entries of yours in this view.</h3>
+              {filtered.length !== tickets.length && (
+                <button
+                  className="button"
+                  onClick={() => {
+                    setGame("all");
+                    setRound("all");
+                  }}
+                >
+                  Clear filters
+                </button>
+              )}
+              <a className="button primary" href="#play">
+                Pick your first numbers
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+      <section aria-labelledby="samples-title" className="ticket-section">
+        <div className="section-heading compact">
+          <h2 id="samples-title">Sample winners, refunds and rewards</h2>
+          <span className="fine">Labelled fixtures · not your entries</span>
+        </div>
+        <div className="my-ticket-list">{samples.map(card)}</div>
+        {!samples.length && <p className="muted">No samples in this view.</p>}
+      </section>
       <p className="fine">
         Valid claims remain available when sales are paused. Old tickets do not
         enter later rounds. Actual entitlements may increase after late
@@ -183,45 +236,35 @@ export default function Tickets({
       </p>
       {claim && (
         <Modal
-          title="Review demo claim"
+          title={
+            claimed.includes(key(claim)) ||
+            results[key(claim)]?.every((r) => r.state === "delivered")
+              ? "Demo receipt"
+              : "Claim demo prize"
+          }
           onClose={() => {
             if (!busy) setClaim(null);
           }}
         >
           <p className="notice">Demo - no real tickets or prizes</p>
           <p>
-            {claim.game === 0 ? "ETH" : "NFT"} · Round {String(claim.round)} ·
-            Ticket #{claim.id}
+            {gameName(claim.game)} · Round {String(claim.round)} · Sample ticket
+            #{claim.id}
           </p>
           <h3>{claim.amount}</h3>
           {claim.kind === "nft" ? (
             <>
-              <label>
-                Demo NFT recipient
-                <select
-                  value={compatible ? "compatible" : "incompatible"}
-                  onChange={(e) =>
-                    setCompatible(e.target.value === "compatible")
-                  }
-                >
-                  <option value="compatible">
-                    Demo wallet · compatible receiver
-                  </option>
-                  <option value="incompatible">
-                    Demo contract · rejects NFT transfers
-                  </option>
-                </select>
-              </label>
-              <p className="fine">
-                Up to 20 assets per transaction. A real contract recipient must
-                support ERC721 safe transfers. The fixture includes one initial
-                asset failure so you can try a partial claim.
-              </p>
               <ul className="asset-outcomes">
                 {Array.from({ length: 6 }, (_, index) => (
                   <li key={index}>
+                    <Globe
+                      kind={index % 2 ? "nft" : "eth"}
+                      number={[7, 4, 19, 12, 3, 16][index]}
+                      size="small"
+                    />
                     <span>
                       World study {String(index + 1).padStart(2, "0")}
+                      <small>Illustrative artwork · secured asset {index + 1}</small>
                     </span>
                     <span>
                       {results[key(claim)]?.find((r) => r.index === index)
@@ -230,6 +273,10 @@ export default function Tickets({
                   </li>
                 ))}
               </ul>
+              <p className="fine">
+                Thumbnails are illustrative Sorphera artwork, not the actual
+                inventory metadata. No floor price or resale value is implied.
+              </p>
               <button
                 disabled={
                   busy ||
@@ -240,9 +287,11 @@ export default function Tickets({
               >
                 {busy
                   ? "Claim pending…"
-                  : results[key(claim)]?.length
-                    ? "Retry remaining assets"
-                    : "Claim 6 demo NFTs"}
+                  : results[key(claim)]?.every((r) => r.state === "delivered")
+                    ? "All 6 NFTs delivered"
+                    : results[key(claim)]?.length
+                      ? "Retry remaining assets"
+                      : "Claim 6 demo NFTs"}
               </button>
               <p className="fine">
                 Incidental ETH is separate from NFT delivery.
@@ -259,6 +308,38 @@ export default function Tickets({
                   ? "Incidental ETH claimed"
                   : "Claim 0.012 demo ETH"}
               </button>
+              <details className="scenarios">
+                <summary>Demo scenarios: failed delivery and rejection</summary>
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    checked={faulty}
+                    onChange={(e) => setFaulty(e.target.checked)}
+                  />
+                  One asset fails on the first attempt, then succeeds on retry
+                </label>
+                <label>
+                  Demo NFT recipient
+                  <select
+                    value={compatible ? "compatible" : "incompatible"}
+                    onChange={(e) =>
+                      setCompatible(e.target.value === "compatible")
+                    }
+                  >
+                    <option value="compatible">
+                      Demo wallet · compatible receiver
+                    </option>
+                    <option value="incompatible">
+                      Demo contract · rejects NFT transfers
+                    </option>
+                  </select>
+                </label>
+                <p className="fine">
+                  Up to 20 assets per transaction. A real contract recipient must
+                  support ERC721 safe transfers. Failures are reported per asset
+                  and retried without undoing successful deliveries.
+                </p>
+              </details>
             </>
           ) : claim.kind === "reward" && queued.includes(key(claim)) ? (
             <>
@@ -309,7 +390,7 @@ export default function Tickets({
             {message}
           </p>
           <details>
-            <summary>Claim & custody details</summary>
+            <summary>Verification details</summary>
             <p>
               ETH prizes and cancellation refunds use claimETH. NFT claims use
               the originating vault’s claimNFTs; a failed asset stays available

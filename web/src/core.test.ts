@@ -227,13 +227,19 @@ test("claim batching is capped at 20 and preserves every asset", () => {
 });
 test("failed NFT delivery is per asset; retry excludes delivered assets", async () => {
   const a = new FixtureAdapter();
-  const first = await a.claimNFTs([0, 1, 2, 3, 4, 5], true, 0);
+  const first = await a.claimNFTs([0, 1, 2, 3, 4, 5], true, 0, true);
   assert.equal(first.filter((x) => x.state === "delivered").length, 5);
   assert.deepEqual(
     first.filter((x) => x.state === "failed").map((x) => x.index),
     [2],
   );
-  assert.equal((await a.claimNFTs([2], true, 1))[0].state, "delivered");
+  assert.equal((await a.claimNFTs([2], true, 1, true))[0].state, "delivered");
+  assert.ok(
+    (await a.claimNFTs([0, 1, 2, 3, 4, 5], true, 0)).every(
+      (x) => x.state === "delivered",
+    ),
+    "default demo claim succeeds",
+  );
   assert.ok(
     (await a.claimNFTs([1, 2], false, 0)).every((x) => x.state === "failed"),
   );
@@ -541,4 +547,154 @@ test("receipt timeouts stay pending after broadcast and cannot imply a safe repu
     "rejected",
   );
   assert.equal(transactionErrorState("Simulation reverted", false), "failed");
+});
+
+// ---------- Budget, baskets, distinct picks and spoiler-safe reveal ----------
+import {
+  planBudget,
+  usd,
+  usdCents,
+  generateDistinct,
+  pickKey,
+  setBasketLines,
+  basketKey,
+  basketCount,
+  calendarEvent,
+  demoQuote,
+} from "./budget";
+import {
+  revealView,
+  matchTicket,
+  customerStatus,
+  paginate,
+  timing,
+} from "./reveal";
+import { allScenarios, myRoundScenarios, initialTickets } from "./fixtures";
+
+test("USD conversion is illustrative, exact in cents and consistent", () => {
+  assert.equal(usd(5000000000000000n), "US$12.50");
+  assert.equal(usd(demoQuote.feeWei), "US$1.00");
+  assert.equal(usdCents(1n), 0n);
+  assert.equal(usd(18420000000000000000n), "US$46,050.00");
+});
+test("US$30 buys 2 whole tickets after the estimated fee; math stays in wei", () => {
+  const p = planBudget(30, 5000000000000000n, 2);
+  assert.equal(p.affordable, 2);
+  assert.equal(p.subtotalWei, 10000000000000000n);
+  assert.equal(p.allInWei, 10400000000000000n);
+  assert.equal(p.allInCents, 2600n);
+  assert.equal(p.remainingCents, 400n);
+  assert.equal(p.overBudget, false);
+  const three = planBudget(30, 5000000000000000n, 3);
+  assert.equal(three.overBudget, true);
+  assert.equal(three.remainingCents, -850n);
+  assert.equal(planBudget(0, 5000000000000000n, 0).affordable, 0);
+  const tiny = planBudget(10, 5000000000000000n, 0);
+  assert.equal(tiny.affordable, 0);
+  assert.match(tiny.reason, /more than your limit/);
+  assert.match(planBudget(0.5, 5000000000000000n, 0).reason, /network fee/);
+  assert.equal(planBudget(100000, 5000000000000000n, 0).affordable, 100);
+  assert.equal(planBudget(30, 5000000000000000n, 0).allInWei, 0n);
+});
+test("Generate N different entries never repeats; repeats stay allowed", () => {
+  const picks = generateDistinct(25);
+  assert.equal(new Set(picks.map(pickKey)).size, 25);
+  picks.forEach((p) => assert.ok(validatePick(p)));
+  const existing: Pick[] = [{ main: [1, 2, 3], bonus: 1 }];
+  const more = generateDistinct(5, existing);
+  assert.ok(!more.some((p) => pickKey(p) === pickKey(existing[0])));
+  assert.throws(() => generateDistinct(0));
+  assert.throws(() => generateDistinct(101));
+  // repeats: the same numbers twice remain a valid line
+  assert.equal(expandLines([{ main: [1, 2, 3], bonus: 1, quantity: 2 }]).length, 2);
+});
+test("baskets are separate per game and round; switching never retargets", () => {
+  let b = setBasketLines({}, 0, 42n, [{ main: [1, 2, 3], bonus: 1, quantity: 1 }]);
+  b = setBasketLines(b, 1, 42n, [{ main: [4, 5, 6], bonus: 2, quantity: 3 }]);
+  assert.equal(basketCount(b[basketKey(0, 42n)]), 1);
+  assert.equal(basketCount(b[basketKey(1, 42n)]), 3);
+  assert.equal(b[basketKey(0, 42n)].game, 0);
+  assert.equal(b[basketKey(1, 42n)].game, 1);
+  assert.deepEqual(b[basketKey(0, 42n)].lines[0].main, [1, 2, 3]);
+  b = setBasketLines(b, 0, 42n, []);
+  assert.equal(b[basketKey(0, 42n)], undefined);
+  assert.equal(basketCount(b[basketKey(1, 42n)]), 3);
+  assert.notEqual(basketKey(0, 42n), basketKey(0, 43n));
+});
+test("calendar export carries the closing time and no result promise", () => {
+  const ics = calendarEvent("Sorphera demo", 1800000000, "https://x/#draw", "u@d");
+  assert.match(ics, /DTSTART:20270115T080000Z/);
+  assert.match(ics, /no fixed result time is promised/);
+});
+test("reveal never exposes numbers, matches or winners before balls stop", () => {
+  const s = allScenarios.find((s) => s.id === "nft-tie")!;
+  const full = replay(s.events, 1);
+  for (let r = 0; r < 4; r++) {
+    const v = revealView(full, r, 1);
+    assert.equal(v.complete, false);
+    assert.equal(v.resultsVisible, false);
+    assert.equal(v.winnerVisible, false);
+    assert.equal(v.shown.filter((n) => n !== undefined).length, r);
+    assert.equal(v.status, "Revealing the numbers");
+  }
+  const done = revealView(full, 4, 1);
+  assert.deepEqual(done.shown, [7, 12, 19, 4]);
+  assert.equal(done.winnerVisible, true);
+  // provisional tie: complete but no winner
+  const prov = revealView(replay(s.events.slice(0, 4), 1), 4, 1);
+  assert.equal(prov.resultsVisible, true);
+  assert.equal(prov.winnerVisible, false);
+  // before Result there is nothing to show
+  const early = revealView(replay(s.events.slice(0, 1), 1), 4, 1);
+  assert.deepEqual(early.shown, [undefined, undefined, undefined, undefined]);
+  assert.equal(early.status, "Waiting for confirmed numbers");
+});
+test("customer statuses hide contract jargon", () => {
+  assert.equal(customerStatus("Settlement", 0), "Preparing the draw");
+  assert.equal(customerStatus("Awaiting draw oracle", 0), "Waiting for confirmed numbers");
+  assert.equal(customerStatus("Tie-break required", 1), "Selecting the winning ticket");
+});
+test("match highlighting follows revealed balls only; partial is never a win", () => {
+  const pick: Pick = { main: [7, 12, 19], bonus: 4 };
+  assert.deepEqual(matchTicket(pick, [7, undefined, undefined, undefined]).mainHits, [7]);
+  assert.equal(matchTicket(pick, [7, 12, 19, undefined]).full, false);
+  assert.equal(matchTicket(pick, [7, 12, 19, 4]).full, true);
+  assert.equal(matchTicket({ main: [7, 12, 1], bonus: 4 }, [7, 12, 19, 4]).full, false);
+});
+test("skip, replay and reduced motion all end on identical results", () => {
+  for (const s of allScenarios) {
+    const end = replay(s.events, s.game);
+    const skipped = revealView(end, 4, s.game);
+    const stepped = revealView(
+      s.events.reduce((st, e) => applyDraw(st, e, s.game), { ...emptyDraw }),
+      4,
+      s.game,
+    );
+    assert.deepEqual(skipped, stepped);
+  }
+  assert.equal(timing(true).spin, 0);
+  assert.ok(timing(false).spin >= 1200 && timing(false).spin <= 1800);
+  assert.ok(timing(false).hold >= 700 && timing(false).hold <= 1000);
+});
+test("fixture replays of the open rounds keep game/round identity and fixed outcomes", () => {
+  for (const s of myRoundScenarios) {
+    assert.equal(s.round, 42n);
+    assert.equal(s.simulated, true);
+    const end = replay(s.events, s.game);
+    assert.equal(end.terminal, true);
+    assert.equal(end.matches, 2);
+  }
+  const nft = replay(myRoundScenarios[1].events, 1);
+  assert.equal(nft.winningTicket, "315");
+  assert.ok(myRoundScenarios[1].finalists!.includes("315"));
+  const eth = replay(myRoundScenarios[0].events, 0);
+  assert.equal(eth.winningTicket, "0");
+  // sample tickets are labelled and never counted as the customer's
+  assert.ok(initialTickets.every((t) => t.source === "sample"));
+});
+test("finalist pagination is bounded", () => {
+  const ids = Array.from({ length: 14 }, (_, i) => String(100 + i));
+  assert.equal(paginate(ids, 0).pages, 3);
+  assert.equal(paginate(ids, 9).page, 2);
+  assert.equal(paginate(ids, 2).items.length, 2);
 });

@@ -1,87 +1,53 @@
-# Sorphera validation record
+# Sorphera validation record — budget, baskets and globe reveal (continuation of PR #4)
 
-## Scope and outcome
+Worker-run verification on 2026-10-09. Source is `web/`; the production static export is root `dist/`. Contracts, canonical ABIs, `src/deployment.json` (demo mode, nulls, `transactionsActivated: false`) and activation safeguards are unchanged. No deployment, funding, signature, purchase or live activation happened.
 
-Worker-run verification on 2026-10-09 Asia/Taipei. The preserved baseline is merged PR #3, `ed68e960dc3b9f0847caa637b5d3ea0c082bcfe3`. Implemented source is `web/`; the production static export is root `dist/`.
+**Local deliverable complete; public publication incomplete.** This session had shell and browser tools but no callable Website publishing workflow, so no public URL or CID was produced. Publish the committed `dist/` as described in `web/README.md`.
 
-**Local demo deliverable complete; requested public publication incomplete.** The session provided browser and shell tools but no callable Website publishing workflow. The actual production export was served locally beneath `/preview/`, inspected and exercised. No public URL/CID or publication is claimed. Genuine deployment configuration remains absent by design, with the assignment-authorized null inputs and demo mode. This is not a launch-readiness assessment or independent network certification.
+## What changed
 
-All four supplied brand files were accessible, inspected and optimized. The board guides the palette and supplies cropped globes; the ice-blue icon supersedes its pink badge. The reference copy is bundled but never displayed wholesale. No “BRAND CONCEPT 01” label appears in the UI. The ZIP and bundled prompts are not submitted. Asset hashes/dimensions are in `asset-manifest.json`.
+- **Budget (`src/budget.ts`, `src/Play.tsx`).** Editable total spending limit (default US$30). Illustrative fixed rate US$2,500/ETH and an estimated per-purchase network fee of 0.0004 ETH ≈ US$1.00, labelled "illustrative, not a live quote" and used consistently on Home, Play, basket, review and receipt. USD is derived from exact wei with integer arithmetic (`usdCents`); wei totals are unchanged. Shows affordable whole tickets after the fee, subtotal, estimated fee, all-in total, remaining budget, and a plain reason when one ticket is unaffordable. Nothing is ever added or purchased automatically.
+- **Baskets.** Separate per game/round baskets (`setBasketLines`) held in app state. Switching ETH/NFT only changes which basket is shown; existing lines are never retargeted. Drafts survive navigation; a closed round flags its drafts and disables review. Round facts (prize, ETH + USD price, countdown, local closing time with timezone) sit above the picker, with the sharing explanation (ETH split vs. one NFT winner) and expandable odds (1 in 5,700, no partial prizes).
+- **Picks.** Manual picks, Quick Pick, Edit/Remove, "Repeat these numbers" (quantity) with the honest note that repeats do not improve the chance those numbers are drawn, and "Generate N different entries" (`generateDistinct`) that guarantees distinct combinations from what is already in the basket. Duplicates stay allowed; 100 tickets per transaction. Developer identifiers ("game 0/1") removed from customer copy.
+- **Review and receipt.** One explicit "Confirm demo entries" action; the rejected-approval demonstration is an optional checkbox. Receipt "Your demo entries are in" shows the globe numbers, game/round, ticket count, ETH + USD amount, local closing time, countdown, "View your draw", "My tickets" and an iCalendar download. No result deadline is promised.
+- **My tickets.** "Your demo entries" are separated from "Sample winners, refunds and rewards". A customer can replay their own open round as a clearly labelled fixture replay with simulated time (`myRoundScenarios`, fixed outcomes independent of picks). The default NFT claim succeeds with a receipt and illustrative thumbnails; failed delivery, incompatible recipient and retry live under "Demo scenarios". Per-asset retry, prior successes, incidental ETH, claim limits, paused-sales claims and reward queue-vs-delivery are preserved.
+- **Signature reveal (`src/Chamber.tsx`, `src/reveal.ts`, `src/DrawRoom.tsx`).** CSS 3D sphere: plush shaded ball, panning continents on the curved surface, cream badge attached with `translateZ` on the sphere front and `backface-visibility: hidden`. Each ball enters badge-away (unnumbered back), rotates 540° with an ease-out deceleration over 1.5 s, holds 0.85 s with the badge facing the camera, then travels into its result slot; the pink bonus globe gets its own turn. `revealView` gates numbers, match counts, payouts and winners until the bonus ball has stopped, including the screen-reader live region ("Ball 1: 7." after each stop; outcome after completion). Spoken callouts use `speechSynthesis` only after the user enables sound. Pause/resume, replay, skip and reduced motion retained; reduced motion is a static quick reveal with no spinning. The stage is a lazy chunk with a lightweight fallback; results and controls live outside it.
+- **Personal results and NFT finale.** The customer's tickets for the replayed game/round sit under the draw with per-ball match highlighting as balls stop and a per-ticket outcome at the end (no win / shares ETH / waiting for winning ticket / winning ticket). Multiple NFT matches switch to the finale "One of these matching tickets wins the whole collection." with paginated ticket-ID chips (visually distinct from 1–20 balls) and the confirmed winner only after `TieBreakResult`; the provisional result never announces a winner or enables claims.
 
 ## Actual build and logic checks
 
 | Command | Actual outcome |
 | --- | --- |
-| `npm install --prefix web --cache /tmp/sorphera-npm-cache --no-audit --no-fund` | Passed, normal registry dependencies installed; earlier attempt without a temporary cache hit read-only home cache and was retried |
-| `npm test --prefix web` | **28 tests passed, 0 failed**; `tests.txt` |
-| `npm run typecheck --prefix web` | Passed, `tsc --noEmit`; `typecheck.txt` |
-| `npm run build --prefix web` | Passed, typecheck and Vite production build, 1,099 modules; `build.txt` |
+| `npm run typecheck` (web/) | Passed, exit 0; `typecheck.txt` |
+| `npm test` (web/) | **39 tests passed, 0 failed**; `tests.txt` |
+| `npm run build` (web/) | Passed: tsc + Vite, 1,101 modules, exit 0; `build.txt` |
 
-An intermediate typecheck caught an intentionally invalid test tuple cast; its test-only cast was corrected and the final typecheck/build passed. The final export was rebuilt after the final application source changes.
+New regression tests cover: USD conversion exactness and consistency; US$30 → 2 whole tickets after fee, over-budget and unaffordable cases, exact wei subtotal/all-in; distinct generation never repeats while repeats remain allowed; per game/round baskets and non-retargeting; calendar export with no result promise; the reveal gate (no numbers, results or winner before 4 stopped balls; provisional tie complete without winner); customer status wording; match highlighting bounded by revealed balls; skip/replay/reduced-motion result equivalence for every scenario and the 1.2–1.8 s / 0.7–1 s timing bounds; fixed outcomes and game/round identity of the personal fixture replays; sample tickets labelled as samples; finalist pagination; and the default-success claim fixture with the optional faulty scenario.
 
-Tests cover number ranges/distinctness, all 5,700 Solidity packed combinations, Quick Pick isolation, duplicate combinations, fractional/oversized batches, exact wei totals, price/identity/time/pause eligibility checks, baseline terminal statuses, NFT provisional ties, unrelated randomness rejection, cancellation review, oracle lockups, replay/skip equivalence, both rollovers, 20-asset batching, per-asset claim failure/retry, demo transport isolation, null/chain/activation gates, canonical lottery ABI equality, untrusted metadata, namespaced caches, log paging/concurrent deduplication/reorg recovery, ABI-based ETH/refund claims independent of sales pause, reverted receipts versus uncertain broadcast/receipt timeouts, actual NFT claim events (including a vote followed by delivery in one receipt) and queued-versus-delivered purchaser rewards.
+## Browser verification (production export served at a subpath)
 
-No contract source/tests, original ABI exports, Foundry settings, root dependencies or protected directories were modified. Existing contract suites were not rerun: this task changed the website only.
+Served `dist/` at `http://127.0.0.1:4173/preview/` (worker-local, ephemeral) and drove it with the Chromium browser tool. Console after all flows: **0 errors, 0 warnings**. `scrollWidth === innerWidth` on Play, My tickets and Draw room at 1280 and 390 px.
 
-## Browser verification
+Exercised: US$30 limit → "2 whole tickets fit"; US$10 → "Not even one ticket fits" with the plain reason. Quick Pick + Add to ETH basket, switch to NFT, Generate 3 different entries (NFT basket 3, ETH basket still 1, both chips counting); totals showed 0.015 ETH subtotal, 0.0004 ETH fee, 0.0154 ETH ≈ US$38.50 all-in and −US$8.50 remaining. Review (all-in 0.0054 ETH ≈ US$13.50) → Confirm demo entries → receipt with numbers, 1 ticket, 0.005 ETH ≈ US$12.50, local closing time, countdown and the three return actions. "View your draw" opened `#draw?scenario=eth-mine` with "Your entry" listed at "0 matched so far" and status "Preparing the draw". Played the replay: at the first ball the live region said "Ball 1: 3." while all four slots still read "?" and the result heading read "Revealing the numbers". NFT tie replay: third ball held "19" with 07/12 slotted and bonus still "?"; at the end slots 07/12/19/04, status "Winning ticket confirmed", finale listing #118/#233/#407 and the confirmed winner. Reduced motion (emulated, checkbox auto-checked): full NFT tie replay completed in ~1.0 s with `document.getAnimations().length === 0` and identical slots/finale. My tickets at 390 px: "Your demo entries" with the "Did my ticket win?" fixture link, sample section separate, default NFT claim delivered all 6 assets with illustrative thumbnails. Focus: 3 px visible rings on the budget field and number globes (71 px targets).
 
-Used the provided Chromium browser tools against **the production export**, served at `http://127.0.0.1:4173/preview/`. This address is worker-local and ephemeral. The local server is a bounded tool-owned exec session; no host daemon or public deployment was created. Relative JS, CSS, favicon and image URLs loaded under the subpath. Direct hash-route navigation and full reload worked.
+Screenshots in this directory (viewed, not just generated): `play-desktop.jpg`, `receipt-desktop.jpg`, `draw-finale-desktop.jpg` (captured after the "yours" label fix via Skip to results), `play-mobile.jpg`, `claim-mobile.jpg`, `draw-mobile-reduced.jpg`, `reveal-1-back-facing.jpg`, `reveal-2-stopped-badge.jpg`, `reveal-3-third-ball-hold.png`.
 
-Checked all six routes (Home, Play, My tickets, History, FAQ, Draw room) for document overflow at **320×760**, **768×1024**, **1440×1000**: all returned `scrollWidth === innerWidth` after fixes. Additional rendered/mobile interaction checks used **390×844**, and draw capture used **1440×1100**. Screenshots were viewed, not just generated. Full-page captures start at scroll position zero so sticky elements do not appear halfway down the artifact.
-
-Actual exercised flows:
-
-- Home jackpot links selected the correct game; gallery opened an artwork explanation; FAQ and result disclosures were checked in source and accessibility snapshots. Route names and active links remained readable at mobile sizes.
-- Quick Pick selected valid numbers without adding a ticket; explicit Add added the line. Keyboard Tab/Space selected main 7, 8, 9 and bonus 1. The focused number's 3px ring was visually inspected. Edit retained the entry; quantity 101 produced an error; quantity 100 produced **0.5 ETH** at 0.005 each. The final invalid-quantity field has `aria-invalid`/error association and receives focus.
-- Ticket review → simulated rejection → retry → pending → confirmed → My tickets succeeded. An injected wallet provider recorded **zero requests** during the demo purchase and claims. At 390px, the NFT path added two tickets at **0.01 ETH**, reviewed and confirmed them.
-- My tickets filtered by game/round. ETH + round 38 produced the expected empty state; Clear filters restored the list. NFT claim delivered five assets, left one failed, and retry delivered the remaining asset without repeating the successful ones. ETH/refund and purchaser reward queue/delivery actions succeeded in the demo. After navigating away/back, the five-delivered/one-failed state remained intact.
-- Native modal Escape closed and returned focus to the invoking claim button. Mobile dialogs stayed within the viewport and scroll to reach additional actions.
-- All seven replay scenarios were exercised through the selector and skip-to-results. The full NFT replay was also played, paused at the original oracle wait, resumed and observed through every phase. There was **no winning ticket** during either randomness wait or the provisional result. Only `Winning ticket confirmed` displayed **#118**. Both rollover scenarios displayed no matches; cancellation showed the below-cost 0.0031 ETH refund; both delayed-oracle scenarios remained nonterminal.
-- Emulated reduced motion enabled the toggle, produced zero browser animations in the inspected draw state and preserved numeric results/skip. Sound is muted by default and code creates audio only on a user play action. Actual speaker output was not assessed.
-- Browser console after the reviewed flows: **0 errors, 0 warnings**. Observed static resource requests returned HTTP 200, including lazy DrawRoom/Chamber chunks. No missing images were found in the checked routes.
-
-Screenshots:
-
-| Artifact | Actual capture |
-| --- | --- |
-| `home-desktop.webp` | 1440px desktop, full Home page |
-| `home-mobile.webp` | 390px mobile, full Home page |
-| `play-mobile.webp` | 390px mobile, picker and populated ticket |
-| `claims-mobile.webp` | 390×844 native claim dialog, five deliveries and one failed NFT |
-| `draw-desktop.webp` | 1440px full draw page, confirmed synthetic NFT tie winner |
+**Recording:** `reveal-nft-tie.gif` (30 stage frames of the NFT tie replay at 1280 px, ~2.5 fps, assembled from sequential element screenshots). Limitation: the capture tool cannot record video, so the GIF is a frame sequence with uneven ~0.4 s spacing; mid-rotation frames are sparse, and the finale panel below the stage is in `draw-finale-desktop.jpg` rather than the GIF.
 
 ## Better Interface review — six domains
 
-The pinned workflow, core principles of all six domains and documentation section were read before/during implementation. Review was consolidated rather than delegated. The combined upstream MIT/Apache notices are retained in `web/licenses/better-interface.txt`.
+| Domain | Coverage | Findings / fixes | Limits |
+| --- | --- | --- | --- |
+| Accessibility | Native controls, labelled fields (`aria-describedby` on budget/quantity), live region per stopped ball, `aria-live` outcome only after completion, keyboard focus rings verified, reduced motion honoured, no autoplay audio. | Fixed: basket count badge produced "ETH jackpot1" as an accessible name (`Play.tsx` count-dot, sr-only separators). Fixed: `Balls` now announces matched count. | No screen-reader session; no forced-colors render. |
+| Layout | Budget bar, round facts and result rows collapse to one column at ≤760 px; no horizontal overflow at 390/1280. | None open. | 320 px and 200% zoom not re-measured in this pass. |
+| Writing | Customer statuses ("Preparing the draw", "Waiting for confirmed numbers", "Selecting the winning ticket"); jargon moved to "Verification details"; removed "game 0/1"; illustrative-rate labels; no result deadline; partial matches explicitly non-winning. | Fixed: sample ticket #118 was labelled "yours" in the finale (`DrawRoom.tsx` chip-mine now requires `source === "mine"`). Fixed: fully delivered claim still read "Retry remaining assets". | No legal review. |
+| Typography | Tabular numerals on money/time; 16–18 px inputs; badge size scales with globe size (`calc(var(--size) * 0.27)`), 170 px stage globe → ~46 px digits, readable in `reveal-2-stopped-badge.jpg`. | None open. | Inter availability not asserted. |
+| Colors | Existing tokens reused; pink finale chips/winner on charcoal; hit rings use ice/pink plus text ("2 matched so far"), never colour alone. | None open. | Contrast of new pink-on-charcoal text not instrument-measured in this pass (earlier record measured core pairs). |
+| UI | States: idle globe, away/spinning/hold/travel, paused (animations paused), complete; disabled Skip when finished; over-budget notice; closed-round notice; empty states for entries/samples. | None open. | No 10% speed animation review; mobile timing tuned by viewport size only, not on a physical device. |
 
-| Domain | Coverage and evidence | Limits |
-| --- | --- | --- |
-| Accessibility | **Checked.** Native links/buttons/forms/dialogs/disclosures; accessible picker state and numeric result alternatives; keyboard selection, visible focus, modal Escape/return, error announcements, reduced-motion behavior and mobile targets. | No screen-reader session, automated WCAG certification, forced-colors rendered session or full keyboard-only traversal of every possible claim state. |
-| Layout | **Checked.** Shared edges, spaced grouping, desktop/mobile screenshots, all six routes at 320/768/1440, mobile overlays and nested scrolling. Fixed narrow hero overflow. | No native browser 200% zoom, text-only enlargement, RTL mirror or physical-device measurements. Product is English-only. |
-| Writing | **Checked.** Exact tagline; clear demo/synthetic labels, verb-based actions, recovery copy, game/round identity, explicit limitations. Reviewed fees, claims, oracle, cancellation, rollover and provisional NFT tie language against baseline. | No professional legal/license review or translated copy. |
-| Typography | **Checked.** Source scale/line height/wrapping, visual heading hierarchy and system font fallback, tabular changing numbers, 16px fields and readable mobile layouts. | No installed Inter font assertion, exhaustive OS font coverage or native zoom validation. |
-| Colors | **Checked.** Tokens and actual computed solid background pairs; body 15.26:1, muted/picker 7.49:1, primary button 9.08:1, selected ETH 11.67:1, focus/picker 13.05:1. Viewed focus and text in the screenshots. | Did not measure every gradient/image/translucent or disabled combination; disabled controls are not a text contrast pass claim. One dark theme only. |
-| UI | **Checked.** Selected/disabled/error/empty/pending/confirmed/partial-failure states, native overlays, consistent spheres, sparse gradients and surfaces. Replay, pause/resume, lazy fallback source and reduced motion checked. | No 10%-speed DevTools animation review, network-throttled fallback timing or physical audio assessment. |
+## Remaining limitations
 
-## Findings, fixes and recheck
-
-| Severity | Final source location | Finding, correction and evidence |
-| --- | --- | --- |
-| High | `web/src/styles.css:2528`, `web/src/App.tsx:34` | Initial demo notice scrolled away, and route focus could hide the page header. Made the notice sticky and focused main without scrolling. Browser computed sticky positioning and final scrolling views preserve the demo boundary. |
-| Medium | `web/src/styles.css:2544` | At 320px the hero retained 20px bleed against 16px margins, producing 328px document width. Aligned bleed to 16px; all-route 320px recheck returned exactly 320px. |
-| Medium | `web/src/core.ts:44` | Source review found an initial decoder inconsistent with Solidity `Balls.key`. Changed to 5-bit main fields and the bonus shift at bit 15. Exhaustive 5,700-combination round-trip test passes. |
-| Medium | `web/src/App.tsx:25`, `web/src/Tickets.tsx:5` | Claim state was component-local and would reset on route changes. Lifted claim memory to the app; browser navigation away/back preserved delivered and retryable indices. Reload intentionally resets the labelled demo. |
-| Medium | `web/src/Play.tsx:74`, `web/src/Play.tsx:201` | Invalid quantity had an alert but no input association/focus recovery. Added error reference, invalid state and focus to the field. The 101-ticket rejection and 100-ticket accepted total were exercised. |
-| High | `web/src/LiveWorkspace.tsx:240` | Final source review found receipt timeouts shared the failure path. Submitted transactions now remain pending unless a reverted receipt proves failure, with a confirmation check and no enabled repurchase. Regression tests cover timeout, RPC outage, rejection and revert classification. |
-| Medium | `web/src/contract.ts:569` | Receipt review found a shared vote and successful transfer could report two states for one index. Kept the last per-asset event; a focused receipt test verifies one final delivered result. |
-| Low | `web/src/styles.css:2540` | Quick Pick's arrow wrapped awkwardly at 320px. Prevented control shrink/wrapping; final narrow view was inspected. |
-
-No known blocking defect remains in the inspected default demo flows. This statement is bounded by the listed checks and is not proof of complete correctness.
-
-## Remaining integration and delivery limitations
-
-- **Public Website publication was not possible with the available tools.** Follow `web/README.md` to publish the complete `dist/` export. No approval was requested because the action was already authorized; the capability itself was absent.
-- Mainnet addresses/block, runtime code hashes, public RPC, ABI release digest, vault/helper verification, company inputs and live canary remain external inputs. Nulls are intentional. Live code is typed and mocked where described, but funded wallet writes, actual VRF, real custody, live reorgs, helper behavior and wallet/network switching against deployed contracts were not executed. Do not activate from this report alone.
-- The live workspace uses a lightweight confirmed-results view; the richer chamber replay is implemented for the default demo. In-memory log history rebuilds on reload and large histories benefit from the documented optional indexer. The current gallery is illustrative, not live metadata indexing or NFT pricing.
-- HTTP static serving is verified. No actual IPFS pin/ENS deployment, offline-first service worker, cross-browser matrix, screen reader or independent accessibility audit was performed.
-- The bundle check is recorded separately in `bundle-report.json`; it is a local payload accounting check, not the platform's final Git transport pack. The runner’s existing `.git/info/exclude` excludes root `artifacts/`; Git-eligible copies of all evidence are therefore retained in `web/evidence/`. The local bundle report counts these once. No ignore/exclude file was changed. Dependency directories/caches, temporary browser traces and ZIP archives are excluded; complete required runtime assets remain.
+- Public Website publication was not possible with the available tools; the export is complete and committed.
+- The sphere is a CSS 3D treatment (shaded sphere, panning continents, 3D-attached badge), not a WebGL mesh; it uses the brand palette rather than the photographed plush balls because those images carry fixed printed numbers that would conflict with results. Slot globes keep the plush artwork with the result badge overlaid.
+- GIF is a frame sequence (see above). No physical-device or screen-reader session.
+- Live mode is untouched by this pass and remains unverified against a real deployment.

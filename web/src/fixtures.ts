@@ -31,6 +31,10 @@ export interface Scenario {
   prize: string;
   description: string;
   events: DrawEvent[];
+  /** Matching ticket IDs for an NFT tie finale (sample tickets). */
+  finalists?: string[];
+  /** Fixture replay of the customer's own open round, with simulated time. */
+  simulated?: boolean;
 }
 const draw = (matches: number, winningTicket = "0"): DrawEvent[] => [
   { name: "DrawRequested", requestId: "demo-draw-41" },
@@ -56,6 +60,7 @@ export const scenarios: Scenario[] = [
     prize: "6 secured NFTs",
     description:
       "3 matching tickets. A separate oracle request selects ticket #118 for all 6 NFTs and 0.012 ETH incidental funds.",
+    finalists: ["118", "233", "407"],
     events: [
       ...draw(3),
       { name: "TieBreakRequired", matches: 3 },
@@ -120,6 +125,7 @@ export const scenarios: Scenario[] = [
     prize: "Winner not yet known",
     description:
       "The numbers are confirmed, but no ticket can claim this jackpot until the original tie-break request is fulfilled and finalized.",
+    finalists: ["52", "77", "91"],
     events: [
       ...draw(3),
       { name: "TieBreakRequired", matches: 3 },
@@ -127,6 +133,47 @@ export const scenarios: Scenario[] = [
     ],
   },
 ];
+// Fixture replays of the customer's own open rounds. Outcomes are fixed and
+// independent of the customer's picks: the sample tickets below match, so a
+// customer entry wins only if it genuinely holds the same numbers.
+export const myRoundScenarios: Scenario[] = [
+  {
+    id: "eth-mine",
+    label: "Fixture replay · your ETH round 42",
+    game: 0,
+    round: 42n,
+    prize: "18.42 ETH",
+    description:
+      "Simulated time: entries closed and the draw confirmed. 2 sample tickets matched and share 18.42 ETH equally: 9.21 ETH each.",
+    simulated: true,
+    events: [
+      { name: "DrawRequested", requestId: "demo-draw-42" },
+      { name: "RandomnessStored", requestId: "demo-draw-42" },
+      { name: "Result", main: [3, 11, 17], bonus: 2, matches: 2, winningTicket: "0" },
+    ],
+  },
+  {
+    id: "nft-mine",
+    label: "Fixture replay · your NFT round 42",
+    game: 1,
+    round: 42n,
+    prize: "6 secured NFTs",
+    description:
+      "Simulated time: entries closed and the draw confirmed. 2 sample tickets matched; the separate tie-break selected ticket #315 for all 6 NFTs and 0.012 ETH incidental funds.",
+    simulated: true,
+    finalists: ["302", "315"],
+    events: [
+      { name: "DrawRequested", requestId: "demo-draw-42n" },
+      { name: "RandomnessStored", requestId: "demo-draw-42n" },
+      { name: "Result", main: [5, 9, 14], bonus: 3, matches: 2, winningTicket: "0" },
+      { name: "TieBreakRequired", matches: 2 },
+      { name: "TieBreakRequested", requestId: "demo-tie-42n" },
+      { name: "TieBreakRandomnessStored", requestId: "demo-tie-42n" },
+      { name: "TieBreakResult", requestId: "demo-tie-42n", winningTicket: "315" },
+    ],
+  },
+];
+export const allScenarios = [...scenarios, ...myRoundScenarios];
 export interface DemoTicket {
   id: string;
   game: Game;
@@ -134,6 +181,10 @@ export interface DemoTicket {
   pick: Pick;
   kind: "entry" | "eth" | "nft" | "refund" | "expired" | "reward";
   amount: string;
+  /** Labelled sample data versus the customer's own demo entries. */
+  source: "sample" | "mine";
+  /** Set when the customer purchased: wei paid for the whole basket. */
+  purchasedAt?: number;
 }
 export const initialTickets: DemoTicket[] = [
   {
@@ -143,6 +194,7 @@ export const initialTickets: DemoTicket[] = [
     pick: { main: [7, 12, 19], bonus: 4 },
     kind: "nft",
     amount: "6 NFTs + 0.012 ETH",
+    source: "sample",
   },
   {
     id: "204",
@@ -151,6 +203,7 @@ export const initialTickets: DemoTicket[] = [
     pick: { main: [7, 12, 19], bonus: 4 },
     kind: "eth",
     amount: "4.28 ETH",
+    source: "sample",
   },
   {
     id: "37",
@@ -159,6 +212,7 @@ export const initialTickets: DemoTicket[] = [
     pick: { main: [3, 9, 16], bonus: 2 },
     kind: "refund",
     amount: "0.0031 ETH",
+    source: "sample",
   },
   {
     id: "81",
@@ -167,6 +221,7 @@ export const initialTickets: DemoTicket[] = [
     pick: { main: [2, 8, 11], bonus: 1 },
     kind: "expired",
     amount: "No entitlement · rolled over",
+    source: "sample",
   },
   {
     id: "205",
@@ -175,6 +230,7 @@ export const initialTickets: DemoTicket[] = [
     pick: { main: [7, 12, 19], bonus: 4 },
     kind: "reward",
     amount: "12 FWA purchaser tokens",
+    source: "sample",
   },
 ];
 export class FixtureAdapter {
@@ -192,17 +248,22 @@ export class FixtureAdapter {
     return { kind: "simulated" as const };
   }
   // Receives no wallet or provider. Synthetic failure is isolated per asset.
+  // The default claim succeeds; `faulty` opts into the demo failure scenario
+  // where one asset fails on the first attempt and succeeds on retry.
   async claimNFTs(
     indices: number[],
     compatible: boolean,
     attempt: number,
+    faulty = false,
   ): Promise<ClaimResult[]> {
     if (indices.length < 1 || indices.length > 20)
       throw new Error("Choose 1–20 assets per batch.");
     return indices.map((index) => ({
       index,
       state:
-        compatible && (attempt > 0 || index !== 2) ? "delivered" : "failed",
+        compatible && (!faulty || attempt > 0 || index !== 2)
+          ? "delivered"
+          : "failed",
     }));
   }
 }

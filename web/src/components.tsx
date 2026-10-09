@@ -27,23 +27,33 @@ export function Globe({
 export function Balls({
   pick,
   size = "small",
+  hits,
 }: {
   pick: Pick;
   size?: "small" | "normal" | "large";
+  /** Numbers already matched by revealed balls, for highlighting. */
+  hits?: { main: number[]; bonus: boolean };
 }) {
+  const hitCount = hits ? hits.main.length + (hits.bonus ? 1 : 0) : 0;
   return (
     <div
       className="balls"
       role="img"
-      aria-label={`Main numbers ${pick.main.join(", ")}. Bonus ${pick.bonus}.`}
+      aria-label={`Main numbers ${pick.main.join(", ")}. Bonus ${pick.bonus}.${
+        hits ? ` ${hitCount} matched.` : ""
+      }`}
     >
       {pick.main.map((n) => (
-        <Globe key={n} number={n} size={size} />
+        <span key={n} className={hits?.main.includes(n) ? "hit" : ""}>
+          <Globe number={n} size={size} />
+        </span>
       ))}
       <span className="bonus-plus" aria-hidden="true">
         +
       </span>
-      <Globe number={pick.bonus} kind="nft" size={size} />
+      <span className={hits?.bonus ? "hit" : ""}>
+        <Globe number={pick.bonus} kind="nft" size={size} />
+      </span>
     </div>
   );
 }

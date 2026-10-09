@@ -5,6 +5,7 @@ import Play from "./Play";
 import Tickets, { type ClaimMemory } from "./Tickets";
 import { initialTickets, type DemoTicket } from "./fixtures";
 import config from "./deployment.json";
+import type { Baskets } from "./budget";
 const DrawRoom = lazy(() => import("./DrawRoom"));
 const LiveWorkspace = lazy(() => import("./LiveWorkspace"));
 const links = [
@@ -28,6 +29,10 @@ export default function App() {
     queued: [],
   });
   const [tickets, setTickets] = useState<DemoTicket[]>(initialTickets);
+  // Separate baskets per game and round survive navigation. Switching views
+  // never moves entries between games.
+  const [baskets, setBaskets] = useState<Baskets>({});
+  const [limit, setLimit] = useState(30);
   useEffect(() => {
     const change = () => {
       setView(route());
@@ -124,10 +129,17 @@ export default function App() {
             <Play
               key={view.params.get("game")}
               initialGame={view.params.get("game") === "1" ? 1 : 0}
+              baskets={baskets}
+              onBaskets={setBaskets}
+              limit={limit}
+              onLimit={setLimit}
               onTickets={(added) => setTickets([...added, ...tickets])}
             />
           ) : view.path === "draw" ? (
-            <DrawRoom scenarioId={view.params.get("scenario") ?? undefined} />
+            <DrawRoom
+              scenarioId={view.params.get("scenario") ?? undefined}
+              tickets={tickets}
+            />
           ) : view.path === "tickets" ? (
             <Tickets
               tickets={tickets}

@@ -57,7 +57,7 @@ export const scenarios: Scenario[] = [
     label: "NFT · the tie-break",
     game: 1,
     round: 41n,
-    prize: "6 secured NFTs",
+    prize: "6 demo NFTs",
     description:
       "3 matching tickets. A separate oracle request selects ticket #118 for all 6 NFTs and 0.012 ETH incidental funds.",
     finalists: ["118", "233", "407"],
@@ -90,7 +90,7 @@ export const scenarios: Scenario[] = [
     round: 40n,
     prize: "4 NFTs rolled",
     description:
-      "No matching tickets. 4 secured NFTs and residual funds roll to the next NFT round. Old tickets expire.",
+      "No matching tickets. 4 demo NFTs and residual funds roll to the next NFT round. Old tickets expire.",
     events: draw(0),
   },
   {
@@ -149,7 +149,13 @@ export const myRoundScenarios: Scenario[] = [
     events: [
       { name: "DrawRequested", requestId: "demo-draw-42" },
       { name: "RandomnessStored", requestId: "demo-draw-42" },
-      { name: "Result", main: [3, 11, 17], bonus: 2, matches: 2, winningTicket: "0" },
+      {
+        name: "Result",
+        main: [3, 11, 17],
+        bonus: 2,
+        matches: 2,
+        winningTicket: "0",
+      },
     ],
   },
   {
@@ -157,7 +163,7 @@ export const myRoundScenarios: Scenario[] = [
     label: "Fixture replay · your NFT round 42",
     game: 1,
     round: 42n,
-    prize: "6 secured NFTs",
+    prize: "6 demo NFTs",
     description:
       "Simulated time: entries closed and the draw confirmed. 2 sample tickets matched; the separate tie-break selected ticket #315 for all 6 NFTs and 0.012 ETH incidental funds.",
     simulated: true,
@@ -165,11 +171,21 @@ export const myRoundScenarios: Scenario[] = [
     events: [
       { name: "DrawRequested", requestId: "demo-draw-42n" },
       { name: "RandomnessStored", requestId: "demo-draw-42n" },
-      { name: "Result", main: [5, 9, 14], bonus: 3, matches: 2, winningTicket: "0" },
+      {
+        name: "Result",
+        main: [5, 9, 14],
+        bonus: 3,
+        matches: 2,
+        winningTicket: "0",
+      },
       { name: "TieBreakRequired", matches: 2 },
       { name: "TieBreakRequested", requestId: "demo-tie-42n" },
       { name: "TieBreakRandomnessStored", requestId: "demo-tie-42n" },
-      { name: "TieBreakResult", requestId: "demo-tie-42n", winningTicket: "315" },
+      {
+        name: "TieBreakResult",
+        requestId: "demo-tie-42n",
+        winningTicket: "315",
+      },
     ],
   },
 ];

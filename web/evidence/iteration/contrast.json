@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Budget input",
+    "foreground": "rgb(247, 236, 223)",
+    "background": "rgb(25, 23, 28)",
+    "ratio": 15.261410783021056
+  },
+  {
+    "name": "Budget explanation",
+    "foreground": "rgb(183, 174, 185)",
+    "background": "rgb(44, 40, 48)",
+    "ratio": 6.721593288882123
+  },
+  {
+    "name": "Review action",
+    "foreground": "rgb(25, 23, 28)",
+    "background": "rgb(245, 160, 197)",
+    "ratio": 9.077169295924602
+  }
+]

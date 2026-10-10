@@ -1,118 +1,90 @@
 import { useLayoutEffect, useRef, useState } from "react";
-
+import PlushGlobe from "./PlushGlobe";
 export type RevealPhase = "away" | "spinning" | "hold" | "travel";
 
-// Plush sphere built from CSS: a shaded ball, a continents layer that pans
-// around the curved surface, and a cream badge attached in 3D on the sphere's
-// front. The badge starts facing away (hidden behind the ball), the stage
-// rotates and decelerates to a stop with the badge facing the camera.
-// The number is supplied; nothing here chooses or changes it.
-export function RevealGlobe({
-  number,
-  kind,
-  phase,
-  spinMs,
-  travelMs,
-  paused,
-  target,
-}: {
-  number: number;
-  kind: "eth" | "nft";
-  phase: RevealPhase;
-  spinMs: number;
-  travelMs: number;
-  paused: boolean;
-  /** Offset to the result slot, used during the travel phase. */
-  target?: { x: number; y: number; scale: number };
-}) {
-  const style = {
-    "--spin": `${spinMs}ms`,
-    "--travel": `${travelMs}ms`,
-    "--tx": `${target?.x ?? 0}px`,
-    "--ty": `${target?.y ?? 0}px`,
-    "--ts": `${target?.scale ?? 1}`,
-  } as React.CSSProperties;
-  return (
-    <div
-      className={`rg rg-${kind} rg-${phase} ${paused ? "rg-paused" : ""}`}
-      style={style}
-      aria-hidden="true"
-    >
-      <div className="rg-3d">
-        <div className="rg-sphere">
-          <div className="rg-continents" />
-          <div className="rg-shade" />
-        </div>
-        <div className="rg-badge-stage">
-          <span className="rg-badge">{String(number).padStart(2, "0")}</span>
-        </div>
-      </div>
-      <div className="rg-shadow" />
-    </div>
-  );
-}
-
+// The stage and resting slots render the same sphere at the same orientation.
+// Progress comes from the draw's clock, so pause freezes both state and pixels.
 export default function RevealStage({
   ball,
   number,
   kind,
   phase,
-  spinMs,
-  travelMs,
-  paused,
+  progress,
   slotId,
+  reduced,
 }: {
   ball: number;
   number: number | undefined;
   kind: "eth" | "nft";
   phase: RevealPhase;
-  spinMs: number;
-  travelMs: number;
-  paused: boolean;
+  progress: number;
   slotId: string;
+  reduced: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [target, setTarget] = useState<{
-    x: number;
-    y: number;
-    scale: number;
-  }>();
+  const [target, setTarget] = useState({ x: 0, y: 0, scale: 1 });
   useLayoutEffect(() => {
-    if (phase !== "travel" || !ref.current) return;
-    const slot = document.getElementById(slotId);
-    const from = ref.current.getBoundingClientRect();
-    if (!slot) return;
-    const to = slot.getBoundingClientRect();
-    setTarget({
-      x: to.left + to.width / 2 - (from.left + from.width / 2),
-      y: to.top + to.height / 2 - (from.top + from.height / 2),
-      scale: to.width / from.width,
-    });
-  }, [phase, slotId, ball]);
+    const measure = () => {
+      const globe = ref.current?.querySelector<HTMLElement>(".rg");
+      const slot = document.getElementById(slotId);
+      if (!globe || !slot || !ref.current) return;
+      const from = ref.current.getBoundingClientRect(),
+        to = slot.getBoundingClientRect();
+      setTarget({
+        x: to.left + to.width / 2 - (from.left + from.width / 2),
+        y: to.top + to.height / 2 - (from.top + from.height / 2),
+        scale: to.width / globe.offsetWidth,
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (ref.current) observer.observe(ref.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [slotId, ball]);
+  const stopped = phase === "hold" || phase === "travel";
+  // Half a turn with a cubic ease out. Back (180°) -> front (0°), never mirrored.
+  const angle =
+    stopped || number === undefined || reduced
+      ? 0
+      : phase === "away"
+        ? Math.PI
+        : Math.PI * Math.pow(1 - progress, 3);
+  const travel =
+    phase === "travel" ? progress * progress * (3 - 2 * progress) : 0;
+  const enter =
+    phase === "away" && number !== undefined && !reduced ? 1 - progress : 0;
   return (
-    <div className="reveal-stage" ref={ref}>
-      {number === undefined ? (
-        <div className={`rg rg-${kind} rg-idle`} aria-hidden="true">
-          <div className="rg-3d">
-            <div className="rg-sphere">
-              <div className="rg-continents" />
-              <div className="rg-shade" />
-            </div>
-          </div>
-          <div className="rg-shadow" />
-        </div>
-      ) : (
-        <RevealGlobe
-          key={ball}
-          number={number}
+    <div
+      className="reveal-stage"
+      ref={ref}
+      data-phase={phase}
+      data-ball={ball}
+      role="img"
+      aria-label={
+        number === undefined
+          ? "Plush globe lottery ball"
+          : stopped
+            ? `${ball === 3 ? "Bonus ball" : `Ball ${ball + 1}`}: ${number}`
+            : `${ball === 3 ? "Bonus ball" : `Ball ${ball + 1}`} turning; number hidden`
+      }
+    >
+      <div
+        className={`rg rg-${kind}`}
+        style={{
+          transform: `translate(${target.x * travel}px, ${target.y * travel - 22 * enter}px) scale(${1 + (target.scale - 1) * travel - 0.1 * enter})`,
+          opacity: number === undefined && ball === 4 ? 0 : 1,
+        }}
+      >
+        <PlushGlobe
           kind={kind}
-          phase={phase}
-          spinMs={spinMs}
-          travelMs={travelMs}
-          paused={paused}
-          target={target}
+          angle={angle}
+          number={stopped ? number : undefined}
         />
-      )}
+      </div>
     </div>
   );
 }

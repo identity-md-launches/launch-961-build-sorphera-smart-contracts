@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Balls, Globe, Modal, PageHead } from "./components";
 import { Countdown } from "./pages";
 import {
@@ -6,7 +6,6 @@ import {
   eth,
   expandLines,
   quickPick,
-  ticketValue,
   type Game,
   type Line,
   type Pick,
@@ -22,6 +21,8 @@ import {
   generateDistinct,
   localTime,
   planBudget,
+  requireAffordable,
+  type BudgetPlan,
   setBasketLines,
   usd,
   type Baskets,
@@ -35,16 +36,16 @@ export function RoundFacts({ round }: { round: Round }) {
   return (
     <div className={`round-facts game-${round.game}`}>
       <div>
-        <span className="fine">Prize right now</span>
+        <span className="fine">Illustrative demo prize</span>
         <strong>
           {round.game === 0
             ? `${eth(round.actualETH)} ETH`
-            : `${round.securedNFTs} secured NFTs`}
+            : `${round.securedNFTs} demo NFTs`}
         </strong>
         <span className="fine">
           {round.game === 0
             ? `≈ ${usd(round.actualETH)} · shared equally by every matching ticket`
-            : "one winning ticket takes the whole collection"}
+            : "one winning ticket takes the NFT jackpot"}
         </span>
       </div>
       <div>
@@ -80,8 +81,8 @@ export default function Play({
   baskets: Baskets;
   onBaskets: (b: Baskets) => void;
   onTickets: (t: DemoTicket[]) => void;
-  limit: number;
-  onLimit: (n: number) => void;
+  limit: string;
+  onLimit: (n: string) => void;
 }) {
   const [game, setGame] = useState<Game>(initialGame);
   const round = demoRounds[game];
@@ -96,7 +97,7 @@ export default function Play({
   const [bonus, setBonus] = useState<number | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [howMany, setHowMany] = useState(3);
+  const [requestedCount, setHowMany] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [tx, setTx] = useState<TxState>("idle");
   const [review, setReview] = useState<Round | null>(null);
@@ -104,17 +105,47 @@ export default function Play({
   const [receipt, setReceipt] = useState<{
     entries: Pick[];
     round: Round;
-    wei: bigint;
+    plan: BudgetPlan;
   } | null>(null);
   const count = basketCount(basket);
   const roundClosed = Date.now() / 1000 >= round.cutoff;
-  let totalWei = 0n;
-  try {
-    if (lines.length) totalWei = ticketValue(lines, round.price);
-  } catch {
-    /* validation displayed by submit */
-  }
   const plan = planBudget(limit, round.price, count);
+  const room = Math.max(0, plan.affordable - count);
+  const howMany = requestedCount ?? room;
+  const submitting = useRef(false);
+  const mounted = useRef(true);
+  const latest = useRef({ game, round, lines, limit });
+  latest.current = { game, round, lines, limit };
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  function budgetField(id: string, disabled = false) {
+    return (
+      <div className="budget-input">
+        <label htmlFor={id}>Budget for this purchase (US$)</label>
+        <input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          autoComplete="off"
+          maxLength={18}
+          value={limit}
+          onChange={(e) => onLimit(e.target.value)}
+          disabled={disabled}
+          aria-invalid={!plan.valid}
+          aria-describedby={`${id}-help`}
+        />
+        <span id={`${id}-help`} className="fine">
+          {plan.valid
+            ? "Applies to this checkout. Your other basket stays separate."
+            : plan.reason}
+        </span>
+      </div>
+    );
+  }
   function select(n: number) {
     setError("");
     setMain((m) =>
@@ -167,6 +198,7 @@ export default function Play({
     setEditing(null);
   }
   function generate() {
+    if (room === 0 || !plan.valid) return;
     try {
       const fresh = generateDistinct(howMany, lines);
       commit([...lines, ...fresh.map((p) => ({ ...p, quantity: 1 }))]);
@@ -175,8 +207,14 @@ export default function Play({
     }
   }
   async function openReview() {
+    if (submitting.current) return;
     try {
+      requireAffordable(planBudget(limit, round.price, count));
       const fresh = await fixture.round(game);
+      const current = latest.current;
+      if (!mounted.current || current.game !== game || current.lines !== lines)
+        throw new Error("Your basket changed. Review it again.");
+      requireAffordable(planBudget(current.limit, fresh.price, count));
       checkPurchase(fresh, round, lines, Math.floor(Date.now() / 1000));
       setReview(fresh);
       setTx("review");
@@ -186,16 +224,35 @@ export default function Play({
     }
   }
   async function confirm() {
-    if (!review) return;
-    if (demoFailure) {
-      setTx("rejected");
-      return;
-    }
-    setTx("pending");
+    if (!review || submitting.current || tx === "confirmed") return;
+    // Synchronous latch also protects multiple events before React renders.
+    submitting.current = true;
     try {
+      const current = latest.current;
+      requireAffordable(planBudget(current.limit, review.price, count));
+      checkPurchase(
+        current.round,
+        review,
+        current.lines,
+        Math.floor(Date.now() / 1000),
+      );
+      if (demoFailure) {
+        setTx("rejected");
+        return;
+      }
+      setTx("pending");
+      setError("");
       await fixture.buy(review, lines);
       await new Promise((resolve) => setTimeout(resolve, 650));
-      const entries = expandLines(lines);
+      const fresh = await fixture.round(game);
+      const final = latest.current;
+      if (!mounted.current) return;
+      if (final.game !== game || final.lines !== lines)
+        throw new Error("Your basket changed. Review it again.");
+      checkPurchase(fresh, review, final.lines, Math.floor(Date.now() / 1000));
+      const acceptedPlan = planBudget(final.limit, fresh.price, count);
+      requireAffordable(acceptedPlan);
+      const entries = expandLines(final.lines);
       const stamp = Date.now();
       onTickets(
         entries.map((p, i) => ({
@@ -209,12 +266,14 @@ export default function Play({
           purchasedAt: stamp,
         })),
       );
-      setReceipt({ entries, round: review, wei: totalWei });
+      setReceipt({ entries, round: review, plan: acceptedPlan });
       setTx("confirmed");
       setLines([]);
     } catch (e) {
       setTx("failed");
       setError((e as Error).message);
+    } finally {
+      submitting.current = false;
     }
   }
   function downloadCalendar() {
@@ -224,9 +283,7 @@ export default function Play({
       location.href.replace(/#.*$/, "#draw"),
       `sorphera-demo-${game}-${String(round.id)}@demo`,
     );
-    const url = URL.createObjectURL(
-      new Blob([ics], { type: "text/calendar" }),
-    );
+    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
     const a = document.createElement("a");
     a.href = url;
     a.download = `sorphera-demo-round-${String(round.id)}.ics`;
@@ -236,7 +293,7 @@ export default function Play({
   const sharing =
     game === 0
       ? "ETH prize sharing: every ticket that matches all four numbers gets an equal share of the ETH prize."
-      : "One NFT winner: if several tickets match, a separate confirmed tie-break picks one ticket for the whole collection.";
+      : "One NFT winner: if several tickets match, a separate confirmed tie-break picks one ticket for the NFT jackpot.";
   return (
     <>
       <PageHead
@@ -247,18 +304,7 @@ export default function Play({
       <section className="budget-bar" aria-labelledby="budget-title">
         <div>
           <h2 id="budget-title">What does my budget buy?</h2>
-          <label className="budget-input">
-            Total spending limit (US$)
-            <input
-              type="number"
-              inputMode="decimal"
-              min="0"
-              step="1"
-              value={Number.isFinite(limit) ? limit : ""}
-              onChange={(e) => onLimit(Number(e.target.value))}
-              aria-describedby="budget-help"
-            />
-          </label>
+          {budgetField("purchase-budget")}
           <p className="fine" id="budget-help">
             {demoQuote.label}: 1 ETH ≈ US$
             {demoQuote.usdPerEth.toLocaleString("en-US")}. Estimated network fee{" "}
@@ -295,14 +341,13 @@ export default function Play({
                 aria-pressed={game === g}
                 onClick={() => {
                   setGame(g);
+                  setHowMany(null);
                   setEditing(null);
                   setError("");
                 }}
               >
                 {gameName(g)}
-                {basketCount(
-                  baskets[basketKey(g, demoRounds[g].id)],
-                ) > 0 && (
+                {basketCount(baskets[basketKey(g, demoRounds[g].id)]) > 0 && (
                   <span className="count-dot">
                     <span className="sr-only">, </span>
                     {basketCount(baskets[basketKey(g, demoRounds[g].id)])}
@@ -318,6 +363,12 @@ export default function Play({
             settlement and confirmed randomness, so results can take longer.
           </p>
           <p className="sharing-note">{sharing}</p>
+          {game === 1 && (
+            <p className="fine">
+              NFT jackpot prizes come from FWA pulls. Demo placeholders only; no
+              NFTs have been pulled, secured or won.
+            </p>
+          )}
           <div className="row between">
             <p className="eyebrow">01 / Pick 3 main numbers</p>
             <button className="quick-pick" onClick={pick}>
@@ -395,9 +446,9 @@ export default function Play({
             </button>
           </div>
           <p className="fine" id="repeat-help">
-            Repeats buy the same numbers more than once. They do not improve
-            the chance those numbers are drawn; they only enlarge your share if
-            they win.
+            Repeats buy the same numbers more than once. They do not improve the
+            chance those numbers are drawn; they only enlarge your share if they
+            win.
           </p>
           <div className="generate-row">
             <label className="quantity">
@@ -411,10 +462,26 @@ export default function Play({
                 onChange={(e) => setHowMany(Number(e.target.value))}
               />
             </label>
-            <button className="button" onClick={generate}>
+            <button
+              className="button"
+              onClick={generate}
+              disabled={
+                room === 0 ||
+                !Number.isInteger(howMany) ||
+                howMany < 1 ||
+                howMany + count > 100
+              }
+            >
               Generate {howMany} different entries
             </button>
           </div>
+          {room === 0 && (
+            <p className="fine" role="status">
+              {plan.affordable === 0
+                ? plan.reason
+                : "No additional ticket fits this purchase budget. Remove an entry or change your budget to generate more."}
+            </p>
+          )}
           <p id="ticket-error" role="alert" className="error">
             {error}
           </p>
@@ -426,8 +493,8 @@ export default function Play({
             <summary>Odds and prize rules</summary>
             <p>
               You win only by matching all 3 main numbers and the bonus. The
-              chance that one entry matches all four is 1 in 5,700. There are
-              no prizes for partial matches.
+              chance that one entry matches all four is 1 in 5,700. There are no
+              prizes for partial matches.
             </p>
             <p>{sharing}</p>
             <p>
@@ -450,10 +517,12 @@ export default function Play({
                 {" · "}
                 <button
                   className="text-button"
-                  onClick={() => setGame(otherGame)}
+                  onClick={() => {
+                    setGame(otherGame);
+                    setHowMany(null);
+                  }}
                 >
-                  {gameName(otherGame)} basket: {basketCount(otherBasket)}{" "}
-                  saved
+                  {gameName(otherGame)} basket: {basketCount(otherBasket)} saved
                 </button>
               </>
             )}
@@ -524,7 +593,8 @@ export default function Play({
             <div>
               <dt>Subtotal</dt>
               <dd>
-                {eth(totalWei)} ETH <small>≈ {cents(plan.subtotalCents)}</small>
+                {eth(plan.subtotalWei)} ETH{" "}
+                <small>≈ {cents(plan.subtotalCents)}</small>
               </dd>
             </div>
             <div>
@@ -537,24 +607,28 @@ export default function Play({
             <div className="total">
               <dt>All-in demo total</dt>
               <dd>
-                {eth(plan.allInWei)} ETH <small>≈ {cents(plan.allInCents)}</small>
+                {eth(plan.allInWei)} ETH{" "}
+                <small>≈ {cents(plan.allInCents)}</small>
               </dd>
             </div>
             <div className={plan.overBudget ? "over" : ""}>
               <dt>Remaining budget</dt>
-              <dd>{cents(plan.remainingCents)}</dd>
+              <dd>
+                {plan.valid
+                  ? cents(plan.remainingCents)
+                  : "Enter a valid budget"}
+              </dd>
             </div>
           </dl>
-          {plan.overBudget && (
+          {(!plan.valid || plan.overBudget) && (
             <p className="notice" role="status">
-              This basket is over your {cents(BigInt(plan.limitCents))} limit.
-              Remove a line or raise the limit before reviewing.
+              {plan.blockReason}
             </p>
           )}
           <button
             className="button primary full"
             onClick={openReview}
-            disabled={!lines.length || roundClosed}
+            disabled={!plan.canPurchase || roundClosed || tx === "pending"}
           >
             Review demo basket <span aria-hidden="true">↗</span>
           </button>
@@ -612,9 +686,18 @@ export default function Play({
                   <dd>{receipt.entries.length}</dd>
                 </div>
                 <div>
-                  <dt>Amount</dt>
+                  <dt>Illustrative all-in total</dt>
                   <dd>
-                    {eth(receipt.wei)} ETH <small>≈ {usd(receipt.wei)}</small>
+                    {eth(receipt.plan.allInWei)} ETH{" "}
+                    <small>≈ {cents(receipt.plan.allInCents)}</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Illustrative fee / remaining budget</dt>
+                  <dd>
+                    {eth(receipt.plan.feeWei)} ETH ≈{" "}
+                    {cents(receipt.plan.feeCents)} /{" "}
+                    {cents(receipt.plan.remainingCents)}
                   </dd>
                 </div>
                 <div>
@@ -656,6 +739,7 @@ export default function Play({
                 {gameName(game)} · Round {String(review.id)} · {count} ticket
                 {count === 1 ? "" : "s"}
               </p>
+              {budgetField("review-budget", tx === "pending")}
               <div className="review-lines">
                 {lines.map((l, i) => (
                   <div className="row between" key={i}>
@@ -668,9 +752,22 @@ export default function Play({
                 {eth(plan.allInWei)} ETH{" "}
                 <small>
                   ≈ {cents(plan.allInCents)} all-in, including{" "}
-                  {cents(plan.feeCents)} estimated fee
+                  {eth(plan.feeWei)} ETH ≈ {cents(plan.feeCents)} illustrative
+                  fee
                 </small>
               </p>
+              <p className="fine">
+                Remaining budget:{" "}
+                {plan.valid
+                  ? cents(plan.remainingCents)
+                  : "Enter a valid budget"}
+                . {demoQuote.label}.
+              </p>
+              {(!plan.valid || plan.overBudget) && (
+                <p className="notice" role="alert">
+                  {plan.blockReason}
+                </p>
+              )}
               <p className="fine">
                 Numbers are unordered. Your tickets apply to this round only.
                 This demo confirmation will not open a wallet.
@@ -684,7 +781,11 @@ export default function Play({
                       ? error
                       : ""}
               </p>
-              <button className="button primary full" onClick={confirm}>
+              <button
+                className="button primary full"
+                onClick={confirm}
+                disabled={tx === "pending" || !plan.canPurchase || roundClosed}
+              >
                 Confirm demo entries
               </button>
               <details>
@@ -692,6 +793,7 @@ export default function Play({
                 <label className="checkbox">
                   <input
                     type="checkbox"
+                    disabled={tx === "pending"}
                     checked={demoFailure}
                     onChange={(e) => setDemoFailure(e.target.checked)}
                   />

@@ -1,0 +1,260 @@
+
+> sorphera-web@1.0.0 test
+> tsx --test src/core.test.ts
+
+TAP version 13
+# Subtest: number validation rejects repeats, out-of-range and fractional numbers
+ok 1 - number validation rejects repeats, out-of-range and fractional numbers
+  ---
+  duration_ms: 2.527961
+  type: 'test'
+  ...
+# Subtest: all 5,700 Solidity packed combinations round-trip exactly
+ok 2 - all 5,700 Solidity packed combinations round-trip exactly
+  ---
+  duration_ms: 26.209342
+  type: 'test'
+  ...
+# Subtest: Quick Pick selects only valid entries and cannot mutate confirmed fixtures
+ok 3 - Quick Pick selects only valid entries and cannot mutate confirmed fixtures
+  ---
+  duration_ms: 85.037503
+  type: 'test'
+  ...
+# Subtest: ticket expansion is unordered, allows duplicate combinations and respects 100
+ok 4 - ticket expansion is unordered, allows duplicate combinations and respects 100
+  ---
+  duration_ms: 1.208908
+  type: 'test'
+  ...
+# Subtest: ETH totals stay exact in wei, including sub-micro ETH
+ok 5 - ETH totals stay exact in wei, including sub-micro ETH
+  ---
+  duration_ms: 0.512854
+  type: 'test'
+  ...
+# Subtest: recheck rejects cutoff, price, round, game, paused sales and invalid status
+ok 6 - recheck rejects cutoff, price, round, game, paused sales and invalid status
+  ---
+  duration_ms: 0.556485
+  type: 'test'
+  ...
+# Subtest: terminal statuses match the baseline exactly; appended ties stay nonterminal
+ok 7 - terminal statuses match the baseline exactly; appended ties stay nonterminal
+  ---
+  duration_ms: 0.235761
+  type: 'test'
+  ...
+# Subtest: NFT tie remains provisional through both oracle phases
+ok 8 - NFT tie remains provisional through both oracle phases
+  ---
+  duration_ms: 0.601575
+  type: 'test'
+  ...
+# Subtest: unbound randomness and premature result cannot reveal a winner
+ok 9 - unbound randomness and premature result cannot reveal a winner
+  ---
+  duration_ms: 0.533129
+  type: 'test'
+  ...
+# Subtest: cancellation review is progress, not cancellation or draw request
+ok 10 - cancellation review is progress, not cancellation or draw request
+  ---
+  duration_ms: 0.592672
+  type: 'test'
+  ...
+# Subtest: oracle and tie delays remain indefinite and do not release claims
+ok 11 - oracle and tie delays remain indefinite and do not release claims
+  ---
+  duration_ms: 0.239936
+  type: 'test'
+  ...
+# Subtest: replay and skip end in identical deterministic contract-derived results
+ok 12 - replay and skip end in identical deterministic contract-derived results
+  ---
+  duration_ms: 0.345247
+  type: 'test'
+  ...
+# Subtest: both rollover fixtures expire old tickets and never name an NFT winner
+ok 13 - both rollover fixtures expire old tickets and never name an NFT winner
+  ---
+  duration_ms: 0.244833
+  type: 'test'
+  ...
+# Subtest: claim batching is capped at 20 and preserves every asset
+ok 14 - claim batching is capped at 20 and preserves every asset
+  ---
+  duration_ms: 0.349469
+  type: 'test'
+  ...
+# Subtest: failed NFT delivery is per asset; retry excludes delivered assets
+ok 15 - failed NFT delivery is per asset; retry excludes delivered assets
+  ---
+  duration_ms: 0.67954
+  type: 'test'
+  ...
+# Subtest: demo adapter never has a wallet transport or transaction hash
+ok 16 - demo adapter never has a wallet transport or transaction hash
+  ---
+  duration_ms: 0.734183
+  type: 'test'
+  ...
+# Subtest: activation fails closed for missing inputs, wrong chain and read-only mode
+ok 17 - activation fails closed for missing inputs, wrong chain and read-only mode
+  ---
+  duration_ms: 0.277421
+  type: 'test'
+  ...
+# Subtest: ABI copies preserve all canonical contract exports
+ok 18 - ABI copies preserve all canonical contract exports
+  ---
+  duration_ms: 1.678812
+  type: 'test'
+  ...
+# Subtest: metadata refuses active and non-HTTPS images; treats names as text
+ok 19 - metadata refuses active and non-HTTPS images; treats names as text
+  ---
+  duration_ms: 0.29263
+  type: 'test'
+  ...
+# Subtest: cache identities separate chains, lotteries, games, rounds and requests
+ok 20 - cache identities separate chains, lotteries, games, rounds and requests
+  ---
+  duration_ms: 0.223797
+  type: 'test'
+  ...
+# Subtest: log indexer pages, caches, deduplicates concurrent reads and rebuilds after reorg
+ok 21 - log indexer pages, caches, deduplicates concurrent reads and rebuilds after reorg
+  ---
+  duration_ms: 10.891174
+  type: 'test'
+  ...
+# Subtest: actual ETH/refund claim uses entitlement and simulation even if sales are paused
+ok 22 - actual ETH/refund claim uses entitlement and simulation even if sales are paused
+  ---
+  duration_ms: 1.679502
+  type: 'test'
+  ...
+# Subtest: finalized receipt failure cannot become a confirmed claim
+ok 23 - finalized receipt failure cannot become a confirmed claim
+  ---
+  duration_ms: 0.324611
+  type: 'test'
+  ...
+# Subtest: ABI fingerprint is stable and nonempty
+ok 24 - ABI fingerprint is stable and nonempty
+  ---
+  duration_ms: 18.514628
+  type: 'test'
+  ...
+# Subtest: NFT receipt processing distinguishes delivery, failure and shared votes
+ok 25 - NFT receipt processing distinguishes delivery, failure and shared votes
+  ---
+  duration_ms: 5.652392
+  type: 'test'
+  ...
+# Subtest: reward queueing is never mistaken for delivery; helper Claimed is required
+ok 26 - reward queueing is never mistaken for delivery; helper Claimed is required
+  ---
+  duration_ms: 1.937758
+  type: 'test'
+  ...
+# Subtest: a shared vote followed by delivery reports one final delivered asset
+ok 27 - a shared vote followed by delivery reports one final delivered asset
+  ---
+  duration_ms: 2.377613
+  type: 'test'
+  ...
+# Subtest: receipt timeouts stay pending after broadcast and cannot imply a safe repurchase
+ok 28 - receipt timeouts stay pending after broadcast and cannot imply a safe repurchase
+  ---
+  duration_ms: 14.333691
+  type: 'test'
+  ...
+# Subtest: USD conversion is illustrative, exact in cents and consistent
+ok 29 - USD conversion is illustrative, exact in cents and consistent
+  ---
+  duration_ms: 40.01632
+  type: 'test'
+  ...
+# Subtest: US$30 buys 2 whole tickets after the estimated fee; math stays in wei
+ok 30 - US$30 buys 2 whole tickets after the estimated fee; math stays in wei
+  ---
+  duration_ms: 1.303641
+  type: 'test'
+  ...
+# Subtest: Generate N different entries never repeats; repeats stay allowed
+ok 31 - Generate N different entries never repeats; repeats stay allowed
+  ---
+  duration_ms: 5.017579
+  type: 'test'
+  ...
+# Subtest: baskets are separate per game and round; switching never retargets
+ok 32 - baskets are separate per game and round; switching never retargets
+  ---
+  duration_ms: 0.335202
+  type: 'test'
+  ...
+# Subtest: calendar export carries the closing time and no result promise
+ok 33 - calendar export carries the closing time and no result promise
+  ---
+  duration_ms: 0.913973
+  type: 'test'
+  ...
+# Subtest: reveal never exposes numbers, matches or winners before balls stop
+ok 34 - reveal never exposes numbers, matches or winners before balls stop
+  ---
+  duration_ms: 0.562044
+  type: 'test'
+  ...
+# Subtest: customer statuses hide contract jargon
+ok 35 - customer statuses hide contract jargon
+  ---
+  duration_ms: 0.151876
+  type: 'test'
+  ...
+# Subtest: match highlighting follows revealed balls only; partial is never a win
+ok 36 - match highlighting follows revealed balls only; partial is never a win
+  ---
+  duration_ms: 0.252997
+  type: 'test'
+  ...
+# Subtest: skip, replay and reduced motion all end on identical results
+ok 37 - skip, replay and reduced motion all end on identical results
+  ---
+  duration_ms: 0.487459
+  type: 'test'
+  ...
+# Subtest: fixture replays of the open rounds keep game/round identity and fixed outcomes
+ok 38 - fixture replays of the open rounds keep game/round identity and fixed outcomes
+  ---
+  duration_ms: 0.214853
+  type: 'test'
+  ...
+# Subtest: finalist pagination is bounded
+ok 39 - finalist pagination is bounded
+  ---
+  duration_ms: 0.212221
+  type: 'test'
+  ...
+# Subtest: purchase affordability rejects invalid edits and respects the exact cent boundary
+ok 40 - purchase affordability rejects invalid edits and respects the exact cent boundary
+  ---
+  duration_ms: 0.565882
+  type: 'test'
+  ...
+# Subtest: suggestions and checkout use the same rounded exact-wei total
+ok 41 - suggestions and checkout use the same rounded exact-wei total
+  ---
+  duration_ms: 0.175116
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1575.015194

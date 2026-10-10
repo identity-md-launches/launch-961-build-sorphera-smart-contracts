@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  asset,
-  Balls,
-  Globe,
-  Modal,
-  PageHead,
-  SectionHeading,
-} from "./components";
+import { asset, Balls, Globe, PageHead, SectionHeading } from "./components";
 import { demoRounds, scenarios } from "./fixtures";
 import { eth, replay } from "./core";
 import { demoQuote, localTime, usd } from "./budget";
@@ -27,7 +20,6 @@ export function Countdown({ cutoff }: { cutoff: number }) {
   );
 }
 export function Home() {
-  const [gallery, setGallery] = useState<number | null>(null);
   return (
     <>
       <section className="hero">
@@ -101,20 +93,29 @@ export function Home() {
                 <div>
                   <h3>
                     {r.game === 0 ? eth(r.actualETH) : r.securedNFTs}
-                    <span>{r.game === 0 ? " ETH" : " NFTs"}</span>
+                    <span>{r.game === 0 ? " ETH" : " demo NFTs"}</span>
                   </h3>
                   <p>
                     {r.game === 0
                       ? `≈ ${usd(r.actualETH)} · one prize, shared equally by matching tickets.`
-                      : "One winning ticket. The whole collection."}
+                      : "One winning ticket. The whole NFT jackpot."}
                   </p>
                   <p className="price-line">
                     Ticket {eth(r.price)} ETH{" "}
                     <small>≈ {usd(r.price)} illustrative</small>
                   </p>
                 </div>
-                <Globe kind={r.game === 0 ? "eth" : "nft"} size="large" />
+                {r.game === 0 && <Globe size="large" />}
               </div>
+              {r.game === 1 && (
+                <p className="nft-origin">
+                  NFT jackpot prizes come from FWA pulls.
+                  <span className="fine">
+                    Demo placeholders only. No NFTs have been pulled, secured or
+                    won.
+                  </span>
+                </p>
+              )}
               <div className="jackpot-footer">
                 <div>
                   <span className="fine">Entries close in</span>
@@ -136,7 +137,7 @@ export function Home() {
                 <p>
                   {r.game === 0
                     ? "18.42 ETH in actual prize cash; 1 pending pull excluded. Every ticket matching all four numbers takes an equal share."
-                    : "6 secured NFTs. 2 pending pulls are excluded. 0.012 ETH incidental funds are separate. Several matching tickets go to a separate tie-break that picks one winner."}{" "}
+                    : "6 demo NFT placeholders. 2 simulated pending pulls are excluded. 0.012 ETH incidental funds are separate. Several matching tickets go to a separate tie-break that picks one winner."}{" "}
                   These are synthetic fixture values, not live balances.
                   Purchaser rewards are separate; company revenue is excluded.
                   No NFT valuation is assumed. Closing time is when entries
@@ -220,45 +221,6 @@ export function Home() {
           Synthetic demo results. No real winners or prizes.
         </p>
       </section>
-      <section className="gallery-section">
-        <SectionHeading
-          eyebrow="Objects of possibility"
-          title="Meet the little worlds."
-        >
-          <span className="fine">
-            Demo collection · supplied Sorphera artwork
-          </span>
-        </SectionHeading>
-        <div className="gallery">
-          {["Blue planet", "Pink orbit", "Lucky world", "Soft horizons"].map(
-            (name, i) => (
-              <button
-                className={`gallery-item gallery-${i}`}
-                key={name}
-                onClick={() => setGallery(i)}
-              >
-                <div className="gallery-art">
-                  <Globe
-                    kind={i % 2 ? "nft" : "eth"}
-                    number={[7, 4, 19, 12][i]}
-                    size="large"
-                  />
-                </div>
-                <span className="gallery-meta">
-                  <strong>{name}</strong>
-                  <span>
-                    World study 0{i + 1} <span aria-hidden="true">↗</span>
-                  </span>
-                </span>
-              </button>
-            ),
-          )}
-        </div>
-        <p className="fine">
-          Illustrative gallery, not real NFT metadata or sale listings. The demo
-          round contains 6 synthetic secured assets; 4 studies are shown.
-        </p>
-      </section>
       <div className="closing-banner">
         <div>
           <p className="eyebrow">A little luck starts here.</p>
@@ -268,37 +230,6 @@ export function Home() {
           Explore the demo ↗
         </a>
       </div>
-      {gallery !== null && (
-        <Modal
-          title={
-            ["Blue planet", "Pink orbit", "Lucky world", "Soft horizons"][
-              gallery
-            ]
-          }
-          onClose={() => setGallery(null)}
-        >
-          <div className="gallery-detail">
-            <Globe
-              kind={gallery % 2 ? "nft" : "eth"}
-              size="large"
-              number={[7, 4, 19, 12][gallery]}
-            />
-          </div>
-          <p>World study 0{gallery + 1} · synthetic gallery asset.</p>
-          <p>
-            This illustration uses the supplied Sorphera branding. It is not an
-            actual NFT, collection endorsement or prize. No valuation is
-            assigned.
-          </p>
-          <a
-            href="#play?game=1"
-            className="button primary full"
-            onClick={() => setGallery(null)}
-          >
-            Explore the NFT demo
-          </a>
-        </Modal>
-      )}
     </>
   );
 }
@@ -380,7 +311,7 @@ export const faqs = [
   ],
   [
     "What does my budget buy?",
-    "Set a total spending limit on the Play page, for example US$30. The demo converts ETH to USD at a fixed illustrative rate of US$2,500 per ETH and estimates one network fee per purchase of about US$1.00. Those are not live quotes. The page shows how many whole tickets fit after the fee, the subtotal, the estimated fee, the all-in total and what remains. Nothing is added or bought for you.",
+    "Set a budget for this purchase on the Play page, for example US$30. The demo converts ETH to USD at a fixed illustrative rate of US$2,500 per ETH and estimates one network fee per purchase of about US$1.00. Those are not live quotes. The page shows how many whole tickets fit after the fee, the subtotal, the estimated fee, the all-in total and what remains. Purchases over budget cannot be reviewed or confirmed. The budget follows you between pages and games; it applies separately to the active checkout. Nothing is added or bought for you.",
   ],
   [
     "What are the odds?",

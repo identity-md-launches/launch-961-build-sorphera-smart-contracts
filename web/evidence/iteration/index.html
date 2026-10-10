@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sorphera — iteration evidence</title>
+<style>
+:root{color-scheme:dark;font:16px/1.6 Arial,sans-serif;background:#19171c;color:#f7ecdf}body{max-width:1100px;margin:auto;padding:24px}h1,h2{line-height:1.2;color:#abd8ed}a{color:#abd8ed}a:focus-visible,video:focus-visible{outline:3px solid #c8edff;outline-offset:5px}video{width:100%;max-width:960px;background:#222027}p{max-width:78ch}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:24px}figure{margin:0 0 24px;background:#222027;padding:16px;border-radius:16px}img{display:block;max-width:100%;height:auto;margin:auto}figcaption{margin-top:12px}small{color:#b7aeb9}.note{border-left:3px solid #f5a0c5;padding:12px 20px}li{margin:8px 0}
+</style>
+<main>
+<h1>Sorphera: budget, globe and NFT evidence</h1>
+<p>Website iteration from merged PR #5. Demo — no real tickets or prizes. <a href="validation.md">Read the validation and limitations</a> or <a href="../../../dist/index.html#draw?scenario=nft-tie">open the exported interactive demo</a> when this repository is served over HTTP.</p>
+<p class="note">IMD CLI publication was attempted but refused with 503 member_sites_closed. These are local export checks; the existing public site was not updated. <a href="publication.json">Publication result</a>.</p>
+<h2>Continuous normal-speed reveal</h2>
+<video controls preload="metadata" aria-describedby="clip-description">
+<source src="reveal-normal.mp4" type="video/mp4">
+<a href="reveal-normal.mp4">Download the silent reveal clip</a>.
+</video>
+<p id="clip-description">Silent 22.92-second Chromium recording, 960×760, 25 fps. Normal speed, without pauses or timer overrides. The control bar remains available throughout. This records browser motion; it does not certify physical-phone performance.</p>
+<details open><summary>Text description of the clip</summary><p>The labelled NFT demo waits for its fixture result. Each ice-blue globe enters showing its back, turns with its continents and cream patch on the same curved surface, then stops. Only then does the patch read 07, 12, and 19 in turn. Each globe holds, then travels down into its draw slot without changing material, geography or orientation. The pink bonus globe gets its own turn and stop, showing 04, then lands. Matching-ticket results follow the bonus; the separate NFT tie-break confirms sample ticket 118. No real NFTs have been pulled, secured or won.</p></details>
+<h2>Reveal stages</h2>
+<div class="grid">
+<figure><img src="globe-away.jpg" alt="First globe seen from the Pacific side; its number badge faces away and no number is exposed."><figcaption>Facing away. Number hidden.</figcaption></figure>
+<figure><img src="globe-mid-turn.jpg" alt="Earth geography curves around the turning blue felt globe; no number is announced yet."><figcaption>Mid-turn. This frame was paused for inspection.</figcaption></figure>
+<figure><img src="globe-stopped.jpg" alt="The stopped blue globe faces forward with a readable cream badge showing 07."><figcaption>Stopped, holding and announcing 7.</figcaption></figure>
+<figure><img src="globe-landed.jpg" alt="The same blue globe and 07 badge now rest in the first small result slot."><figcaption>Landed. Its canvas pixels match the stopped globe before scale.</figcaption></figure>
+<figure><img src="globe-bonus-stop.jpg" alt="The pink bonus globe stops separately with the cream badge showing 04; the three blue globes are already in their slots."><figcaption>Bonus stop, before the separate NFT winner is known.</figcaption></figure>
+<figure><img src="draw-mobile-reduced-after.jpg" alt="At 320 pixels wide, the reduced-motion result shows three blue globes numbered 07, 12, 19 and the pink bonus 04."><figcaption>Same design in narrow reduced-motion results.</figcaption></figure>
+</div>
+<h2>Budget guard: before and after</h2>
+<p>The acceptance fixture uses US$2,500 per ETH, a 0.005 ETH / US$12.50 ticket, and 0.0004 ETH / US$1.00 per-checkout fee. Two tickets total US$26.00; three total US$38.50.</p>
+<div class="grid">
+<figure><img src="budget-before.jpg" alt="Before: a three-ticket US$38.50 basket warns it exceeds the US$30 limit, but Review remains enabled."><figcaption>PR #5 baseline: warning without enforcement.</figcaption></figure>
+<figure><img src="budget-after.jpg" alt="After: the US$38.50 basket states it is US$8.50 over the US$30 budget and disables Review."><figcaption>Current export: exact excess and recovery advice; Review is blocked.</figcaption></figure>
+<figure><img src="review-before.jpg" alt="Before: the over-budget US$38.50 review still offers an enabled Confirm demo entries button."><figcaption>Baseline confirmation allowed the over-budget demo purchase.</figcaption></figure>
+<figure><img src="review-after.jpg" alt="After lowering the budget to US$30 inside review, the US$38.50 purchase shows an excess warning and disables confirmation."><figcaption>Current confirmation rechecks the edited budget.</figcaption></figure>
+</div>
+<h2>Homepage: before and after</h2>
+<div class="grid">
+<figure><img src="home-before.jpg" alt="Baseline homepage including the bottom Meet the little worlds gallery and invented World Study cards."><figcaption>Before: fictional collection gallery.</figcaption></figure>
+<figure><img src="home-after.jpg" alt="Updated homepage retains the Sorphera branding and jackpots, removes the invented gallery, and states NFT jackpot prizes come from FWA pulls with adjacent demo-only wording."><figcaption>After: accurate FWA explanation and no invented collection.</figcaption></figure>
+</div>
+<h2>Other checked states</h2>
+<ul>
+<li><a href="play-mobile-after.jpg">Narrow mobile Play, basket and budget</a></li>
+<li><a href="keyboard-focus.jpg">Keyboard focus on Review and the two-ticket totals</a></li>
+<li><a href="claim-after.jpg">Usable claim receipt with neutral Demo NFT placeholders</a></li>
+<li><a href="browser-results.json">Actual interaction results</a>, <a href="reveal-results.json">reveal checks</a>, <a href="motion-summary.json">frame/phase timing</a>, <a href="video-probe.json">video probe</a></li>
+<li><a href="../../../DESIGN.md">Implemented design</a>, <a href="../../README.md">install, rebuild and publish instructions</a></li>
+</ul>
+</main>
+</html>

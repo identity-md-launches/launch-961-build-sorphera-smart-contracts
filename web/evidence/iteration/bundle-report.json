@@ -1,0 +1,14 @@
+{
+  "files": 261,
+  "limitBytes": 8388608,
+  "distBytes": 1096179,
+  "cliCompressedExportBytes": 601174,
+  "protectedChanges": [],
+  "nodeModulesOrDependencyArchives": false,
+  "ignoreFilesChanged": false,
+  "submodules": false,
+  "baseline": "cc450384ecf7ddbf5cb49b8a2aba62921c0a2e62",
+  "entryHtmlSha256": "a51dbf5df86a4b9bb41ebeaa5d4f3806f05ad6153541785843b131eaa1321679",
+  "publication": "refused: 503 member_sites_closed",
+  "eligibleSourceBytes": 8009613
+}

@@ -613,51 +613,21 @@ summary::marker {
   isolation: isolate;
   box-shadow: 0 7px 12px #0003;
 }
-.globe > img {
+.plush-globe {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  transform: scale(1.025);
-}
-.globe .number-badge {
-  position: absolute;
-  left: 30%;
-  top: 34%;
-  width: 42%;
-  height: 40%;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #f9e7d9, #d9bcaf);
-  color: #201b20;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1;
-  box-shadow:
-    inset 0 0 0 1px #c49f9255,
-    0 1px 1px #37213155;
-  transform: rotate(-7deg);
-}
-.globe-nft .number-badge {
-  left: 28%;
-  top: 35%;
-  transform: rotate(6deg);
 }
 .globe-small {
   width: 45px;
   height: 45px;
 }
-.globe-small .number-badge {
-  font-size: 12px;
-}
+
 .globe-large {
   width: 112px;
   height: 112px;
 }
-.globe-large .number-badge {
-  font-size: 29px;
-}
+
 .balls {
   display: flex;
   align-items: center;
@@ -738,9 +708,7 @@ summary::marker {
   width: 52px;
   height: 52px;
 }
-.recent-result .number-badge {
-  font-size: 16px;
-}
+
 .round-arrow {
   font-size: 23px;
   color: var(--ice);
@@ -749,96 +717,7 @@ summary::marker {
 .recent-section > .fine {
   margin-top: 15px;
 }
-.gallery-section {
-  margin-top: 62px;
-}
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.gallery-item {
-  padding: 0;
-  border-radius: 18px;
-  text-align: start;
-  background: transparent;
-  overflow: hidden;
-}
-.gallery-art {
-  height: 215px;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(
-    ellipse at 50% 60%,
-    #3f5969 0%,
-    #293642 45%,
-    #26262f 100%
-  );
-  border-radius: 18px;
-  outline: 1px solid #ffffff13;
-  outline-offset: -1px;
-  position: relative;
-  overflow: hidden;
-}
-.gallery-1 .gallery-art {
-  background: radial-gradient(
-    ellipse at 50% 60%,
-    #9a5e7a,
-    #4d3247 55%,
-    #372a37
-  );
-}
-.gallery-2 .gallery-art {
-  background: radial-gradient(
-    ellipse at 50% 60%,
-    #77718d,
-    #444056 55%,
-    #302b3b
-  );
-}
-.gallery-3 .gallery-art {
-  background: radial-gradient(
-    ellipse at 50% 60%,
-    #aa8e84,
-    #61514f 55%,
-    #392d35
-  );
-}
-.gallery-art .globe-large {
-  width: 148px;
-  height: 148px;
-  box-shadow: 0 20px 35px #120b1455;
-}
-.gallery-art .number-badge {
-  font-size: 40px;
-}
-.gallery-1 .globe {
-  transform: rotate(13deg);
-}
-.gallery-2 .globe {
-  transform: rotate(-18deg);
-}
-.gallery-3 .globe {
-  transform: rotate(6deg);
-}
-.gallery-meta {
-  padding: 16px 2px 10px;
-  display: grid;
-  gap: 5px;
-}
-.gallery-meta strong {
-  font-size: 14px;
-  font-weight: 500;
-}
-.gallery-meta > span {
-  color: var(--muted);
-  font-size: 11px;
-  display: flex;
-  justify-content: space-between;
-}
-.gallery-section > .fine {
-  margin-top: 16px;
-}
+
 .closing-banner {
   margin-top: 58px;
   background: #302530;
@@ -1056,9 +935,7 @@ summary::marker {
   margin: 0 auto 18px;
   opacity: 0.8;
 }
-.empty-ticket .number-badge {
-  font-size: 19px;
-}
+
 .empty-ticket h3 {
   font-size: 15px;
   color: var(--cream);
@@ -1397,9 +1274,7 @@ summary::marker {
   width: 80px;
   height: 80px;
 }
-.reveal-balls .number-badge {
-  font-size: 23px;
-}
+
 .reveal-balls > p {
   font-size: 11px;
   margin: 15px 0;
@@ -1517,17 +1392,7 @@ summary::marker {
   width: 100%;
   height: auto;
 }
-.gallery-detail {
-  text-align: center;
-  padding: 30px;
-}
-.gallery-detail .globe-large {
-  width: 190px;
-  height: 190px;
-}
-.gallery-detail .number-badge {
-  font-size: 48px;
-}
+
 .loading {
   text-align: center;
   padding: 100px 20px;
@@ -1609,16 +1474,7 @@ summary::marker {
   .steps {
     gap: 30px;
   }
-  .gallery-art {
-    height: 180px;
-  }
-  .gallery-art .globe-large {
-    width: 125px;
-    height: 125px;
-  }
-  .gallery-art .number-badge {
-    font-size: 33px;
-  }
+
   .my-ticket {
     flex-wrap: wrap;
   }
@@ -1640,9 +1496,7 @@ summary::marker {
     width: 49px;
     height: 49px;
   }
-  .number-choice .number-badge {
-    font-size: 14px;
-  }
+
   .slip-cut {
     margin-inline: -22px;
   }
@@ -1798,19 +1652,7 @@ summary::marker {
   .how-section {
     margin-top: 60px;
   }
-  .gallery {
-    gap: 14px;
-  }
-  .gallery-art {
-    height: 145px;
-  }
-  .gallery-art .globe-large {
-    width: 98px;
-    height: 98px;
-  }
-  .gallery-art .number-badge {
-    font-size: 26px;
-  }
+
   .section-heading .eyebrow {
     font-size: 9px;
   }
@@ -1825,9 +1667,7 @@ summary::marker {
     width: 44px;
     height: 44px;
   }
-  .recent-result .number-badge {
-    font-size: 13px;
-  }
+
   .recent-result .round-arrow {
     display: none;
   }
@@ -2149,33 +1989,12 @@ summary::marker {
   .recent-result h3 {
     font-size: 24px;
   }
-  .gallery-section {
-    margin-top: 40px;
-  }
+
   .section-heading > .fine {
     max-width: none;
     text-align: start;
   }
-  .gallery {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 14px;
-  }
-  .gallery-art {
-    height: 175px;
-  }
-  .gallery-art .globe-large {
-    width: 120px;
-    height: 120px;
-  }
-  .gallery-art .number-badge {
-    font-size: 31px;
-  }
-  .gallery-meta strong {
-    font-size: 13px;
-  }
-  .gallery-meta > span {
-    font-size: 10px;
-  }
+
   .closing-banner {
     margin-top: 38px;
     padding: 28px;
@@ -2231,9 +2050,7 @@ summary::marker {
   .number-choice {
     padding: 3px;
   }
-  .number-choice .number-badge {
-    font-size: 14px;
-  }
+
   .bonus-picker {
     gap: 7px;
   }
@@ -2337,9 +2154,7 @@ summary::marker {
     width: 61px;
     height: 61px;
   }
-  .reveal-balls .number-badge {
-    font-size: 18px;
-  }
+
   .draw-controls {
     gap: 10px;
   }
@@ -2434,13 +2249,7 @@ summary::marker {
   .jackpot-top .eyebrow {
     font-size: 10px;
   }
-  .gallery-art {
-    height: 150px;
-  }
-  .gallery-art .globe-large {
-    width: 105px;
-    height: 105px;
-  }
+
   .number-choice .globe {
     width: 43px;
     height: 43px;
@@ -2469,9 +2278,7 @@ summary::marker {
     width: 49px;
     height: 49px;
   }
-  .reveal-balls .number-badge {
-    font-size: 14px;
-  }
+
   .chamber {
     width: 235px;
     height: 230px;
@@ -2744,176 +2551,45 @@ summary::marker {
 }
 .rg {
   --size: 170px;
-  position: relative;
   width: var(--size);
   height: var(--size);
-  transform-style: preserve-3d;
-}
-.rg-3d {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-.rg-sphere {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #8cc6e4;
-  box-shadow:
-    inset -18px -22px 40px #2b5d7a99,
-    inset 10px 14px 30px #ffffff55;
-}
-.rg-nft .rg-sphere {
-  background: #f09cc2;
-  box-shadow:
-    inset -18px -22px 40px #8a3a60aa,
-    inset 10px 14px 30px #ffffff66;
-}
-.rg-continents {
-  position: absolute;
-  inset: 0;
-  background-repeat: repeat-x;
-  background-size: 200% 100%;
-  background-position: 0% 50%;
-  opacity: 0.95;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><g fill='%23f5a0c5'><path d='M22 48c18-14 44-18 66-8 14 7 10 26-4 36-12 9-18 28-8 42 9 13 2 30-14 32-20 2-40-12-50-30-12-24-10-56 10-72z'/><path d='M150 24c22-10 52-2 62 18 8 18-8 30-26 32-16 2-20 20-10 32 8 10 4 26-10 30-24 6-52-14-56-40-4-26 14-62 40-72z'/><path d='M262 70c16-20 48-22 66-4 14 14 8 36-8 44-14 8-30 2-40 14-8 12-26 12-32-2-8-18-2-36 14-52z'/><path d='M330 136c14-6 34 0 38 14 4 12-8 24-22 24-14 0-26-10-26-22 0-6 4-12 10-16z'/><path d='M96 142c14-10 36-6 44 8 6 12-4 26-18 28-18 2-36-6-38-20-2-6 4-12 12-16z'/><path d='M214 150c10-8 28-4 32 8 4 10-6 20-18 20-10 0-20-6-22-14-2-6 2-10 8-14z'/></g></svg>");
-}
-.rg-nft .rg-continents {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><g fill='%23f7ecdf'><path d='M22 48c18-14 44-18 66-8 14 7 10 26-4 36-12 9-18 28-8 42 9 13 2 30-14 32-20 2-40-12-50-30-12-24-10-56 10-72z'/><path d='M150 24c22-10 52-2 62 18 8 18-8 30-26 32-16 2-20 20-10 32 8 10 4 26-10 30-24 6-52-14-56-40-4-26 14-62 40-72z'/><path d='M262 70c16-20 48-22 66-4 14 14 8 36-8 44-14 8-30 2-40 14-8 12-26 12-32-2-8-18-2-36 14-52z'/><path d='M330 136c14-6 34 0 38 14 4 12-8 24-22 24-14 0-26-10-26-22 0-6 4-12 10-16z'/><path d='M96 142c14-10 36-6 44 8 6 12-4 26-18 28-18 2-36-6-38-20-2-6 4-12 12-16z'/><path d='M214 150c10-8 28-4 32 8 4 10-6 20-18 20-10 0-20-6-22-14-2-6 2-10 8-14z'/></g></svg>");
-}
-.rg-shade {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, #ffffff66 0, #ffffff00 38%),
-    radial-gradient(circle at 50% 50%, #0000 55%, #1a0f2466 80%, #1a0f24cc 100%);
-  pointer-events: none;
-}
-.rg-badge-stage {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  transform: rotateY(180deg);
-}
-.rg-badge {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 42%;
-  height: 42%;
-  margin: -21% 0 0 -21%;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #f9e7d9, #d9bcaf);
-  color: #201b20;
-  font-size: calc(var(--size) * 0.27);
-  font-weight: 800;
-  line-height: 1;
-  box-shadow:
-    inset 0 0 0 2px #c49f9266,
-    0 2px 3px #37213188;
-  backface-visibility: hidden;
-  transform: translateZ(calc(var(--size) * 0.5 - 4px));
-}
-.rg-shadow {
-  position: absolute;
-  left: 15%;
-  right: 15%;
-  bottom: -18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, #0009, #0000 70%);
-}
-@keyframes rg-turn {
-  from {
-    transform: rotateY(540deg);
-  }
-  to {
-    transform: rotateY(0deg);
-  }
-}
-@keyframes rg-pan {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: -300% 50%;
-  }
-}
-@keyframes rg-settle {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.04);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes rg-enter {
-  from {
-    transform: translateY(-40px) scale(0.6);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
-}
-.rg-away .rg-3d {
-  animation: rg-enter 320ms ease-out both;
-}
-.rg-spinning .rg-badge-stage {
-  animation: rg-turn var(--spin) cubic-bezier(0.16, 0.7, 0.2, 1) forwards;
-}
-.rg-spinning .rg-continents {
-  animation: rg-pan var(--spin) cubic-bezier(0.16, 0.7, 0.2, 1) forwards;
-}
-.rg-hold .rg-badge-stage,
-.rg-travel .rg-badge-stage {
-  transform: rotateY(0deg);
-}
-.rg-hold .rg-continents,
-.rg-travel .rg-continents {
-  background-position: -300% 50%;
-}
-.rg-hold .rg-3d {
-  animation: rg-settle 420ms ease-out;
-}
-.rg-hold .rg-badge {
-  box-shadow:
-    inset 0 0 0 2px #c49f9266,
-    0 0 0 6px #ffffff22,
-    0 2px 3px #37213188;
-}
-.rg-travel {
-  transition: transform var(--travel) cubic-bezier(0.4, 0, 0.2, 1),
-    opacity var(--travel) ease-in;
-  transform: translate(var(--tx), var(--ty)) scale(var(--ts));
-  opacity: 0.2;
-}
-.rg-paused .rg-badge-stage,
-.rg-paused .rg-continents,
-.rg-paused .rg-3d {
-  animation-play-state: paused;
-}
-.rg-idle {
-  opacity: 0.85;
-}
-.rg-idle .rg-3d {
-  animation: rg-float 4s ease-in-out infinite;
-}
-@keyframes rg-float {
-  50% {
-    transform: translateY(-6px);
-  }
+  position: relative;
+  filter: drop-shadow(0 9px 9px #0004);
+  will-change: transform;
 }
 .slot {
   display: inline-block;
+  border-radius: 50%;
+}
+.slot-empty {
+  outline: 1px dashed var(--line);
+  outline-offset: -3px;
+}
+.slot-empty .globe {
+  visibility: hidden;
+}
+.nft-origin {
+  margin: 12px 0 20px;
+  font-size: 14px;
+}
+.nft-origin .fine {
+  display: block;
+  margin-top: 4px;
+}
+.nft-placeholder {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 52px;
+  border: 1px dashed var(--muted);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.budget-input .fine {
+  max-width: 42ch;
+  font-weight: 400;
 }
 .balls .hit .globe {
   box-shadow:
@@ -3040,15 +2716,5 @@ summary::marker {
   }
   .asset-outcomes li > span:last-child {
     grid-column: 2;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .rg-away .rg-3d,
-  .rg-hold .rg-3d,
-  .rg-idle .rg-3d {
-    animation: none;
-  }
-  .rg-travel {
-    transition: none;
   }
 }

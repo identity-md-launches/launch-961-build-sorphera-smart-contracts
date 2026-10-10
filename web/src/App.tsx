@@ -32,7 +32,7 @@ export default function App() {
   // Separate baskets per game and round survive navigation. Switching views
   // never moves entries between games.
   const [baskets, setBaskets] = useState<Baskets>({});
-  const [limit, setLimit] = useState(30);
+  const [limit, setLimit] = useState("30");
   useEffect(() => {
     const change = () => {
       setView(route());

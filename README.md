@@ -16,9 +16,9 @@ npm run build
 npm run preview
 ```
 
-`npm run build` writes root `dist/`. Publish that complete directory with the Website workflow or any static/IPFS host; assets are relative and routes use hashes. No Website publishing tool was available to this worker, so **public publication is still pending**. The local preview and exported pages were tested; no public preview URL is invented.
+`npm run build` writes root `dist/`. Publish that complete directory with the Website workflow or any static/IPFS host; assets are relative and routes use hashes. The worker attempted IMD CLI publishing, but the service refused it with **503 `member_sites_closed`**; public publication is still pending. The local preview and exported pages were tested; no public preview URL is invented.
 
-See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [actual checks and limitations](web/evidence/validation.md), and [screenshots](web/evidence/). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
+See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [current checks and limitations](web/evidence/iteration/validation.md), and [before/after screenshots and continuous reveal clip](web/evidence/iteration/index.html). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
 
 Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. A labelled demo website is now included; no new token/pool. No transaction was broadcast and public sales remain disabled.
 

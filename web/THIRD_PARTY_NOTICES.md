@@ -14,3 +14,7 @@ Original/optimized dimensions, hashes and byte sizes: `evidence/asset-manifest.j
 React, React DOM and viem are MIT licensed; license copies are in `licenses/`. Transitive package licenses remain in the installed packages and the dependency lockfile identifies their versions. Build tooling is installed normally and is not vendored into the submission.
 
 The pinned Better Interface design guide is adapted from Jakub Krehel's Better Interface, MIT, commit `267330e1adfc66a718fb65fa6918c1f06d0a689e`. Its documentation method is adapted from Paul Bakaus's Impeccable, Apache-2.0, commit `9d715cc4f5564a990ca8345abfdd5df6dc9b41c8`. The supplied combined attribution and license are retained verbatim in `licenses/better-interface.txt`. The guide informed this implementation's review; it is not part of the shipped application logic.
+
+## Globe geography
+
+`src/earth-land.json` contains rounded exterior rings from Natural Earth's 1:110m land dataset, public domain: https://www.naturalearthdata.com/about/terms-of-use/ . Source: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson (retrieved 2026-10-10). The Sorphera palette, felt texture, lighting and dynamic badge are generated locally in `src/PlushGlobe.tsx`; no network is required at runtime.

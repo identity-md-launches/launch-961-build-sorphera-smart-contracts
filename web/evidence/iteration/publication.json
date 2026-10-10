@@ -1,0 +1,12 @@
+{
+  "command": "imd site publish dist --name sorphera-a-world-of-possibility",
+  "exitCode": 1,
+  "bundledBytes": 601174,
+  "status": 503,
+  "code": "member_sites_closed",
+  "message": "this plane names no member sites",
+  "published": false,
+  "resultingUrl": null,
+  "resultingCid": null,
+  "existingUrl": "https://sorphera-a-world-of-possibility.sites.imd.fun/"
+}

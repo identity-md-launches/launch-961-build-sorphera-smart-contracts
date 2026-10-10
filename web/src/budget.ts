@@ -1,8 +1,13 @@
-import { expandLines, quickPick, type Game, type Line, type Pick } from "./core";
+import {
+  expandLines,
+  quickPick,
+  type Game,
+  type Line,
+  type Pick,
+} from "./core";
 
-// Illustrative demo conversion. Not a live quote. Exact wei arithmetic is
-// preserved everywhere; USD figures are presentation only and derive from
-// one fixed rate so the whole site stays consistent.
+// Illustrative demo conversion, not a live quote. Exact wei arithmetic is
+// preserved; budget affordability and displayed USD share this fixed rate.
 export const demoQuote = {
   usdPerEth: 2500,
   // Estimated network fee for one purchase transaction in the demo, in wei.
@@ -27,11 +32,10 @@ export function usd(wei: bigint, usdPerEth = demoQuote.usdPerEth): string {
 
 export interface BudgetPlan {
   limitCents: number;
+  valid: boolean;
   priceWei: bigint;
   feeWei: bigint;
-  /** Whole tickets affordable inside the limit after the estimated fee. */
   affordable: number;
-  /** Tickets currently in the basket. */
   count: number;
   subtotalWei: bigint;
   allInWei: bigint;
@@ -40,40 +44,65 @@ export interface BudgetPlan {
   allInCents: bigint;
   remainingCents: bigint;
   overBudget: boolean;
-  /** Why not even one ticket fits, or empty. */
+  canPurchase: boolean;
   reason: string;
+  blockReason: string;
+}
+
+/** Keep incomplete edits as text. Only positive, exact USD cents are valid. */
+export function budgetCents(value: string | number): number | null {
+  const text = String(value).trim();
+  if (!/^(?:\d+)(?:\.\d{1,2})?$/.test(text)) return null;
+  const [whole, fraction = ""] = text.split(".");
+  const result = BigInt(whole) * 100n + BigInt(fraction.padEnd(2, "0"));
+  return result > 0n && result <= BigInt(Number.MAX_SAFE_INTEGER)
+    ? Number(result)
+    : null;
 }
 
 export function planBudget(
-  limitUsd: number,
+  limitUsd: string | number,
   priceWei: bigint,
   count: number,
   feeWei: bigint = demoQuote.feeWei,
   usdPerEth = demoQuote.usdPerEth,
 ): BudgetPlan {
-  const safeLimit =
-    Number.isFinite(limitUsd) && limitUsd > 0 ? Math.round(limitUsd * 100) : 0;
-  const priceCents = usdCents(priceWei, usdPerEth);
-  const feeCents = usdCents(feeWei, usdPerEth);
+  const parsed = budgetCents(limitUsd);
+  const valid = parsed !== null;
+  const limitCents = parsed ?? 0;
+  const limit = BigInt(limitCents);
+  // Round the exact all-in wei once, identically for suggestions and checkout.
+  const cost = (n: number) =>
+    n > 0 ? usdCents(BigInt(n) * priceWei + feeWei, usdPerEth) : 0n;
   let affordable = 0;
-  let reason = "";
-  if (safeLimit <= 0) reason = "Enter a spending limit to see what it buys.";
-  else if (BigInt(safeLimit) <= feeCents)
-    reason = `Your limit does not cover the estimated network fee of ${usd(feeWei, usdPerEth)}.`;
-  else {
-    const room = BigInt(safeLimit) - feeCents;
-    const n = priceCents > 0n ? Number(room / priceCents) : 100;
-    affordable = Math.max(0, Math.min(100, n));
-    if (affordable === 0)
-      reason = `One ticket costs ${usd(priceWei, usdPerEth)} plus about ${usd(feeWei, usdPerEth)} in fees, more than your limit.`;
+  if (valid) {
+    for (let n = 1; n <= 100 && cost(n) <= limit; n++) affordable = n;
   }
   const subtotalWei = BigInt(count) * priceWei;
   const allInWei = count > 0 ? subtotalWei + feeWei : 0n;
+  const allInCents = cost(count);
   const subtotalCents = usdCents(subtotalWei, usdPerEth);
-  const allInCents = count > 0 ? subtotalCents + feeCents : 0n;
-  const remainingCents = BigInt(safeLimit) - allInCents;
+  const remainingCents = limit - allInCents;
+  const overBudget = allInCents > limit;
+  const reason = !valid
+    ? "Enter a budget greater than US$0.00, using at most two decimal places."
+    : affordable > 0
+      ? ""
+      : limit < usdCents(feeWei, usdPerEth)
+        ? `Your budget does not cover the illustrative network fee of ${usd(feeWei, usdPerEth)}.`
+        : `One ticket costs ${usd(priceWei, usdPerEth)} plus ${usd(feeWei, usdPerEth)} in illustrative fees, more than your budget.`;
+  const blockReason = !valid
+    ? reason
+    : overBudget
+      ? `This purchase is ${cents(-remainingCents)} over your ${cents(limit)} budget. Remove an entry or change your budget.`
+      : count < 1
+        ? "Add an entry to review this purchase."
+        : count > 100
+          ? "Each purchase is limited to 100 tickets."
+          : "";
   return {
-    limitCents: safeLimit,
+    limitCents,
+    valid,
     priceWei,
     feeWei,
     affordable,
@@ -81,12 +110,19 @@ export function planBudget(
     subtotalWei,
     allInWei,
     subtotalCents,
-    feeCents: count > 0 ? feeCents : 0n,
+    // Reconcile displayed cents to the single rounded total.
+    feeCents: count > 0 ? allInCents - subtotalCents : 0n,
     allInCents,
     remainingCents,
-    overBudget: safeLimit > 0 && allInCents > BigInt(safeLimit),
+    overBudget,
+    canPurchase: blockReason === "",
     reason,
+    blockReason,
   };
+}
+
+export function requireAffordable(plan: BudgetPlan): void {
+  if (!plan.canPurchase) throw new Error(plan.blockReason);
 }
 export const cents = (c: bigint) => {
   const neg = c < 0n;
@@ -147,7 +183,10 @@ export function calendarEvent(
   uid: string,
 ): string {
   const stamp = (t: number) =>
-    new Date(t * 1000).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    new Date(t * 1000)
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace(/\.\d{3}/, "");
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",

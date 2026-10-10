@@ -60,7 +60,12 @@ export default function Tickets({
       const indices = previous.length
         ? previous.filter((r) => r.state !== "delivered").map((r) => r.index)
         : [0, 1, 2, 3, 4, 5];
-      const next = await fixture.claimNFTs(indices, compatible, attempt, faulty);
+      const next = await fixture.claimNFTs(
+        indices,
+        compatible,
+        attempt,
+        faulty,
+      );
       const merged = [
         ...previous.filter((r) => r.state === "delivered"),
         ...next,
@@ -91,9 +96,7 @@ export default function Tickets({
   function card(t: DemoTicket) {
     const done = claimed.includes(key(t));
     const nftDone = results[key(t)]?.every((r) => r.state === "delivered");
-    const open = demoRounds.find(
-      (r) => r.game === t.game && r.id === t.round,
-    );
+    const open = demoRounds.find((r) => r.game === t.game && r.id === t.round);
     return (
       <article className={`my-ticket game-${t.game}`} key={key(t)}>
         <div className="ticket-identity">
@@ -101,9 +104,7 @@ export default function Tickets({
             {gameName(t.game)} / Round {String(t.round)}
           </span>
           <h3>
-            {t.source === "mine"
-              ? "Your demo entry"
-              : `Sample ticket #${t.id}`}
+            {t.source === "mine" ? "Your demo entry" : `Sample ticket #${t.id}`}
           </h3>
           <span className="pill">{kindLabel(t)}</span>
         </div>
@@ -138,7 +139,9 @@ export default function Tickets({
       </article>
     );
   }
-  const myRounds = [...new Set(mine.map((t) => `${t.game}:${String(t.round)}`))];
+  const myRounds = [
+    ...new Set(mine.map((t) => `${t.game}:${String(t.round)}`)),
+  ];
   return (
     <>
       <PageHead
@@ -257,14 +260,12 @@ export default function Tickets({
               <ul className="asset-outcomes">
                 {Array.from({ length: 6 }, (_, index) => (
                   <li key={index}>
-                    <Globe
-                      kind={index % 2 ? "nft" : "eth"}
-                      number={[7, 4, 19, 12, 3, 16][index]}
-                      size="small"
-                    />
+                    <span className="nft-placeholder" aria-hidden="true">
+                      NFT
+                    </span>
                     <span>
-                      World study {String(index + 1).padStart(2, "0")}
-                      <small>Illustrative artwork · secured asset {index + 1}</small>
+                      Demo NFT {index + 1}
+                      <small>Placeholder · no actual NFT</small>
                     </span>
                     <span>
                       {results[key(claim)]?.find((r) => r.index === index)
@@ -274,8 +275,9 @@ export default function Tickets({
                 ))}
               </ul>
               <p className="fine">
-                Thumbnails are illustrative Sorphera artwork, not the actual
-                inventory metadata. No floor price or resale value is implied.
+                NFT jackpot prizes come from FWA pulls. These are neutral demo
+                placeholders; no NFTs have been pulled, secured or won. Claims
+                below simulate delivery only.
               </p>
               <button
                 disabled={
@@ -288,7 +290,7 @@ export default function Tickets({
                 {busy
                   ? "Claim pending…"
                   : results[key(claim)]?.every((r) => r.state === "delivered")
-                    ? "All 6 NFTs delivered"
+                    ? "All 6 demo NFTs simulated"
                     : results[key(claim)]?.length
                       ? "Retry remaining assets"
                       : "Claim 6 demo NFTs"}
@@ -335,9 +337,9 @@ export default function Tickets({
                   </select>
                 </label>
                 <p className="fine">
-                  Up to 20 assets per transaction. A real contract recipient must
-                  support ERC721 safe transfers. Failures are reported per asset
-                  and retried without undoing successful deliveries.
+                  Up to 20 assets per transaction. A real contract recipient
+                  must support ERC721 safe transfers. Failures are reported per
+                  asset and retried without undoing successful deliveries.
                 </p>
               </details>
             </>

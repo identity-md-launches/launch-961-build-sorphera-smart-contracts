@@ -591,7 +591,7 @@ test("US$30 buys 2 whole tickets after the estimated fee; math stays in wei", ()
   assert.equal(planBudget(0, 5000000000000000n, 0).affordable, 0);
   const tiny = planBudget(10, 5000000000000000n, 0);
   assert.equal(tiny.affordable, 0);
-  assert.match(tiny.reason, /more than your limit/);
+  assert.match(tiny.reason, /more than your budget/);
   assert.match(planBudget(0.5, 5000000000000000n, 0).reason, /network fee/);
   assert.equal(planBudget(100000, 5000000000000000n, 0).affordable, 100);
   assert.equal(planBudget(30, 5000000000000000n, 0).allInWei, 0n);
@@ -606,10 +606,15 @@ test("Generate N different entries never repeats; repeats stay allowed", () => {
   assert.throws(() => generateDistinct(0));
   assert.throws(() => generateDistinct(101));
   // repeats: the same numbers twice remain a valid line
-  assert.equal(expandLines([{ main: [1, 2, 3], bonus: 1, quantity: 2 }]).length, 2);
+  assert.equal(
+    expandLines([{ main: [1, 2, 3], bonus: 1, quantity: 2 }]).length,
+    2,
+  );
 });
 test("baskets are separate per game and round; switching never retargets", () => {
-  let b = setBasketLines({}, 0, 42n, [{ main: [1, 2, 3], bonus: 1, quantity: 1 }]);
+  let b = setBasketLines({}, 0, 42n, [
+    { main: [1, 2, 3], bonus: 1, quantity: 1 },
+  ]);
   b = setBasketLines(b, 1, 42n, [{ main: [4, 5, 6], bonus: 2, quantity: 3 }]);
   assert.equal(basketCount(b[basketKey(0, 42n)]), 1);
   assert.equal(basketCount(b[basketKey(1, 42n)]), 3);
@@ -622,7 +627,12 @@ test("baskets are separate per game and round; switching never retargets", () =>
   assert.notEqual(basketKey(0, 42n), basketKey(0, 43n));
 });
 test("calendar export carries the closing time and no result promise", () => {
-  const ics = calendarEvent("Sorphera demo", 1800000000, "https://x/#draw", "u@d");
+  const ics = calendarEvent(
+    "Sorphera demo",
+    1800000000,
+    "https://x/#draw",
+    "u@d",
+  );
   assert.match(ics, /DTSTART:20270115T080000Z/);
   assert.match(ics, /no fixed result time is promised/);
 });
@@ -651,15 +661,27 @@ test("reveal never exposes numbers, matches or winners before balls stop", () =>
 });
 test("customer statuses hide contract jargon", () => {
   assert.equal(customerStatus("Settlement", 0), "Preparing the draw");
-  assert.equal(customerStatus("Awaiting draw oracle", 0), "Waiting for confirmed numbers");
-  assert.equal(customerStatus("Tie-break required", 1), "Selecting the winning ticket");
+  assert.equal(
+    customerStatus("Awaiting draw oracle", 0),
+    "Waiting for confirmed numbers",
+  );
+  assert.equal(
+    customerStatus("Tie-break required", 1),
+    "Selecting the winning ticket",
+  );
 });
 test("match highlighting follows revealed balls only; partial is never a win", () => {
   const pick: Pick = { main: [7, 12, 19], bonus: 4 };
-  assert.deepEqual(matchTicket(pick, [7, undefined, undefined, undefined]).mainHits, [7]);
+  assert.deepEqual(
+    matchTicket(pick, [7, undefined, undefined, undefined]).mainHits,
+    [7],
+  );
   assert.equal(matchTicket(pick, [7, 12, 19, undefined]).full, false);
   assert.equal(matchTicket(pick, [7, 12, 19, 4]).full, true);
-  assert.equal(matchTicket({ main: [7, 12, 1], bonus: 4 }, [7, 12, 19, 4]).full, false);
+  assert.equal(
+    matchTicket({ main: [7, 12, 1], bonus: 4 }, [7, 12, 19, 4]).full,
+    false,
+  );
 });
 test("skip, replay and reduced motion all end on identical results", () => {
   for (const s of allScenarios) {
@@ -697,4 +719,45 @@ test("finalist pagination is bounded", () => {
   assert.equal(paginate(ids, 0).pages, 3);
   assert.equal(paginate(ids, 9).page, 2);
   assert.equal(paginate(ids, 2).items.length, 2);
+});
+
+test("purchase affordability rejects invalid edits and respects the exact cent boundary", () => {
+  const price = 5000000000000000n;
+  for (const budget of [
+    "",
+    " ",
+    "0",
+    "-30",
+    "oops",
+    "30.",
+    "25.999",
+    "1e9",
+    "Infinity",
+    Number.NaN,
+    Infinity,
+  ]) {
+    const p = planBudget(budget, price, 2);
+    assert.equal(p.valid, false, String(budget));
+    assert.equal(p.canPurchase, false, String(budget));
+    assert.equal(p.affordable, 0, String(budget));
+  }
+  assert.equal(planBudget("26.00", price, 2).canPurchase, true);
+  assert.equal(planBudget("25.99", price, 2).canPurchase, false);
+  assert.equal(planBudget("10", price, 1).canPurchase, false);
+  assert.equal(planBudget("30", price, 0).canPurchase, false);
+  assert.equal(planBudget("9999", price, 101).canPurchase, false);
+  assert.equal(
+    planBudget("30", price, 3).blockReason,
+    "This purchase is US$8.50 over your US$30.00 budget. Remove an entry or change your budget.",
+  );
+});
+test("suggestions and checkout use the same rounded exact-wei total", () => {
+  // Rounding individual ticket cents first would incorrectly suggest 2.
+  const price = 1002400000000000n;
+  const p = planBudget("6.00", price, 2);
+  assert.equal(p.allInCents, usdCents(2n * price + demoQuote.feeWei));
+  assert.equal(p.allInCents, 601n);
+  assert.equal(p.affordable, 1);
+  assert.equal(p.canPurchase, false);
+  assert.equal(p.subtotalCents + p.feeCents, p.allInCents);
 });

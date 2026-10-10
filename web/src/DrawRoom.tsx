@@ -1,14 +1,8 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Balls, Globe, PageHead } from "./components";
 import { allScenarios, type DemoTicket } from "./fixtures";
 import { replay } from "./core";
-import {
-  BALLS,
-  matchTicket,
-  paginate,
-  revealView,
-  timing,
-} from "./reveal";
+import { BALLS, matchTicket, paginate, revealView, timing } from "./reveal";
 import type { RevealPhase } from "./Chamber";
 import { gameName } from "./Play";
 const RevealStage = lazy(() => import("./Chamber"));
@@ -35,11 +29,41 @@ export default function DrawRoom({
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const [announce, setAnnounce] = useState("");
-  const state = replay(scenario.events.slice(0, step), scenario.game);
-  const view = revealView(state, revealed, scenario.game);
+  const state = useMemo(
+    () => replay(scenario.events.slice(0, step), scenario.game),
+    [scenario, step],
+  );
+  const clock = useRef({ key: "", elapsed: 0 });
+  const [frame, setFrame] = useState({ key: "", elapsed: 0 });
+  const phaseKey = `${id}:${step}:${revealed}:${phase}:${reduce}`;
+  const duration =
+    state.main && revealed < BALLS
+      ? phase === "away"
+        ? reduce
+          ? 0
+          : 350
+        : phase === "spinning"
+          ? timing(reduce).spin
+          : phase === "hold"
+            ? timing(reduce).hold
+            : timing(reduce).travel
+      : reduce
+        ? 60
+        : EVENT_MS;
+  const progress =
+    frame.key === phaseKey
+      ? Math.min(1, frame.elapsed / Math.max(1, duration))
+      : 0;
+  const stoppedCount =
+    revealed +
+    (state.main && revealed < BALLS && (phase === "hold" || phase === "travel")
+      ? 1
+      : 0);
+  const view = revealView(state, stoppedCount, scenario.game);
   const t = timing(reduce);
-  const started = step > 0;
-  const finished = step >= scenario.events.length && (view.complete || !state.main);
+  const started = step > 0 || playing || frame.elapsed > 0;
+  const finished =
+    step >= scenario.events.length && (revealed === BALLS || !state.main);
   const spoken = useRef("");
   useEffect(() => {
     setStep(0);
@@ -58,6 +82,12 @@ export default function DrawRoom({
     m.addEventListener("change", change);
     return () => m.removeEventListener("change", change);
   }, []);
+  useEffect(
+    () => () => {
+      if ("speechSynthesis" in window) speechSynthesis.cancel();
+    },
+    [id],
+  );
   // Timeline driver: advances fixture events and reveal phases. It only
   // sequences the supplied result; it never selects or changes numbers.
   useEffect(() => {
@@ -101,27 +131,39 @@ export default function DrawRoom({
       setRevealed((v) => v + 1);
       setPhase("away");
     }
-    const timer = setTimeout(action, delay);
-    return () => clearTimeout(timer);
+    if (clock.current.key !== phaseKey)
+      clock.current = { key: phaseKey, elapsed: 0 };
+    let last = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      // A background tab holds the sequence rather than jumping past balls.
+      const delta = document.hidden ? 0 : Math.min(50, now - last);
+      last = now;
+      clock.current.elapsed += delta;
+      setFrame({ ...clock.current });
+      if (clock.current.elapsed >= delay) action();
+      else raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [
     playing,
-    step,
-    phase,
-    revealed,
-    reduce,
-    scenario.events.length,
-    state.main,
-    state.bonus,
+    phaseKey,
     muted,
-    id,
+    state,
+    reduce,
     t.spin,
     t.hold,
     t.travel,
+    scenario.events.length,
   ]);
   useEffect(() => {
     if (view.complete && finished) setAnnounce(view.status);
   }, [view.complete, finished, view.status]);
   function start() {
+    clock.current = { key: "", elapsed: 0 };
+    setFrame({ key: "", elapsed: 0 });
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
     setStep(0);
     setRevealed(0);
     setPhase("away");
@@ -141,6 +183,7 @@ export default function DrawRoom({
     }
   }
   function skip() {
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
     setStep(scenario.events.length);
     setRevealed(BALLS);
     setPhase("away");
@@ -187,7 +230,11 @@ export default function DrawRoom({
         <div className="row wrap">
           <button
             className="quiet"
-            onClick={() => setMuted(!muted)}
+            onClick={() => {
+              setMuted(!muted);
+              if (!muted && "speechSynthesis" in window)
+                speechSynthesis.cancel();
+            }}
             aria-pressed={!muted}
           >
             {muted ? "Enable sound" : "Mute sound"}
@@ -205,7 +252,9 @@ export default function DrawRoom({
       <div className="draw-stage">
         <div className="draw-topline">
           <span className="pill">
-            {scenario.simulated ? "Fixture replay · simulated time" : "Sample replay"}
+            {scenario.simulated
+              ? "Fixture replay · simulated time"
+              : "Sample replay"}
           </span>
           <span>
             {gameName(scenario.game)} · Round {String(scenario.round)}
@@ -227,25 +276,45 @@ export default function DrawRoom({
             number={currentNumber}
             kind={stageKind}
             phase={phase}
-            spinMs={t.spin}
-            travelMs={t.travel}
-            paused={!playing}
+            progress={progress}
+            reduced={reduce}
             slotId={`slot-${revealed}`}
           />
         </Suspense>
         <div className="reveal-balls" aria-label="Drawn numbers">
           <div className="balls">
             {[0, 1, 2].map((i) => (
-              <span id={`slot-${i}`} className="slot" key={i}>
+              <span
+                id={`slot-${i}`}
+                className={`slot ${i >= revealed ? "slot-empty" : ""}`}
+                key={i}
+                aria-label={
+                  i < revealed
+                    ? `Ball ${i + 1}: ${view.shown[i]}`
+                    : `Ball ${i + 1}: awaiting reveal`
+                }
+              >
                 <Globe
                   size="large"
-                  number={view.shown[i] ?? "?"}
+                  number={i < revealed ? view.shown[i] : undefined}
                 />
               </span>
             ))}
             <span className="bonus-plus">+</span>
-            <span id="slot-3" className="slot">
-              <Globe size="large" kind="nft" number={view.shown[3] ?? "?"} />
+            <span
+              id="slot-3"
+              className={`slot ${revealed < BALLS ? "slot-empty" : ""}`}
+              aria-label={
+                revealed === BALLS
+                  ? `Bonus ball: ${view.shown[3]}`
+                  : "Bonus ball: awaiting reveal"
+              }
+            >
+              <Globe
+                size="large"
+                kind="nft"
+                number={revealed === BALLS ? view.shown[3] : undefined}
+              />
             </span>
           </div>
           <p className="muted">
@@ -258,13 +327,26 @@ export default function DrawRoom({
         <div className="draw-controls">
           <button
             className="button primary"
-            onClick={playing ? () => setPlaying(false) : start}
+            onClick={
+              playing
+                ? () => {
+                    setPlaying(false);
+                    if ("speechSynthesis" in window) speechSynthesis.pause();
+                  }
+                : start
+            }
           >
             {playing ? "Pause" : started ? "Replay" : "Watch the draw"}
             <span aria-hidden="true">▷</span>
           </button>
           {started && !playing && !finished && (
-            <button className="button" onClick={() => setPlaying(true)}>
+            <button
+              className="button"
+              onClick={() => {
+                setPlaying(true);
+                if ("speechSynthesis" in window) speechSynthesis.resume();
+              }}
+            >
               Resume
             </button>
           )}
@@ -273,6 +355,12 @@ export default function DrawRoom({
           </button>
         </div>
       </div>
+      {scenario.game === 1 && (
+        <p className="fine">
+          NFT jackpot prizes come from FWA pulls. Demo placeholders only; no
+          actual NFTs have been pulled, secured or won.
+        </p>
+      )}
       <div className="draw-result" role="status">
         <div>
           <p className="eyebrow">
@@ -308,7 +396,7 @@ export default function DrawRoom({
         <section className="finale" aria-labelledby="finale-title">
           <p className="eyebrow">NFT finale</p>
           <h2 id="finale-title">
-            One of these matching tickets wins the whole collection.
+            One of these matching tickets wins the whole NFT jackpot.
           </h2>
           <ul className="finalists">
             {pageData.items.map((tid) => (
@@ -353,8 +441,8 @@ export default function DrawRoom({
               <span className="eyebrow">Confirmed winning ticket</span>
               <strong>Ticket #{state.winningTicket}</strong>
               <span className="fine">
-                Secured NFTs: {scenario.game === 1 ? 6 : 0} · incidental ETH:
-                0.012 ETH, claimed separately
+                Demo NFTs: {scenario.game === 1 ? 6 : 0} · incidental ETH: 0.012
+                ETH, claimed separately
               </span>
             </div>
           ) : (
@@ -374,13 +462,15 @@ export default function DrawRoom({
                 if (!m.full)
                   outcome = `No win · ${hits} of 4 matched. No prizes for partial matches.`;
                 else if (scenario.game === 0)
-                  outcome = "Matched all four · shares the ETH prize equally with other matching tickets.";
+                  outcome =
+                    "Matched all four · shares the ETH prize equally with other matching tickets.";
                 else if (!view.winnerVisible)
-                  outcome = "Matched all four · waiting for the confirmed winning ticket.";
+                  outcome =
+                    "Matched all four · waiting for the confirmed winning ticket.";
                 else
                   outcome =
                     state.winningTicket === x.id
-                      ? "Winning ticket · claim the collection in My tickets."
+                      ? "Winning ticket · claim the demo NFT jackpot in My tickets."
                       : "Matched all four, but another ticket was selected. No prize.";
               }
               return (
@@ -389,7 +479,9 @@ export default function DrawRoom({
                   className={`result-ticket ${view.complete && m.full ? "full" : ""}`}
                 >
                   <span className="fine">
-                    {x.source === "mine" ? "Your entry" : `Sample ticket #${x.id}`}
+                    {x.source === "mine"
+                      ? "Your entry"
+                      : `Sample ticket #${x.id}`}
                   </span>
                   <Balls
                     pick={x.pick}
@@ -410,8 +502,8 @@ export default function DrawRoom({
           </p>
         )}
         <p className="fine">
-          Old tickets do not enter later rounds. ETH matches split the prize;
-          no match rolls the prize into the next round of the same game.
+          Old tickets do not enter later rounds. ETH matches split the prize; no
+          match rolls the prize into the next round of the same game.
         </p>
       </section>
       <details>

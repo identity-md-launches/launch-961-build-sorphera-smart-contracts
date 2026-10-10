@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import type { Pick } from "./core";
+import PlushGlobe from "./PlushGlobe";
 export const asset = (name: string) =>
   `${import.meta.env.BASE_URL}brand/${name}.webp`;
 export function Globe({
@@ -13,14 +14,7 @@ export function Globe({
 }) {
   return (
     <span className={`globe globe-${kind} globe-${size}`} aria-hidden="true">
-      <img src={asset(`${kind}-ball`)} alt="" draggable="false" />
-      {number !== undefined && (
-        <span className="number-badge">
-          {typeof number === "number"
-            ? String(number).padStart(2, "0")
-            : number}
-        </span>
-      )}
+      <PlushGlobe kind={kind} number={number} />
     </span>
   );
 }
@@ -80,6 +74,30 @@ export function Modal({
       ref={ref}
       className="modal"
       aria-labelledby="modal-title"
+      onKeyDown={(e) => {
+        if (e.key !== "Tab") return;
+        const controls = Array.from(
+          ref.current?.querySelectorAll<HTMLElement>(
+            'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], summary, [tabindex="0"]',
+          ) ?? [],
+        ).filter(
+          (node) =>
+            node.getClientRects().length > 0 &&
+            (node.checkVisibility
+              ? node.checkVisibility()
+              : !node.closest("details:not([open])") ||
+                node.tagName === "SUMMARY"),
+        );
+        const first = controls[0],
+          last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }}
       onCancel={(e) => {
         e.preventDefault();
         onClose();

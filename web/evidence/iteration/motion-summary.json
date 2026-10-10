@@ -1,0 +1,76 @@
+{
+  "samples": 1242,
+  "medianFrameMs": 16.699999999999818,
+  "p95FrameMs": 33.29999999999927,
+  "maxFrameMs": 66.59999999999854,
+  "phases": [
+    {
+      "key": "0:away",
+      "at": 952.9
+    },
+    {
+      "key": "0:spinning",
+      "at": 4752.8
+    },
+    {
+      "key": "0:hold",
+      "at": 6269.4
+    },
+    {
+      "key": "0:travel",
+      "at": 7136
+    },
+    {
+      "key": "1:away",
+      "at": 7602.6
+    },
+    {
+      "key": "1:spinning",
+      "at": 7986
+    },
+    {
+      "key": "1:hold",
+      "at": 9502.6
+    },
+    {
+      "key": "1:travel",
+      "at": 10369.2
+    },
+    {
+      "key": "2:away",
+      "at": 10885.8
+    },
+    {
+      "key": "2:spinning",
+      "at": 11235.9
+    },
+    {
+      "key": "2:hold",
+      "at": 12752.5
+    },
+    {
+      "key": "2:travel",
+      "at": 13619.1
+    },
+    {
+      "key": "3:away",
+      "at": 14085.7
+    },
+    {
+      "key": "3:spinning",
+      "at": 14452.4
+    },
+    {
+      "key": "3:hold",
+      "at": 15985.7
+    },
+    {
+      "key": "3:travel",
+      "at": 16852.3
+    },
+    {
+      "key": "4:away",
+      "at": 17318.9
+    }
+  ]
+}

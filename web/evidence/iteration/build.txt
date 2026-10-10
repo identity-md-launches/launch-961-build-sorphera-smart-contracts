@@ -1,0 +1,17 @@
+
+> sorphera-web@1.0.0 build
+> tsc --noEmit && vite build
+
+vite v7.1.9 building for production...
+transforming...
+✓ 1103 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                          0.76 kB │ gzip:   0.45 kB
+../dist/assets/index-j5fkC9vt.css          35.45 kB │ gzip:   8.37 kB
+../dist/assets/Chamber-CBI7hmtd.js          1.33 kB │ gzip:   0.80 kB
+../dist/assets/ccip-52Yrf9gL.js             2.65 kB │ gzip:   1.26 kB
+../dist/assets/DrawRoom-C6o8Hg4B.js        10.55 kB │ gzip:   4.10 kB
+../dist/assets/LiveWorkspace-Dw4MFE_e.js  325.27 kB │ gzip:  90.31 kB
+../dist/assets/index-CWrBW4eP.js          335.18 kB │ gzip: 110.62 kB
+✓ built in 4.10s

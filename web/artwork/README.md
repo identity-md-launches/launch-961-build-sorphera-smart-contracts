@@ -36,7 +36,13 @@ for the whole object. Blue/pink, pink/cream and Atlas palettes share those maps,
 relief and fibres. Back geography is a reconstruction; no rear photograph or
 photogrammetric scan was supplied.
 
-`plushModel.ts` builds one 24,576-triangle mesh. WebGL uses mip filtering; the
+`plushModel.ts` builds one 24,576-triangle mesh. WebGL uses mip filtering, including two continuous planar polar patches derived
+once at model load from the same committed albedo. Longitude UV derivatives
+become unbounded at a pole; ordinary equirectangular mipmaps previously blurred
+those fibres into a radial fan. The x/z patches keep a bounded physical footprint
+and blend only within the caps (`abs(y)` 0.90–0.96). Antialiasing remains enabled.
+No new photograph, map family or texture-generation dependency is introduced,
+and rebuilding the maps cannot remove the renderer fix. The
 Canvas fallback prefilters the same albedo, culls back-facing triangles and
 rasterizes the same mesh. Wrapped normals close the longitudinal join. Dynamic
 black glyphs are mapped only to the front badge. `paintGlobe` and its front

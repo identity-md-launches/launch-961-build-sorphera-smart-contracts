@@ -4,7 +4,7 @@ The existing React 19 / TypeScript / Vite static site uses the supplied Sorphera
 
 ## Install, preview and rebuild
 
-Use Node 22.12+ (validated here with Node 24.21.0 and npm 11.19.0).
+Use Node 22.12+ (this revision was validated with Node 22.23.3 and npm 10.9.9).
 
 ```sh
 cd web
@@ -41,7 +41,7 @@ The **Passport** earns one stamp per finalized eligible paid ticket; every 12 ea
 
 ## Checks and evidence
 
-See [current validation](evidence/continuity/validation.md) and the [comparison/clip viewer](evidence/continuity/index.html). These supersede the visual and timing descriptions in earlier evidence directories. Current results include build/typecheck, 46 unchanged unit tests, 12 added timing tests, 10 production-export browser flows, 3 paused/reward flows and 16/16 pinned design-probe checks. Both WebGL and software reveal checks were run separately; actual outcomes and frame timings are recorded with the clips.
+See [revision validation](evidence/continuity/revision-validation.md) and the [initial implementation record](evidence/continuity/validation.md) and the [comparison/clip viewer](evidence/continuity/index.html). These supersede the visual and timing descriptions in earlier evidence directories. Current results include build/typecheck, 46 unchanged unit tests, 12 added timing tests, 10 production-export browser flows, 3 paused/reward flows and 16/16 pinned design-probe checks. Both WebGL and software reveal checks were run separately; actual outcomes and frame timings are recorded with the clips.
 
 From the repository root, with Playwright installed as **external test tooling**:
 
@@ -53,7 +53,7 @@ PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node web/tests/reveal.mjs
 SOFTWARE=1 PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node web/tests/reveal.mjs
 ```
 
-Scripts start/close their own bounded HTTP servers. `PLAYWRIGHT_BROWSERS_PATH` can select an external browser installation; schedule/reveal also support `CHROMIUM_PATH`. The pause test bundles real components with a test-only sales-state hook; this hook is absent from `dist/`. Schedule/reveal tests serve the production export under `/preview/`. The plush harness bundles the renderer source against built material assets and also checks export reflow. `npm test` runs the existing suite; the additional schedule suite is invoked explicitly because the package manifest is preserved.
+Scripts start/close their own bounded HTTP servers. `PLAYWRIGHT_BROWSERS_PATH` can select an external browser installation; schedule/reveal also support `CHROMIUM_PATH`. The pause test bundles real components with a test-only sales-state hook; this hook is absent from `dist/`. Schedule/reveal tests serve the production export under `/preview/`. The plush harness bundles the renderer source against built material assets and checks export reflow with the declared stack, Arial, DejaVu Sans and sans-serif fallbacks. It captures 256px pole inspections and compares WebGL polar fibre detail against software rendering; the old radial-blur implementation fails this regression. The WebGL renderer derives continuous polar texture patches from the existing albedo while retaining mip filtering, geometry, caches and animation. `npm test` runs the existing suite; the additional schedule suite is invoked explicitly because the package manifest is preserved.
 
 The pinned design probe command was `node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste` with `IMD_PLAYWRIGHT` pointing to external tooling. Pinned inputs are removed by the runner; the report is preserved here. Chromium used SwiftShader for WebGL and a forced WebGL-disabled Canvas run. WebKit did not complete a launch; physical devices, screen readers and native 200% zoom were not tested. A passing automated check is not a security or accessibility guarantee.
 

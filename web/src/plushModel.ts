@@ -199,6 +199,54 @@ function ink(number?: number | string) {
   inks.set(text, c);
   return c;
 }
+// A longitude mip footprint diverges at the poles: adjacent fragments can span
+// an entire UV row although they cover only a few fibres. Reproject the SAME
+// albedo onto two continuous x/z patches once at load time. Their mip levels
+// average a physical cloth area, not a narrowing wedge of longitude. The
+// square extends well past the shader's blend band; its unused corners and
+// the join between the two patches cannot enter the visible filter footprint.
+function polarAlbedo() {
+  const size = 256,
+    span = 1.2;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size * 2;
+  const ctx = canvas.getContext("2d")!;
+  const frame = ctx.createImageData(size, size * 2);
+  const source = pixels(model.albedo);
+  const { width, height } = model.albedo;
+  for (let pole = 0; pole < 2; pole++)
+    for (let row = 0; row < size; row++)
+      for (let col = 0; col < size; col++) {
+        const x = ((col + 0.5) / size - 0.5) * span;
+        const z = ((row + 0.5) / size - 0.5) * span;
+        const y = (pole === 0 ? 1 : -1) * Math.sqrt(1 - x * x - z * z);
+        const u = Math.atan2(x, z) / TAU + 0.5;
+        const v = Math.acos(y) / Math.PI;
+        const sx = u * width - 0.5;
+        const sy = Math.max(0, Math.min(height - 1, v * height - 0.5));
+        const ix = Math.floor(sx),
+          iy = Math.floor(sy);
+        const fx = sx - ix,
+          fy = sy - iy;
+        const left = (ix + width) % width,
+          right = (left + 1) % width;
+        const bottom = Math.min(height - 1, iy + 1);
+        const dst = ((pole * size + row) * size + col) * 4;
+        for (let ch = 0; ch < 3; ch++) {
+          const top =
+            source[(iy * width + left) * 4 + ch] * (1 - fx) +
+            source[(iy * width + right) * 4 + ch] * fx;
+          const below =
+            source[(bottom * width + left) * 4 + ch] * (1 - fx) +
+            source[(bottom * width + right) * 4 + ch] * fx;
+          frame.data[dst + ch] = top * (1 - fy) + below * fy;
+        }
+        frame.data[dst + 3] = 255;
+      }
+  ctx.putImageData(frame, 0, 0);
+  return canvas;
+}
 function createGPU() {
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = SIZE;
@@ -215,9 +263,13 @@ function createGPU() {
       original=normal;rotated=vec3(c*surfaceNormal.x-s*surfaceNormal.z,surfaceNormal.y,s*surfaceNormal.x+c*surfaceNormal.z);
       float ct=cos(tilt),st=sin(tilt);p=vec3(p.x,ct*p.y-st*p.z,st*p.y+ct*p.z);rotated=vec3(rotated.x,ct*rotated.y-st*rotated.z,st*rotated.y+ct*rotated.z);tex=uv;
       gl_Position=vec4(p.x*.94921875,p.y*.94921875,-p.z*.5,1.);}`;
-  const fragment = `precision mediump float; uniform sampler2D albedo;uniform sampler2D surface;uniform sampler2D ink;
+  const fragment = `precision mediump float; uniform sampler2D albedo;uniform sampler2D polar;uniform sampler2D surface;uniform sampler2D ink;
     uniform vec3 baseColor;uniform vec3 landColor;uniform float recolor;varying vec2 tex;varying vec3 original;varying vec3 rotated;
     void main(){vec3 m=texture2D(surface,tex).rgb; vec3 c=texture2D(albedo,tex).rgb;
+      vec3 radial=normalize(original);
+      vec2 polarUV=radial.xz/1.2+.5;
+      polarUV.y=polarUV.y*.5+(radial.y<0.? .5:0.);
+      c=mix(c,texture2D(polar,polarUV).rgb,smoothstep(.90,.96,abs(radial.y)));
       float luminance=dot(c,vec3(.2126,.7152,.0722));
       c=mix(c,luminance*mix(baseColor,landColor,m.r),recolor*(1.-m.g));
       vec3 n=normalize(rotated);
@@ -276,7 +328,7 @@ function createGPU() {
       gl!.UNSIGNED_BYTE,
       source,
     );
-    if (name === "albedo") {
+    if (name === "albedo" || name === "polar") {
       gl!.generateMipmap(gl!.TEXTURE_2D);
       gl!.texParameteri(
         gl!.TEXTURE_2D,
@@ -289,6 +341,7 @@ function createGPU() {
   upload(model.albedo, 0, "albedo");
   upload(model.surface, 1, "surface");
   upload(ink(), 2, "ink");
+  upload(polarAlbedo(), 3, "polar");
   gl.enable(gl.DEPTH_TEST);
   gl.clearColor(0, 0, 0, 0);
   let lastInk: HTMLCanvasElement;

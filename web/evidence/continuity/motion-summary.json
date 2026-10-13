@@ -1,162 +1,164 @@
 {
   "webgl": {
-    "frame_count": 1023,
-    "sampled_seconds": 26.665634,
-    "mean_fps": 38.32648419310038,
-    "median_ms": 16.700000000000045,
-    "p95_ms": 99.89999999999964,
-    "max_ms": 133.40000000000146,
-    "over40ms": 131,
+    "frame_count": 1133,
+    "sampled_seconds": 23.8324,
+    "mean_fps": 47.54032325741427,
+    "median_ms": 16.699999999999818,
+    "p95_ms": 66.59999999999854,
+    "max_ms": 116.80000000000109,
+    "over40ms": 84,
     "phases": [
       {
         "key": "0:away",
-        "at": 898.266
+        "at": 670.8
       },
       {
         "key": "0:spinning",
-        "at": 4698
+        "at": 4420.7
       },
       {
         "key": "0:hold",
-        "at": 7364.6
+        "at": 6037.3
       },
       {
         "key": "0:travel",
-        "at": 8331.2
+        "at": 6870.6
       },
       {
         "key": "1:away",
-        "at": 8797.9
+        "at": 7337.2
       },
       {
         "key": "1:spinning",
-        "at": 9197.9
+        "at": 7703.9
       },
       {
         "key": "1:hold",
-        "at": 11831.1
+        "at": 9537.1
       },
       {
         "key": "1:travel",
-        "at": 12731.1
+        "at": 10370.4
       },
       {
         "key": "2:away",
-        "at": 13197.7
+        "at": 10837
       },
       {
         "key": "2:spinning",
-        "at": 13597.8
+        "at": 11203.7
       },
       {
         "key": "2:hold",
-        "at": 16130.9
+        "at": 13420.3
       },
       {
         "key": "2:travel",
-        "at": 17064.2
+        "at": 14336.9
       },
       {
         "key": "3:away",
-        "at": 17564.2
+        "at": 14803.6
       },
       {
         "key": "3:spinning",
-        "at": 17947.5
+        "at": 15170.2
       },
       {
         "key": "3:hold",
-        "at": 20447.4
+        "at": 17403.5
       },
       {
         "key": "3:travel",
-        "at": 21364.1
+        "at": 18253.4
       },
       {
         "key": "4:away",
-        "at": 21847.4
+        "at": 18720
       }
     ],
-    "video_bytes": 322230
+    "video_bytes": 286220,
+    "video_duration_seconds": 24.48
   },
   "canvas": {
-    "frame_count": 1053,
-    "sampled_seconds": 23.215799999999998,
-    "mean_fps": 45.313967211984945,
-    "median_ms": 16.700000000000273,
-    "p95_ms": 50.100000000000364,
-    "max_ms": 83.39999999999964,
-    "over40ms": 112,
+    "frame_count": 1317,
+    "sampled_seconds": 21.9491,
+    "mean_fps": 60.00246023754959,
+    "median_ms": 16.69999999999891,
+    "p95_ms": 16.700000000000728,
+    "max_ms": 16.80000000000291,
+    "over40ms": 0,
     "phases": [
       {
         "key": "0:away",
-        "at": 1197
+        "at": 754.8
       },
       {
         "key": "0:spinning",
-        "at": 5096.8
+        "at": 4504.6
       },
       {
         "key": "0:hold",
-        "at": 6896.8
+        "at": 6021.2
       },
       {
         "key": "0:travel",
-        "at": 7746.7
+        "at": 6887.8
       },
       {
         "key": "1:away",
-        "at": 8213.4
+        "at": 7354.5
       },
       {
         "key": "1:spinning",
-        "at": 8613.4
+        "at": 7721.1
       },
       {
         "key": "1:hold",
-        "at": 10380
+        "at": 9237.7
       },
       {
         "key": "1:travel",
-        "at": 11213.3
+        "at": 10104.3
       },
       {
         "key": "2:away",
-        "at": 11696.6
+        "at": 10571
       },
       {
         "key": "2:spinning",
-        "at": 12080
+        "at": 10937.7
       },
       {
         "key": "2:hold",
-        "at": 13779.9
+        "at": 12454.3
       },
       {
         "key": "2:travel",
-        "at": 14613.1
+        "at": 13320.9
       },
       {
         "key": "3:away",
-        "at": 15113.1
+        "at": 13787.5
       },
       {
         "key": "3:spinning",
-        "at": 15513.1
+        "at": 14154.2
       },
       {
         "key": "3:hold",
-        "at": 17296.3
+        "at": 15670.8
       },
       {
         "key": "3:travel",
-        "at": 18146.3
+        "at": 16537.4
       },
       {
         "key": "4:away",
-        "at": 18646.4
+        "at": 17004.1
       }
     ],
-    "video_bytes": 315207
+    "video_bytes": 291490,
+    "video_duration_seconds": 22.64
   }
 }

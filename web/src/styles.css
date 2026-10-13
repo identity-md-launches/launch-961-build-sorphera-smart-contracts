@@ -2036,11 +2036,12 @@ summary::marker {
     font-size: var(--type-small);
   }
   .play-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
   .picker-panel,
   .ticket-slip {
+    min-width: 0;
     padding: 23px;
   }
   .slip-cut {

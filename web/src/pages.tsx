@@ -30,7 +30,7 @@ export function Home({ passport }: { passport: PassportRecord }) {
           </p>
           <div className="hero-actions">
             <a className="button primary" href="#play">
-              Make your picks <span aria-hidden="true">↗</span>
+              Make your picks
             </a>
             <a className="watch-link" href="#draw">
               {" "}

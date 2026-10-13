@@ -1,10 +1,19 @@
 {
   "limit_bytes": 8388608,
-  "conservative_gzip_snapshot_upper_bound_bytes": 8000000,
-  "method": "Tar+gzip level 9 of every extant tracked file and Git-eligible new file, excluding runner-deleted .imd/ inputs and test/scratch/. Final archive including this report verified below the stated upper bound. Archive itself stays in /tmp, outside delivery.",
+  "verified_complete_tree_git_bundle_below_bytes": 7800000,
+  "verified_complete_tree_tar_gzip_below_bytes": 8370000,
+  "method": "Copy every extant tracked and Git-eligible new file (except runner-deleted .imd inputs, test/scratch and separately uploaded artifacts) into /tmp. Initialize and bundle only that isolated complete tree. No repository .git writes or source history pruning. Bundle and gzip snapshot remain outside delivery; final sizes checked against these conservative bounds. The worker consumes .imd-responses.json separately.",
   "protected_paths_changed": [],
   "submodules": 0,
   "generated_dependency_cache_or_archive_files": [],
+  "git_diff_check": "passed",
+  "root_export_files": 16,
+  "root_export_file_bytes": 1353528,
+  "dist_index_sha256": "473e6d9072286c6c9a8cd29884235878ab38ab79d0ecbe7945d85b68ed24807e",
+  "dist_matches_production_build": true,
+  "source_matches_isolated_build_mirror": true,
+  "public_assets_match_export": true,
+  "evidence_viewer_missing_local_links": [],
   "required_files_checked": [
     "dist/index.html",
     "web/package.json",
@@ -14,20 +23,14 @@
     "web/scripts/plush-materials.py",
     "web/artwork/plush-source.webp",
     "web/evidence/continuity/index.html",
-    "web/evidence/continuity/validation.md",
+    "web/evidence/continuity/revision-validation.md",
     "web/evidence/continuity/plush-comparison.jpg",
     "web/evidence/continuity/plush-fallback-comparison.jpg",
     "web/evidence/continuity/plush-full-turn.jpg",
     "web/evidence/continuity/plush-fallback-full-turn.jpg",
+    "web/evidence/continuity/plush-poles.jpg",
+    "web/evidence/continuity/plush-fallback-poles.jpg",
     "web/evidence/continuity/reveal-webgl.mp4",
     "web/evidence/continuity/reveal-canvas.mp4"
-  ],
-  "root_export_files": 19,
-  "root_export_file_bytes": 1352551,
-  "dist_index_sha256": "3395b5b57ee816d8fbb0de4a2c9096733ca57dae5c618ea49fd3031b1cbd2ca8",
-  "git_diff_check": "passed",
-  "removed_superseded_evidence": [
-    "web/evidence/reveal-nft-tie.gif",
-    "web/evidence/iteration2/reveal-stopped.png"
   ]
 }

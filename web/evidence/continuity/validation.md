@@ -1,6 +1,6 @@
-# Sorphera continuity and timing validation
+# Initial Sorphera continuity and timing validation
 
-13 October 2026. This report covers the current website source and root `dist/`. Older evidence directories describe earlier iterations. All observations below are worker-side checks, not independent certification.
+Historical initial implementation report, 13 October 2026. The review reproduced pole-filtering and font-dependent layout defects after this run. See [revision validation](revision-validation.md) for their fixes, current measurements and limitations. The comparison sheets and clips in this directory have been regenerated from the revised export; the figures below are retained as the original run record. All observations are worker-side checks, not independent certification.
 
 ## Delivered behavior and boundaries
 

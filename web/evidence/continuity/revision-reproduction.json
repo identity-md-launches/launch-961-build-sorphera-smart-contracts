@@ -1,0 +1,152 @@
+{
+  "browser": "Chromium 154 / SwiftShader",
+  "before_layout_dejavu": [
+    {
+      "width": 390,
+      "route": "#home",
+      "scrollWidth": 390,
+      "boxes": {
+        ".hero-actions": {
+          "x": 20,
+          "y": 421.015625,
+          "width": 350,
+          "height": 108,
+          "top": 421.015625,
+          "right": 370,
+          "bottom": 529.015625,
+          "left": 20
+        },
+        ".jackpot-amount h3": {
+          "x": 44,
+          "y": 859.078125,
+          "width": 200,
+          "height": 36,
+          "top": 859.078125,
+          "right": 244,
+          "bottom": 895.078125,
+          "left": 44
+        }
+      }
+    },
+    {
+      "width": 320,
+      "route": "#play?game=0",
+      "scrollWidth": 321,
+      "boxes": {
+        ".play-layout": {
+          "x": 16,
+          "y": 951.859375,
+          "width": 288,
+          "height": 3127.515625,
+          "top": 951.859375,
+          "right": 304,
+          "bottom": 4079.375,
+          "left": 16
+        },
+        ".picker-panel": {
+          "x": 16,
+          "y": 951.859375,
+          "width": 305,
+          "height": 2218.109375,
+          "top": 951.859375,
+          "right": 321,
+          "bottom": 3169.96875,
+          "left": 16
+        },
+        ".ticket-slip": {
+          "x": 16,
+          "y": 3193.96875,
+          "width": 305,
+          "height": 885.40625,
+          "top": 3193.96875,
+          "right": 321,
+          "bottom": 4079.375,
+          "left": 16
+        }
+      }
+    },
+    {
+      "width": 320,
+      "route": "#play?game=1",
+      "scrollWidth": 321,
+      "boxes": {
+        ".play-layout": {
+          "x": 16,
+          "y": 951.859375,
+          "width": 288,
+          "height": 3145.515625,
+          "top": 951.859375,
+          "right": 304,
+          "bottom": 4097.375,
+          "left": 16
+        },
+        ".picker-panel": {
+          "x": 16,
+          "y": 951.859375,
+          "width": 305,
+          "height": 2236.109375,
+          "top": 951.859375,
+          "right": 321,
+          "bottom": 3187.96875,
+          "left": 16
+        },
+        ".ticket-slip": {
+          "x": 16,
+          "y": 3211.96875,
+          "width": 305,
+          "height": 885.40625,
+          "top": 3211.96875,
+          "right": 321,
+          "bottom": 4097.375,
+          "left": 16
+        }
+      }
+    }
+  ],
+  "before_pole_detail": {
+    "ethNorth": 6.778809290020379,
+    "ethSouth": 9.334972579897608,
+    "nftNorth": 7.024990946771346,
+    "nftSouth": 12.425902461140218
+  },
+  "before_fallback_detail": {
+    "ethNorth": 32.70516706485035,
+    "ethSouth": 37.63971678229259,
+    "nftNorth": 33.99283530719962,
+    "nftSouth": 51.181894631975915
+  },
+  "after_pole_detail": {
+    "ethNorth": 20.32680243892461,
+    "ethSouth": 25.880109303148245,
+    "nftNorth": 21.112951562836475,
+    "nftSouth": 34.99102260738557
+  },
+  "after_pole_ratios": {
+    "ethNorth": 0.6215165450345825,
+    "ethSouth": 0.6875744961854604,
+    "nftNorth": 0.6211000457018303,
+    "nftSouth": 0.6836601665293748
+  },
+  "front_crop_comparison": {
+    "crop": [
+      48,
+      32,
+      160,
+      192
+    ],
+    "results": {
+      "eth": {
+        "changedChannels": 0,
+        "maxDifference": 0,
+        "channels": 122880
+      },
+      "nft": {
+        "changedChannels": 0,
+        "maxDifference": 0,
+        "channels": 122880
+      }
+    }
+  },
+  "old_renderer_regression": "Failed as expected: ethNorth WebGL/Canvas detail 0.20727028474059858 < 0.45",
+  "new_renderer_regression": "Passed for all four poles (0.621\u20130.688)."
+}

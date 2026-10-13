@@ -1,25 +1,82 @@
-✔ frozen round anchors are Sunday 00:00/01:00 UTC with independent illustrative gaps (1.765738ms)
-✔ later rounds have distinct identities; old timestamps do not depend on the clock (0.312915ms)
-✔ strict cutoff applies to paid and reward lines while status is still Sales (0.993651ms)
-✔ window opens without claiming a request, a winner, or opening sales (0.269517ms)
-✔ known oracle and NFT tie states stay separate from elapsed time (0.261996ms)
-✔ confirmed or cancelled state outranks a client clock before the reference window (32.468183ms)
-✔ sales pause does not move times or spend any Passport reward (1.284193ms)
-✔ missing earliestDraw is reported honestly (0.343682ms)
-✔ countdown adds seconds only in final hour, recovers from clock jumps, never negative (0.317606ms)
-✔ calendar actions have separate UTC times, UIDs, labels, exact round URLs and caveat (2.123791ms)
-✔ ContractAdapter preserves the getRound timestamps without ABI changes (0.650165ms)
-✔ rollover never renders ticket zero and fulfilled randomness is not a final result (0.515234ms)
-ℹ tests 12
-ℹ suites 0
-ℹ pass 12
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 3276.730315
-npm notice
-npm notice New major version of npm available! 11.19.0 -> 12.2.0
-npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
-npm notice To update run: npm install -g npm@12.2.0
-npm notice
+TAP version 13
+# Subtest: frozen round anchors are Sunday 00:00/01:00 UTC with independent illustrative gaps
+ok 1 - frozen round anchors are Sunday 00:00/01:00 UTC with independent illustrative gaps
+  ---
+  duration_ms: 1.440358
+  type: 'test'
+  ...
+# Subtest: later rounds have distinct identities; old timestamps do not depend on the clock
+ok 2 - later rounds have distinct identities; old timestamps do not depend on the clock
+  ---
+  duration_ms: 0.264496
+  type: 'test'
+  ...
+# Subtest: strict cutoff applies to paid and reward lines while status is still Sales
+ok 3 - strict cutoff applies to paid and reward lines while status is still Sales
+  ---
+  duration_ms: 0.585988
+  type: 'test'
+  ...
+# Subtest: window opens without claiming a request, a winner, or opening sales
+ok 4 - window opens without claiming a request, a winner, or opening sales
+  ---
+  duration_ms: 0.148121
+  type: 'test'
+  ...
+# Subtest: known oracle and NFT tie states stay separate from elapsed time
+ok 5 - known oracle and NFT tie states stay separate from elapsed time
+  ---
+  duration_ms: 0.28463
+  type: 'test'
+  ...
+# Subtest: confirmed or cancelled state outranks a client clock before the reference window
+ok 6 - confirmed or cancelled state outranks a client clock before the reference window
+  ---
+  duration_ms: 35.014997
+  type: 'test'
+  ...
+# Subtest: sales pause does not move times or spend any Passport reward
+ok 7 - sales pause does not move times or spend any Passport reward
+  ---
+  duration_ms: 0.995817
+  type: 'test'
+  ...
+# Subtest: missing earliestDraw is reported honestly
+ok 8 - missing earliestDraw is reported honestly
+  ---
+  duration_ms: 0.346888
+  type: 'test'
+  ...
+# Subtest: countdown adds seconds only in final hour, recovers from clock jumps, never negative
+ok 9 - countdown adds seconds only in final hour, recovers from clock jumps, never negative
+  ---
+  duration_ms: 0.561641
+  type: 'test'
+  ...
+# Subtest: calendar actions have separate UTC times, UIDs, labels, exact round URLs and caveat
+ok 10 - calendar actions have separate UTC times, UIDs, labels, exact round URLs and caveat
+  ---
+  duration_ms: 1.629187
+  type: 'test'
+  ...
+# Subtest: ContractAdapter preserves the getRound timestamps without ABI changes
+ok 11 - ContractAdapter preserves the getRound timestamps without ABI changes
+  ---
+  duration_ms: 0.482045
+  type: 'test'
+  ...
+# Subtest: rollover never renders ticket zero and fulfilled randomness is not a final result
+ok 12 - rollover never renders ticket zero and fulfilled randomness is not a final result
+  ---
+  duration_ms: 0.35556
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1001.423236

@@ -10,14 +10,14 @@
 </head>
 <body><main>
 <h1>Sorphera: the whole globe</h1>
-<p>Current delivery evidence, 13 October 2026. The blue/pink main ball and pink/cream bonus share the photo-derived mesh, felt and raised applique through a full turn.</p>
-<nav><a href="validation.md">Checks and limitations</a><a href="../../../dist/index.html">Open the static website</a><a href="../revision/plush-comparison.jpg">PR #7 defect comparison</a></nav>
+<p>Review revision evidence, 13 October 2026. The blue/pink main ball and pink/cream bonus share the photo-derived mesh, felt and raised applique through a full turn.</p>
+<nav><a href="revision-validation.md">Checks and limitations</a><a href="../../../dist/index.html">Open the static website</a><a href="../revision/plush-comparison.jpg">PR #7 defect comparison</a></nav>
 <h2>Normal-speed reveal, WebGL</h2>
-<p>Uninterrupted entry, turn, stop, hold, landing and the separate NFT tie-break. Muted by default. 960×760, 25 fps, 27.80 seconds.</p>
+<p>Uninterrupted entry, turn, stop, hold, landing and the separate NFT tie-break. Muted by default. 960×760, 25 fps, 24.48 seconds.</p>
 <video controls muted playsinline preload="metadata" poster="globe-away.jpg" aria-label="Normal-speed WebGL sample reveal with blue main balls and pink bonus"><source src="reveal-webgl.mp4" type="video/mp4"><a href="reveal-webgl.mp4">Download the WebGL recording</a></video>
 <p>Sequence description: three blue balls enter with their badges facing away, rotate, stop on 7, 12 and 19, hold and travel to their slots. The pink bonus follows on 4. The sample then requests a separate tie-break before confirming ticket 118. These are supplied simulation results.</p>
 <h2>Normal-speed reveal, software fallback</h2>
-<p>The same interaction with WebGL disabled. 960×760, 25 fps, 25.08 seconds.</p>
+<p>The same interaction with WebGL disabled. 960×760, 25 fps, 22.64 seconds.</p>
 <video controls muted playsinline preload="metadata" poster="globe-away.jpg" aria-label="Normal-speed Canvas software sample reveal"><source src="reveal-canvas.mp4" type="video/mp4"><a href="reveal-canvas.mp4">Download the software recording</a></video>
 <p class="note">The clips preserve original timestamps. Headless rendering has occasional stalls; 25 fps encoding does not promise 25 unique rendered frames every second. <a href="motion-summary.json">Actual frame intervals and phase timings</a> are included. No acceleration, cut or image swap hides the back.</p>
 <h2>Actual picker and draw sizes</h2>
@@ -28,15 +28,21 @@
 <p>Each palette at 0°, 45°, 90°, 135°, 180°, 225°, 270° and 315°, followed by north and south pole views. The front badge is not duplicated on the unseen hemisphere.</p>
 <figure><div class="sheet" tabindex="0" aria-label="Scrollable WebGL full turn"><img src="plush-full-turn.jpg" alt="Blue and pink WebGL globes at eight 45-degree intervals and both poles"></div><figcaption><a href="plush-full-turn.jpg">WebGL full turn</a></figcaption></figure>
 <figure><div class="sheet" tabindex="0" aria-label="Scrollable software full turn"><img src="plush-fallback-full-turn.jpg" alt="Blue and pink Canvas globes at eight 45-degree intervals and both poles"></div><figcaption><a href="plush-fallback-full-turn.jpg">Software full turn</a></figcaption></figure>
+<h2>Polar filtering revision, at 256px</h2>
+<p>Each row shows blue north, blue south, pink north and pink south. The original longitude mip footprint blurred the centres into spokes. The revised renderer samples the same albedo through continuous planar coordinates at the caps, retaining trilinear filtering and antialiasing.</p>
+<figure><div class="sheet" tabindex="0" aria-label="Original polar defect"><img src="plush-poles-before.jpg" alt="Before: four WebGL poles show smooth radial fans"></div><figcaption>Before: reproduced original renderer.</figcaption></figure>
+<figure><div class="sheet" tabindex="0" aria-label="Corrected WebGL poles"><img src="plush-poles.jpg" alt="After: blue and pink WebGL poles retain ordinary felt fibres through their centres"></div><figcaption>After: continuous polar sampling, same maps.</figcaption></figure>
+<figure><div class="sheet" tabindex="0" aria-label="Software pole comparison"><img src="plush-fallback-poles.jpg" alt="Independent software-rendered north and south poles for both palettes"></div><figcaption>Software comparison, unchanged material family.</figcaption></figure>
 <h2>Schedules and checkout</h2>
 <p>Controlled-clock screenshots use America/New_York, with EDT labels and UTC values internally. The countdowns are factual simulated schedule data; no result appears at zero.</p>
 <figure><a href="upcoming-desktop.jpg"><img style="width:100%;height:auto" src="upcoming-desktop.jpg" alt="Desktop upcoming Draw Room prioritizes draw-window time with sales cutoff alongside"></a></figure>
 <div class="screens">
-<figure><a href="home-390.jpg"><img src="home-390.jpg" alt="390px Home first screen shows Sorphera, tagline, Make your picks and the first jackpot"></a><figcaption>Home first screen at 390px.</figcaption></figure>
+<figure><a href="home-390.jpg"><img src="home-390.jpg" alt="390px Home first screen shows Sorphera, tagline, Make your picks and the first jackpot"></a><figcaption>Home at 390px with DejaVu Sans fallback; both actions fit one row. <a href="home-390-arial.jpg">Arial fallback comparison</a>.</figcaption></figure>
 <figure><a href="draw-390.jpg"><img src="draw-390.jpg" alt="390px Draw Room with NFT round identity, both timers, calendar actions and separate sample replays"></a><figcaption>Upcoming NFT round at 390px.</figcaption></figure>
 <figure><a href="tickets-390.jpg"><img src="tickets-390.jpg" alt="My tickets with saved exact-round entry"></a><figcaption>Saved tickets at 390px.</figcaption></figure>
 <figure><a href="play-schedule-390.jpg"><img src="play-schedule-390.jpg" alt="Play round facts show independent NFT sales and draw-window times"></a><figcaption>Compact Play schedule.</figcaption><a href="checkout-cutoff.jpg"><img src="checkout-cutoff.jpg" alt="Open checkout at cutoff displays Entries closed and disables confirmation"></a><figcaption>Previously open checkout at cutoff.</figcaption></figure>
 </div>
 <p><a href="sorphera-nft-42-draw-window.ics">Captured draw-window event</a> · <a href="sorphera-nft-42-sales-closing.ics">Captured sales-closing event</a>. These test captures contain a local preview URL; the website generates the exact link for the host where it runs.</p>
-<p><a href="validation.md">Full results, six-domain design review, source findings and limitations</a>.</p>
+<div class="screens"><figure><a href="play-320-eth.jpg"><img src="play-320-eth.jpg" alt="ETH Play card fits a 320px viewport with DejaVu Sans"></a><figcaption>ETH Play, 320px.</figcaption></figure><figure><a href="play-320-nft.jpg"><img src="play-320-nft.jpg" alt="NFT Play card fits a 320px viewport with DejaVu Sans"></a><figcaption>NFT Play, 320px.</figcaption></figure></div>
+<p><a href="revision-validation.md">Full results, six-domain design review, source findings and limitations</a>.</p>
 </main></body></html>

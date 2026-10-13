@@ -66,6 +66,8 @@ export function planBudget(
   count: number,
   feeWei: bigint = demoQuote.feeWei,
   usdPerEth = demoQuote.usdPerEth,
+  /** Reward (free) tickets in the same purchase: priced at zero, fee still applies. */
+  freeCount = 0,
 ): BudgetPlan {
   const parsed = budgetCents(limitUsd);
   const valid = parsed !== null;
@@ -78,9 +80,10 @@ export function planBudget(
   if (valid) {
     for (let n = 1; n <= 100 && cost(n) <= limit; n++) affordable = n;
   }
+  const entries = count + freeCount;
   const subtotalWei = BigInt(count) * priceWei;
-  const allInWei = count > 0 ? subtotalWei + feeWei : 0n;
-  const allInCents = cost(count);
+  const allInWei = entries > 0 ? subtotalWei + feeWei : 0n;
+  const allInCents = entries > 0 ? usdCents(allInWei, usdPerEth) : 0n;
   const subtotalCents = usdCents(subtotalWei, usdPerEth);
   const remainingCents = limit - allInCents;
   const overBudget = allInCents > limit;
@@ -95,9 +98,9 @@ export function planBudget(
     ? reason
     : overBudget
       ? `This purchase is ${cents(-remainingCents)} over your ${cents(limit)} budget. Remove an entry or change your budget.`
-      : count < 1
+      : entries < 1
         ? "Add an entry to review this purchase."
-        : count > 100
+        : entries > 100
           ? "Each purchase is limited to 100 tickets."
           : "";
   return {
@@ -111,7 +114,7 @@ export function planBudget(
     allInWei,
     subtotalCents,
     // Reconcile displayed cents to the single rounded total.
-    feeCents: count > 0 ? allInCents - subtotalCents : 0n,
+    feeCents: entries > 0 ? allInCents - subtotalCents : 0n,
     allInCents,
     remainingCents,
     overBudget,
@@ -156,6 +159,8 @@ export interface Basket {
   game: Game;
   round: bigint;
   lines: Line[];
+  /** Passport reward tickets chosen for this round. Priced at zero. */
+  rewards?: Line[];
 }
 export const basketKey = (game: Game, round: bigint) => `${game}:${round}`;
 export type Baskets = Record<string, Basket>;
@@ -167,12 +172,31 @@ export function setBasketLines(
 ): Baskets {
   const key = basketKey(game, round);
   const next = { ...baskets };
-  if (!lines.length) delete next[key];
-  else next[key] = { game, round, lines };
+  const rewards = baskets[key]?.rewards ?? [];
+  if (!lines.length && !rewards.length) delete next[key];
+  else next[key] = { game, round, lines, rewards };
+  return next;
+}
+export function setBasketRewards(
+  baskets: Baskets,
+  game: Game,
+  round: bigint,
+  rewards: Line[],
+): Baskets {
+  const key = basketKey(game, round);
+  const next = { ...baskets };
+  const lines = baskets[key]?.lines ?? [];
+  if (!lines.length && !rewards.length) delete next[key];
+  else next[key] = { game, round, lines, rewards };
   return next;
 }
 export const basketCount = (b?: Basket) =>
   b ? b.lines.reduce((n, l) => n + l.quantity, 0) : 0;
+export const basketRewardCount = (b?: Basket) =>
+  b?.rewards ? b.rewards.reduce((n, l) => n + l.quantity, 0) : 0;
+/** Reward tickets reserved in every saved basket, so one reward is never spent twice. */
+export const reservedRewards = (baskets: Baskets) =>
+  Object.values(baskets).reduce((n, b) => n + basketRewardCount(b), 0);
 export const basketEntries = (b?: Basket) => (b ? expandLines(b.lines) : []);
 
 /** iCalendar text for the closing time. Pure data; download is a user action. */

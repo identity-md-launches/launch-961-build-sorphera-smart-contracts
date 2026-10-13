@@ -6,6 +6,17 @@ import Tickets, { type ClaimMemory } from "./Tickets";
 import { initialTickets, type DemoTicket } from "./fixtures";
 import config from "./deployment.json";
 import type { Baskets } from "./budget";
+import {
+  IDENTITIES,
+  emptyRecord,
+  loadIdentity,
+  loadRecord,
+  sampleRecord,
+  saveIdentity,
+  saveRecord,
+  type IdentityId,
+  type PassportRecord,
+} from "./passport";
 const DrawRoom = lazy(() => import("./DrawRoom"));
 const LiveWorkspace = lazy(() => import("./LiveWorkspace"));
 const links = [
@@ -33,6 +44,41 @@ export default function App() {
   // never moves entries between games.
   const [baskets, setBaskets] = useState<Baskets>({});
   const [limit, setLimit] = useState("30");
+  // Passport records are isolated per demo identity. Demo wallet A starts
+  // with labelled sample history; B starts empty. Switching never transfers
+  // progress, tickets or baskets.
+  const [identity, setIdentity] = useState<IdentityId>(loadIdentity);
+  const [passport, setPassportState] = useState<PassportRecord>(() =>
+    loadStored(loadIdentity()),
+  );
+  function loadStored(id: IdentityId): PassportRecord {
+    const stored = loadRecord(id);
+    if (stored.purchases.length || stored.redemptions.length) return stored;
+    try {
+      if (localStorage.getItem(`sorphera.demo.passport.v1:${id}`))
+        return emptyRecord();
+    } catch {
+      // Storage unavailable: fall through to the sample fixture.
+    }
+    return id === "demo-a" ? sampleRecord() : emptyRecord();
+  }
+  const setPassport = (record: PassportRecord) => {
+    setPassportState(record);
+    saveRecord(identity, record);
+  };
+  function switchIdentity(id: IdentityId) {
+    if (id === identity) return;
+    saveIdentity(id);
+    setIdentity(id);
+    setPassportState(loadStored(id));
+    setTickets(initialTickets);
+    setBaskets({});
+    setClaimMemory({ results: {}, claimed: [], queued: [] });
+  }
+  useEffect(() => {
+    saveRecord(identity, passport);
+    // Persist the seeded sample once so the first purchase is not re-seeded.
+  }, [identity, passport]);
   useEffect(() => {
     const change = () => {
       setView(route());
@@ -49,7 +95,7 @@ export default function App() {
     return () => window.removeEventListener("hashchange", change);
   }, []);
   useEffect(() => {
-    document.title = `Sorphera${view.path === "home" ? "" : ` · ${links.find(([p]) => p === view.path)?.[1] ?? "Explore"}`} — ${config.mode === "demo" ? "Demo" : "Ethereum mainnet"}`;
+    document.title = `Sorphera${view.path === "home" ? "" : ` · ${links.find(([p]) => p === view.path)?.[1] ?? "Explore"}`}: ${config.mode === "demo" ? "demo" : "Ethereum mainnet"}`;
   }, [view.path]);
   return (
     <>
@@ -124,7 +170,7 @@ export default function App() {
           {config.mode !== "demo" ? (
             <LiveWorkspace />
           ) : view.path === "home" ? (
-            <Home />
+            <Home passport={passport} />
           ) : view.path === "play" ? (
             <Play
               key={view.params.get("game")}
@@ -134,6 +180,9 @@ export default function App() {
               limit={limit}
               onLimit={setLimit}
               onTickets={(added) => setTickets([...added, ...tickets])}
+              passport={passport}
+              onPassport={setPassport}
+              identity={identity}
             />
           ) : view.path === "draw" ? (
             <DrawRoom
@@ -145,6 +194,11 @@ export default function App() {
               tickets={tickets}
               memory={claimMemory}
               onMemory={setClaimMemory}
+              passport={passport}
+              onPassport={setPassport}
+              identityLabel={
+                IDENTITIES.find((i) => i.id === identity)?.label ?? identity
+              }
             />
           ) : view.path === "history" ? (
             <History />
@@ -174,9 +228,7 @@ export default function App() {
           <a href="#faq">The finer details ↗</a>
         </div>
         <div className="footer-bottom">
-          <span>
-            Weekly ETH &amp; NFT lottery ball jackpots. Powered by FWA.
-          </span>
+          <span>Powered by FWA</span>
           <span>
             {config.mode === "demo"
               ? "Demo experience · Synthetic data · No real prizes"
@@ -200,6 +252,23 @@ export default function App() {
           <p>
             Ethereum mainnet deployment details are not configured. Live wallet
             actions are unavailable.
+          </p>
+          <label>
+            Demo wallet for passport and tickets
+            <select
+              value={identity}
+              onChange={(e) => switchIdentity(e.target.value as IdentityId)}
+            >
+              {IDENTITIES.map((i) => (
+                <option key={i.id} value={i.id}>
+                  {i.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <p className="fine">
+            Passport progress is demo data stored in this browser per demo
+            wallet. Switching wallets never transfers stamps or rewards.
           </p>
           <a
             className="button primary full"

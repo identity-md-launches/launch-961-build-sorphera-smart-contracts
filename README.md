@@ -18,7 +18,9 @@ npm run preview
 
 `npm run build` writes root `dist/`. Publish that complete directory with the Website workflow or any static/IPFS host; assets are relative and routes use hashes. The worker attempted IMD CLI publishing, but the service refused it with **503 `member_sites_closed`**; public publication is still pending. The local preview and exported pages were tested; no public preview URL is invented.
 
-See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [current checks and limitations](web/evidence/iteration/validation.md), and [before/after screenshots and continuous reveal clip](web/evidence/iteration/index.html). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
+Iteration 2 (2026-10-13) adds one plush globe asset family matched to the brand photography, the demo/simulated **Passport: every 12 paid tickets earns 1 free ticket** (shared across both games, rewards usable in either; see [the contracts handoff](docs/PASSPORT-HANDOFF.md)), and the three-globe **Sorphera Atlas** concept teaser above the homepage footer. Validation for this iteration: [web/evidence/iteration2/validation.md](web/evidence/iteration2/validation.md).
+
+See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [previous checks and limitations](web/evidence/iteration/validation.md), and [before/after screenshots and continuous reveal clip](web/evidence/iteration/index.html). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
 
 Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. A labelled demo website is now included; no new token/pool. No transaction was broadcast and public sales remain disabled.
 

@@ -480,7 +480,9 @@ export default function DrawRoom({
                 >
                   <span className="fine">
                     {x.source === "mine"
-                      ? "Your entry"
+                      ? x.reward
+                        ? "Your reward ticket"
+                        : "Your entry"
                       : `Sample ticket #${x.id}`}
                   </span>
                   <Balls

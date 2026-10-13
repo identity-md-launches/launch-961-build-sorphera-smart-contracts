@@ -761,3 +761,113 @@ test("suggestions and checkout use the same rounded exact-wei total", () => {
   assert.equal(p.canPurchase, false);
   assert.equal(p.subtotalCents + p.feeCents, p.allInCents);
 });
+
+// ----- Passport: every 12 paid tickets earns 1 free ticket -----------------
+import {
+  CARD,
+  STANDARD_PRICE,
+  earn,
+  emptyRecord,
+  passportView,
+  projectPurchase,
+  recordPurchase,
+  redeemReward,
+  sampleRecord,
+  setPurchaseState,
+  spendableRewards,
+  type PassportRecord,
+} from "./passport";
+import { reservedRewards, setBasketRewards } from "./budget";
+
+const paidPurchase = (
+  id: string,
+  paid: number,
+  state: "pending" | "finalized" | "refunded" | "failed" = "finalized",
+  price = STANDARD_PRICE,
+) => ({ id, game: 0 as const, round: "42", price: String(price), paid, state, at: 0 });
+
+test("passport boundaries: 11+1, 11+3 and 24 tickets", () => {
+  assert.deepEqual(earn(11), { rewards: 0, stamps: 11 });
+  assert.deepEqual(earn(12), { rewards: 1, stamps: 0 });
+  assert.deepEqual(earn(14), { rewards: 1, stamps: 2 });
+  assert.deepEqual(earn(24), { rewards: 2, stamps: 0 });
+  let r = recordPurchase(emptyRecord(), paidPurchase("a", 11));
+  assert.equal(passportView(r).available, 0);
+  assert.equal(passportView(r).remaining, 1);
+  r = recordPurchase(r, paidPurchase("b", 1));
+  assert.equal(passportView(r).available, 1);
+  assert.equal(passportView(r).stamps, 0);
+  let r2 = recordPurchase(recordPurchase(emptyRecord(), paidPurchase("a", 11)), paidPurchase("b", 3));
+  assert.deepEqual([passportView(r2).available, passportView(r2).stamps], [1, 2]);
+  let r3 = recordPurchase(emptyRecord(), paidPurchase("a", 24));
+  assert.deepEqual([passportView(r3).available, passportView(r3).stamps], [2, 0]);
+  assert.equal(CARD, 12);
+});
+
+test("passport excludes free, pending, refunded, failed and off-price tickets", () => {
+  let r = recordPurchase(emptyRecord(), paidPurchase("p", 12, "pending"));
+  assert.equal(passportView(r).available, 0, "pending is refundable, not earned");
+  assert.equal(passportView(r).pending, 12);
+  assert.equal(passportView(r).pendingStamps, 12);
+  r = setPurchaseState(r, "p", "finalized");
+  assert.equal(passportView(r).available, 1);
+  r = recordPurchase(r, paidPurchase("x", 12, "refunded"));
+  r = recordPurchase(r, paidPurchase("y", 12, "failed"));
+  r = recordPurchase(r, paidPurchase("z", 12, "finalized", 1000000000000000n));
+  assert.equal(passportView(r).available, 1, "refunded/failed/cheap tickets earn nothing");
+  // A free-only purchase records 0 paid tickets and earns no stamp.
+  r = recordPurchase(r, paidPurchase("free", 0));
+  assert.equal(passportView(r).stamps, 0);
+  // Refunding a finalized purchase removes its stamps again.
+  r = setPurchaseState(r, "p", "refunded");
+  assert.equal(passportView(r).earned, 0);
+});
+
+test("passport counts a purchase once and consumes a reward once", () => {
+  let r = recordPurchase(emptyRecord(), paidPurchase("same", 12));
+  r = recordPurchase(r, paidPurchase("same", 12));
+  r = recordPurchase(r, paidPurchase("same", 12));
+  assert.equal(passportView(r).finalized, 12, "retries and reloads never double count");
+  const redemption = { id: "rd-1", game: 1 as const, round: "42", pick: { main: [1, 2, 3] as [number, number, number], bonus: 1 }, at: 0 };
+  const used = redeemReward(r, redemption, STANDARD_PRICE);
+  assert.equal(passportView(used).available, 0);
+  assert.equal(passportView(used).used, 1);
+  assert.equal(redeemReward(used, redemption, STANDARD_PRICE), used, "same id is idempotent");
+  assert.throws(() => redeemReward(used, { ...redemption, id: "rd-2" }, STANDARD_PRICE), /No free ticket/);
+  assert.throws(() => redeemReward(r, { ...redemption, id: "rd-3" }, 1000000000000000n), /standard ticket price/);
+  assert.equal(spendableRewards(r, 5), 1, "never more than earned");
+  assert.equal(spendableRewards(used, 1), 0);
+});
+
+test("projected rewards are shown but not spendable; carry remains across rounds", () => {
+  const r = recordPurchase(emptyRecord(), paidPurchase("a", 8));
+  assert.deepEqual(projectPurchase(r, 4, STANDARD_PRICE), { eligible: true, stamps: 0, rewards: 1 });
+  assert.deepEqual(projectPurchase(r, 7, STANDARD_PRICE), { eligible: true, stamps: 3, rewards: 1 });
+  assert.equal(projectPurchase(r, 4, 7000000000000000n).eligible, false);
+  assert.equal(passportView(r).available, 0, "projection does not earn");
+  assert.equal(spendableRewards(r, 1), 0);
+  const sample = sampleRecord();
+  const v = passportView(sample);
+  assert.deepEqual([v.stamps, v.pending, v.remaining, v.available], [8, 3, 4, 0]);
+});
+
+test("free-only checkout keeps the network fee and reward baskets stay separate per game", () => {
+  const free = planBudget("30", STANDARD_PRICE, 0, undefined, undefined, 1);
+  assert.equal(free.subtotalWei, 0n);
+  assert.equal(free.allInWei, 400000000000000n, "fee still applies, no gas-free promise");
+  assert.equal(free.canPurchase, true);
+  const none = planBudget("30", STANDARD_PRICE, 0);
+  assert.equal(none.canPurchase, false);
+  const mixed = planBudget("30", STANDARD_PRICE, 2, undefined, undefined, 1);
+  assert.equal(mixed.subtotalWei, 2n * STANDARD_PRICE);
+  assert.equal(mixed.allInWei, 2n * STANDARD_PRICE + 400000000000000n);
+  const line = { main: [1, 2, 3] as [number, number, number], bonus: 1, quantity: 1 };
+  let baskets = setBasketRewards({}, 0, 42n, [line]);
+  baskets = setBasketLines(baskets, 1, 42n, [line]);
+  assert.equal(reservedRewards(baskets), 1);
+  assert.equal(baskets["1:42"].rewards?.length ?? 0, 0, "reward never moves between games");
+  baskets = setBasketRewards(baskets, 0, 42n, []);
+  assert.equal(baskets["0:42"], undefined, "empty basket is dropped");
+  const record: PassportRecord = emptyRecord();
+  assert.equal(passportView(record).available, 0);
+});

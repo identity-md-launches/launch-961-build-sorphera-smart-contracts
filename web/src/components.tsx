@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import type { Pick } from "./core";
-import PlushGlobe from "./PlushGlobe";
+import PlushGlobe, { type GlobeKind } from "./PlushGlobe";
 export const asset = (name: string) =>
   `${import.meta.env.BASE_URL}brand/${name}.webp`;
 export function Globe({
@@ -9,7 +9,7 @@ export function Globe({
   size = "normal",
 }: {
   number?: number | string;
-  kind?: "eth" | "nft";
+  kind?: GlobeKind;
   size?: "small" | "normal" | "large";
 }) {
   return (

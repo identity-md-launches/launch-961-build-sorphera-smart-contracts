@@ -4,6 +4,8 @@ import { demoRounds, scenarios } from "./fixtures";
 import { eth, replay } from "./core";
 import { demoQuote, localTime, usd } from "./budget";
 import { customerStatus } from "./reveal";
+import { PassportCard } from "./Passport";
+import { type PassportRecord } from "./passport";
 export function Countdown({ cutoff }: { cutoff: number }) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -19,7 +21,7 @@ export function Countdown({ cutoff }: { cutoff: number }) {
     </span>
   );
 }
-export function Home() {
+export function Home({ passport }: { passport: PassportRecord }) {
   return (
     <>
       <section className="hero">
@@ -70,7 +72,7 @@ export function Home() {
             height="661"
             fetchPriority="high"
           />
-          <span className="art-label">A LITTLE LUCK GOES A LONG WAY.</span>
+          <span className="art-label">A little luck goes a long way.</span>
         </div>
       </section>
       <section className="jackpot-section" aria-labelledby="jackpots-title">
@@ -179,6 +181,23 @@ export function Home() {
             </p>
           </article>
         </div>
+        <div className="buy12">
+          <div className="buy12-stamps" aria-hidden="true">
+            <Globe size="small" number={12} />
+            <Globe size="small" kind="nft" number="+1" />
+          </div>
+          <div>
+            <h3>Buy 12, get 1 free</h3>
+            <p>
+              Every 12 paid tickets stamps a passport card and earns 1 free
+              ticket in either game. Demo: simulated rewards.
+            </p>
+          </div>
+          <a className="button" href="#tickets">
+            See my passport <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <PassportCard record={passport} compact heading="Your passport" />
         <a className="inline-link" href="#faq">
           A few more things to know <span aria-hidden="true">↗</span>
         </a>
@@ -230,6 +249,30 @@ export function Home() {
           Explore the demo ↗
         </a>
       </div>
+      <section className="atlas" aria-labelledby="atlas-title">
+        <div className="atlas-copy">
+          <h2 id="atlas-title">Sorphera Atlas</h2>
+          <p className="atlas-line">A few worlds up our sleeve.</p>
+          <p>An early peek at Sorphera Atlas. For now, just enjoy the view.</p>
+          <span className="fine">Concept artwork.</span>
+        </div>
+        <ul className="atlas-globes">
+          {(
+            [
+              ["ca", "CA", "Canada", "Plush maple-red globe with cream continents"],
+              ["jp", "JP", "Japan", "Plush blossom-pink globe with red continents"],
+              ["br", "BR", "Brazil", "Plush green globe with yellow continents"],
+            ] as const
+          ).map(([kind, code, name, alt]) => (
+            <li key={kind}>
+              <span role="img" aria-label={`${name}: ${alt}, badge ${code}`}>
+                <Globe size="large" kind={kind} number={code} />
+              </span>
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
     </>
   );
 }

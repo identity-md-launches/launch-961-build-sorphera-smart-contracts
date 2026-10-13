@@ -5,6 +5,14 @@ import type { ClaimResult } from "./core";
 import { gameName } from "./Play";
 import { localTime } from "./budget";
 import { demoRounds } from "./fixtures";
+import {
+  CARD,
+  eligiblePrice,
+  passportView,
+  setPurchaseState,
+  type PassportRecord,
+} from "./passport";
+import { PassportCard, REWARD_RULE } from "./Passport";
 export interface ClaimMemory {
   results: Record<string, ClaimResult[]>;
   claimed: string[];
@@ -12,7 +20,9 @@ export interface ClaimMemory {
 }
 const kindLabel = (t: DemoTicket) =>
   t.kind === "entry"
-    ? "Entered"
+    ? t.reward
+      ? "Reward ticket"
+      : "Entered"
     : t.kind === "expired"
       ? "Expired"
       : t.kind === "refund"
@@ -24,10 +34,16 @@ export default function Tickets({
   tickets,
   memory,
   onMemory,
+  passport,
+  onPassport,
+  identityLabel,
 }: {
   tickets: DemoTicket[];
   memory: ClaimMemory;
   onMemory: (m: ClaimMemory) => void;
+  passport: PassportRecord;
+  onPassport: (r: PassportRecord) => void;
+  identityLabel: string;
 }) {
   const [game, setGame] = useState("all");
   const [round, setRound] = useState("all");
@@ -104,9 +120,15 @@ export default function Tickets({
             {gameName(t.game)} / Round {String(t.round)}
           </span>
           <h3>
-            {t.source === "mine" ? "Your demo entry" : `Sample ticket #${t.id}`}
+            {t.source === "mine"
+              ? t.reward
+                ? "Your reward ticket"
+                : "Your demo entry"
+              : `Sample ticket #${t.id}`}
           </h3>
-          <span className="pill">{kindLabel(t)}</span>
+          <span className={`pill ${t.reward ? "pink-pill" : ""}`}>
+            {kindLabel(t)}
+          </span>
         </div>
         <Balls pick={t.pick} />
         <div className="claim-summary">
@@ -115,6 +137,7 @@ export default function Tickets({
             <span className="fine">
               Entries close {localTime(open.cutoff)}. Results follow the
               confirmed draw; no result time is promised.
+              {t.reward && ` ${REWARD_RULE} Same results and prize rights.`}
             </span>
           )}
           {t.kind !== "entry" && t.kind !== "expired" && (
@@ -150,8 +173,98 @@ export default function Tickets({
         description="Your entries, results and claimable prizes, all in one place."
       />
       <p className="notice">
-        Demo - no real tickets or prizes. Your entries reset when you reload.
+        Demo - no real tickets or prizes. Your entries reset when you reload;
+        passport progress is demo data kept in this browser for{" "}
+        {identityLabel}.
       </p>
+      <PassportCard record={passport} />
+      <details className="passport-ledger">
+        <summary>Passport ledger: pending, finalized and refunded</summary>
+        <p className="fine">
+          One stamp per eligible paid ticket at the standard price. Free,
+          refunded, cancelled or failed tickets earn nothing. Demo controls
+          below simulate finality and refunds; contracts will decide the real
+          rules.
+        </p>
+        <table className="ledger">
+          <thead>
+            <tr>
+              <th scope="col">Purchase</th>
+              <th scope="col">Paid tickets</th>
+              <th scope="col">State</th>
+              <th scope="col">Stamps</th>
+              <th scope="col">Demo control</th>
+            </tr>
+          </thead>
+          <tbody>
+            {passport.purchases.map((p) => {
+              const eligible = eligiblePrice(BigInt(p.price));
+              return (
+                <tr key={p.id}>
+                  <td>
+                    {p.sample ? "Sample · " : ""}
+                    {gameName(p.game)} round {p.round}
+                  </td>
+                  <td>{p.paid}</td>
+                  <td>{p.state}</td>
+                  <td>
+                    {p.state === "finalized" && eligible
+                      ? p.paid
+                      : p.state === "pending" && eligible
+                        ? `${p.paid} pending`
+                        : "0"}
+                  </td>
+                  <td>
+                    {p.state === "pending" ? (
+                      <span className="row wrap">
+                        <button
+                          className="text-button"
+                          onClick={() =>
+                            onPassport(
+                              setPurchaseState(passport, p.id, "finalized"),
+                            )
+                          }
+                        >
+                          Simulate finality
+                        </button>
+                        <button
+                          className="text-button"
+                          onClick={() =>
+                            onPassport(
+                              setPurchaseState(passport, p.id, "refunded"),
+                            )
+                          }
+                        >
+                          Simulate refund
+                        </button>
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            {passport.redemptions.map((r) => (
+              <tr key={r.id}>
+                <td>
+                  Reward used · {gameName(r.game)} round {r.round}
+                </td>
+                <td>0</td>
+                <td>redeemed</td>
+                <td>0</td>
+                <td>—</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="fine">
+          Lifetime: {passportView(passport).finalized} finalized paid tickets,{" "}
+          {passportView(passport).earned} rewards earned,{" "}
+          {passportView(passport).used} used. Each {CARD} tickets earns one
+          reward; leftover stamps carry to the next card.
+        </p>
+      </details>
       <div className="filters">
         <label>
           Jackpot

@@ -201,6 +201,8 @@ export interface DemoTicket {
   source: "sample" | "mine";
   /** Set when the customer purchased: wei paid for the whole basket. */
   purchasedAt?: number;
+  /** Passport reward ticket: a free promotional entry into the same funded draw. */
+  reward?: boolean;
 }
 export const initialTickets: DemoTicket[] = [
   {

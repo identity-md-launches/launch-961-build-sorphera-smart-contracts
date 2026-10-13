@@ -33,6 +33,22 @@ For the IdentityMD Website workflow, select this repository/source submission an
 
 **Publication result:** `imd site publish dist --name sorphera-a-world-of-possibility` bundled the export (601,174 bytes) but exited 1: **503 `member_sites_closed`: “this plane names no member sites.”** No updated public URL or CID was returned. The supplied existing demo is https://sorphera-a-world-of-possibility.sites.imd.fun/; this worker did not update it. The launch platform can publish the committed export under its existing site name after submission. See `evidence/iteration/publication.json`. The temporary local preview is not a public website URL.
 
+## Visual revision (2026-10-13)
+
+The shared globe now uses a photo-derived displaced cloth mesh, preserving felt detail, raised applique and a blank padded badge. Dynamic rounded ink follows the curved surface; front renders remain cached by kind and number. WebGL and Canvas fallbacks share the mesh and material. Source/provenance: [artwork/README.md](artwork/README.md). The original draw clock and Passport accounting are unchanged.
+
+The six type roles are 12/14/18/20/28px plus one 36–64px display clamp. Home combines the demo round with its jackpot label and shortens the mobile hero. At 390×844 both the primary action and first jackpot amount are visible. See [the measured revision review](evidence/revision/validation.md) for all four finding responses, checks, screenshots and limitations. This revision’s evidence supersedes the older procedural-globe and type-scale descriptions below.
+
+Optional renderer regression (external test tools can live in `/tmp`; no extra production dependencies):
+
+```sh
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs \
+ESBUILD_MODULE=/path/to/esbuild/lib/main.js \
+node web/tests/plush.mjs
+```
+
+Run that command from the repository root. It serves the production export at a subpath and writes comparisons to `test/scratch/plush/`. It checks all twenty number prints, five orientations, hidden rear printing, WebGL-disabled fallback, reflow and the 390px first-screen positions. Visual fidelity still needs inspection of its reference/model comparison, not a test verdict.
+
 ## Iteration 2 (2026-10-13): plush globes, Passport, Atlas teaser
 
 - **One plush globe asset family.** `src/PlushGlobe.tsx` renders every ball (picker, baskets, receipts, My tickets, reveal stage, slots, fallbacks) from one textured sphere model whose materials were sampled from `public/brand/eth-ball.webp`, `nft-ball.webp` and the brand board: felt with fibre nap, quilted stitched seams, raised continents with rounded edges and contact shadows, a padded cream badge with a stitched rim, and bold rounded black numerals drawn at render time on a blank badge. Main balls are ice blue with pink continents; the bonus ball is pink with cream continents in both games. Front renders at angle 0 are cached per number; focus and selection rings stay outside the art. Rear and side views are true renders of the same sphere, so the badge and digits follow the curved surface through the draw animation (badge-away entry, 1.5s decelerating turn, stop facing the viewer, 0.85s hold, travel into the slot).

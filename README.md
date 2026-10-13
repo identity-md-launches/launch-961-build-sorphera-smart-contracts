@@ -20,6 +20,8 @@ npm run preview
 
 Iteration 2 (2026-10-13) adds one plush globe asset family matched to the brand photography, the demo/simulated **Passport: every 12 paid tickets earns 1 free ticket** (shared across both games, rewards usable in either; see [the contracts handoff](docs/PASSPORT-HANDOFF.md)), and the three-globe **Sorphera Atlas** concept teaser above the homepage footer. Validation for this iteration: [web/evidence/iteration2/validation.md](web/evidence/iteration2/validation.md).
 
+The visual revision replaces the rejected procedural globe with a photo-derived displaced mesh and a matching software fallback, consolidates typography to six roles, combines the round label, and brings the first jackpot onto the 390px first screen. The production build, typecheck, 46 unit tests, interaction/reveal checks and all 16 taste probe checks pass. See [revision evidence and limitations](web/evidence/revision/validation.md). No publishing command was run in this revision.
+
 See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [previous checks and limitations](web/evidence/iteration/validation.md), and [before/after screenshots and continuous reveal clip](web/evidence/iteration/index.html). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
 
 Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. A labelled demo website is now included; no new token/pool. No transaction was broadcast and public sales remain disabled.

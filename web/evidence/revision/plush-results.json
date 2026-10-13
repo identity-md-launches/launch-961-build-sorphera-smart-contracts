@@ -1,0 +1,37 @@
+{
+  "mesh": {
+    "renderer": "mesh-webgl",
+    "uniqueViews": 5,
+    "uniqueNumbers": 20,
+    "backHidesPrint": true,
+    "uniqueSymbols": 6,
+    "durations": [
+      33,
+      32.59999990463257,
+      32.60000014305115,
+      34.799999952316284,
+      37.5
+    ]
+  },
+  "layout320": {
+    "overflow": false,
+    "action": 516.203125,
+    "jackpot": 879.171875
+  },
+  "layout390": {
+    "overflow": false,
+    "action": 467.015625,
+    "jackpot": 810.6875
+  },
+  "layout768": {
+    "overflow": false,
+    "action": 573.84375,
+    "jackpot": 793.125
+  },
+  "layout1440": {
+    "overflow": false,
+    "action": 579.421875,
+    "jackpot": 831.671875
+  },
+  "errors": []
+}

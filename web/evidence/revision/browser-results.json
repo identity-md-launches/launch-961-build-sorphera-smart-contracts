@@ -1,0 +1,14 @@
+{
+  "results": [
+    "Game 0: budget boundaries, real review/confirm guards, rejection and duplicate clicks",
+    "Game 1: budget boundaries, real review/confirm guards, rejection and duplicate clicks",
+    "Independent saved baskets, budget navigation, no-ticket generator and transaction limit",
+    "Basket changed during pending: no stale entries accepted",
+    "Round closes after review: confirmation rejected and draft retained",
+    "Homepage and neutral NFT claim with retry and receipt",
+    "All routes reflow at 320, 390, 768 and 1440 CSS pixels",
+    "Keyboard review, focus trap, Escape return and narrow purchase layout",
+    "Measured opaque contrast pairs and 200% text enlargement"
+  ],
+  "errors": []
+}

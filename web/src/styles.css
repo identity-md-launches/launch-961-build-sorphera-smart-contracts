@@ -1,4 +1,10 @@
 :root {
+  --type-caption: 12px;
+  --type-small: 14px;
+  --type-body: 18px;
+  --type-title: 20px;
+  --type-section: 28px;
+  --type-display: clamp(36px, 5vw, 64px);
   --ink: #19171c;
   --surface: #222027;
   --surface-raised: #2c2830;
@@ -18,7 +24,7 @@
   background: var(--ink);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.55;
 }
 * {
@@ -90,17 +96,20 @@ select {
   border-radius: 10px;
   background: var(--ink);
   color: var(--cream);
-  font-size: 16px;
+  font-size: var(--type-body);
 }
 input[type="checkbox"] {
   min-height: 20px;
   width: 20px;
   accent-color: var(--ice);
 }
+small {
+  font-size: var(--type-caption);
+}
 label {
   display: grid;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 h1,
 h2,
@@ -115,19 +124,19 @@ h3 {
   line-height: 1.12;
 }
 h1 {
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: var(--type-display);
   letter-spacing: -2px;
   color: var(--ice);
   margin-bottom: 24px;
 }
 h2 {
-  font-size: clamp(25px, 3vw, 35px);
+  font-size: var(--type-section);
   letter-spacing: -0.5px;
   font-weight: 600;
   margin-bottom: 12px;
 }
 h3 {
-  font-size: 20px;
+  font-size: var(--type-title);
   letter-spacing: 0;
   font-weight: 600;
   margin-bottom: 12px;
@@ -146,13 +155,13 @@ details {
 }
 summary {
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--type-small);
   font-weight: 600;
   min-height: 28px;
 }
 details p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
   max-width: 70ch;
   margin: 16px 0 0;
 }
@@ -194,7 +203,7 @@ summary::marker {
   text-align: center;
   background: #352834;
   color: #f1c8e0;
-  font-size: 12px;
+  font-size: var(--type-caption);
   letter-spacing: 0;
   position: relative;
   z-index: 10;
@@ -235,7 +244,7 @@ summary::marker {
   margin-inline: auto;
 }
 .site-header nav a {
-  font-size: 14px;
+  font-size: var(--type-small);
   white-space: nowrap;
   text-decoration: none;
   color: var(--muted);
@@ -264,13 +273,13 @@ summary::marker {
   border-radius: 12px;
   min-height: 44px;
   padding: 8px 18px;
-  font-size: 14px;
+  font-size: var(--type-small);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .wallet-icon {
-  font-size: 24px;
+  font-size: var(--type-title);
   line-height: 1;
 }
 .button {
@@ -285,7 +294,7 @@ summary::marker {
   border-radius: 12px;
   background: transparent;
   color: var(--cream);
-  font-size: 14px;
+  font-size: var(--type-small);
   font-weight: 600;
   text-align: center;
   line-height: 1.5;
@@ -328,7 +337,7 @@ summary::marker {
   color: var(--muted);
 }
 .fine {
-  font-size: 12px;
+  font-size: var(--type-caption);
   line-height: 1.65;
 }
 .pink {
@@ -338,7 +347,7 @@ summary::marker {
   text-align: center;
 }
 .eyebrow {
-  font-size: 14px;
+  font-size: var(--type-small);
   letter-spacing: 0;
   text-transform: none;
   font-weight: 400;
@@ -353,7 +362,7 @@ summary::marker {
   padding: 5px 12px;
   background: #35404a;
   color: var(--ice);
-  font-size: 12px;
+  font-size: var(--type-caption);
   white-space: nowrap;
   line-height: 1.5;
 }
@@ -367,7 +376,7 @@ summary::marker {
   background: #49303f;
 }
 .inline-link {
-  font-size: 14px;
+  font-size: var(--type-small);
   white-space: nowrap;
   text-decoration: none;
   border-bottom: 1px solid #665767;
@@ -391,7 +400,7 @@ summary::marker {
   padding-bottom: 44px;
 }
 .hero .eyebrow {
-  font-size: 14px;
+  font-size: var(--type-small);
   letter-spacing: 0;
   color: var(--lavender);
   display: flex;
@@ -401,7 +410,7 @@ summary::marker {
 }
 .tiny-star {
   color: var(--pink);
-  font-size: 20px;
+  font-size: var(--type-title);
 }
 .hero h1 {
   margin: 0 0 12px;
@@ -413,7 +422,7 @@ summary::marker {
   margin-inline-start: -10px;
 }
 .tagline {
-  font-size: clamp(18px, 2vw, 23px);
+  font-size: var(--type-title);
   line-height: 1.45;
   max-width: 450px;
   font-weight: 600;
@@ -422,7 +431,7 @@ summary::marker {
 }
 .hero-description {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
   line-height: 1.65;
   margin-bottom: 28px;
 }
@@ -436,7 +445,7 @@ summary::marker {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--type-small);
   text-decoration: none;
   min-height: 44px;
 }
@@ -447,7 +456,7 @@ summary::marker {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 16px;
+  font-size: var(--type-body);
   color: var(--cream);
   padding-inline-start: 2px;
 }
@@ -473,7 +482,7 @@ summary::marker {
   position: absolute;
   bottom: 28px;
   right: 24px;
-  font-size: 12px;
+  font-size: var(--type-caption);
   letter-spacing: 0;
   color: var(--cream);
   padding: 8px 12px;
@@ -494,7 +503,7 @@ summary::marker {
   margin-bottom: 22px;
 }
 .section-heading.compact h2 {
-  font-size: 20px;
+  font-size: var(--type-title);
   letter-spacing: -0.5px;
 }
 .section-heading .eyebrow {
@@ -538,7 +547,7 @@ summary::marker {
   margin: 22px 0 18px;
 }
 .jackpot-amount h3 {
-  font-size: 50px;
+  font-size: var(--type-display);
   font-weight: 600;
   letter-spacing: -2px;
   color: var(--ice);
@@ -549,11 +558,11 @@ summary::marker {
   color: var(--pink);
 }
 .jackpot-amount h3 > span {
-  font-size: 24px;
+  font-size: var(--type-title);
   letter-spacing: -0.8px;
 }
 .jackpot-amount p {
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
   margin: 0;
   max-width: 240px;
@@ -581,11 +590,11 @@ summary::marker {
 .countdown {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--type-body);
   letter-spacing: 0;
 }
 .cutoff {
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
 }
 .jackpot-accounting {
@@ -593,13 +602,13 @@ summary::marker {
   padding: 14px 0 9px;
 }
 .jackpot-accounting summary {
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
   font-weight: 400;
   min-height: 24px;
 }
 .jackpot-accounting p {
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .globe {
   display: inline-block;
@@ -635,7 +644,7 @@ summary::marker {
 }
 .bonus-plus {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
   padding: 0 2px;
 }
 .how-section {
@@ -653,7 +662,7 @@ summary::marker {
   padding-inline-start: 44px;
 }
 .step-number {
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--pink);
   position: absolute;
   left: 0;
@@ -663,13 +672,13 @@ summary::marker {
   border-radius: 50%;
 }
 .steps h3 {
-  font-size: 18px;
+  font-size: var(--type-body);
   font-weight: 600;
   margin-bottom: 12px;
 }
 .steps p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
   line-height: 1.7;
 }
 .recent-section {
@@ -695,7 +704,7 @@ summary::marker {
   margin-bottom: 10px;
 }
 .recent-result h3 {
-  font-size: 24px;
+  font-size: var(--type-title);
   margin-bottom: 8px;
 }
 .recent-result p {
@@ -710,7 +719,7 @@ summary::marker {
 }
 
 .round-arrow {
-  font-size: 24px;
+  font-size: var(--type-title);
   color: var(--ice);
   margin-inline-end: 10px;
 }
@@ -730,13 +739,13 @@ summary::marker {
   padding: 35px 40px;
 }
 .closing-banner h2 {
-  font-size: 28px;
+  font-size: var(--type-section);
   color: var(--ice);
   margin: 0;
 }
 .closing-banner .eyebrow {
   color: var(--pink);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .footer {
   padding: 36px max(36px, calc((100% - 1208px) / 2)) 24px;
@@ -751,19 +760,19 @@ summary::marker {
   gap: 30px;
 }
 .footer-top p {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
   margin: 0;
 }
 .footer-top > a:last-child {
-  font-size: 12px;
+  font-size: var(--type-caption);
   text-decoration: none;
 }
 .footer-bottom {
   margin-top: 25px;
   padding-top: 20px;
   border-top: 1px solid #ffffff0f;
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
 }
 .page-head {
@@ -771,12 +780,12 @@ summary::marker {
   max-width: 750px;
 }
 .page-head h1 {
-  font-size: clamp(36px, 4.3vw, 55px);
+  font-size: var(--type-display);
   margin-bottom: 18px;
 }
 .page-head > p:last-child {
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--type-body);
   margin: 0;
   max-width: 60ch;
 }
@@ -807,7 +816,7 @@ summary::marker {
   background: transparent;
   border-radius: 8px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .game-switch button.active {
   background: var(--ice);
@@ -826,7 +835,7 @@ summary::marker {
   border: 1px solid #64516c;
   border-radius: 10px;
   padding: 10px 14px;
-  font-size: 12px;
+  font-size: var(--type-caption);
   min-height: 42px;
 }
 .quick-pick span {
@@ -834,7 +843,7 @@ summary::marker {
   color: var(--pink);
 }
 .picker-hint {
-  font-size: 14px;
+  font-size: var(--type-small);
   margin: 14px 0 19px;
 }
 .number-picker {
@@ -884,7 +893,7 @@ summary::marker {
   border-top: 1px solid var(--line);
 }
 .quantity {
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .quantity input {
   width: 95px;
@@ -894,7 +903,7 @@ summary::marker {
 }
 .error {
   color: var(--error);
-  font-size: 14px;
+  font-size: var(--type-small);
   min-height: 0;
   margin: 14px 0 0;
 }
@@ -908,11 +917,11 @@ summary::marker {
   background: linear-gradient(150deg, #302833, #25222a);
 }
 .ticket-slip h2 {
-  font-size: 24px;
+  font-size: var(--type-title);
   margin: 0;
 }
 .ticket-slip > .muted {
-  font-size: 14px;
+  font-size: var(--type-small);
   margin: 10px 0 22px;
 }
 .slip-cut {
@@ -937,11 +946,11 @@ summary::marker {
 }
 
 .empty-ticket h3 {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--cream);
 }
 .empty-ticket p {
-  font-size: 14px;
+  font-size: var(--type-small);
   max-width: 28ch;
   margin: 0 auto;
 }
@@ -962,12 +971,12 @@ summary::marker {
   border-radius: 8px;
 }
 .text-button {
-  font-size: 12px;
+  font-size: var(--type-caption);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 .icon-button {
-  font-size: 24px;
+  font-size: var(--type-title);
 }
 .ticket-totals {
   margin: 0 0 24px;
@@ -978,7 +987,7 @@ summary::marker {
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  font-size: 14px;
+  font-size: var(--type-small);
   margin-bottom: 12px;
   color: var(--muted);
 }
@@ -988,7 +997,7 @@ summary::marker {
   font-variant-numeric: tabular-nums;
 }
 .ticket-totals .total {
-  font-size: 16px;
+  font-size: var(--type-body);
   color: var(--cream);
   margin-top: 22px;
 }
@@ -1025,11 +1034,11 @@ summary::marker {
   margin-bottom: 18px;
 }
 .modal-top h2 {
-  font-size: 24px;
+  font-size: var(--type-title);
   margin: 7px 0;
 }
 .modal p {
-  font-size: 14px;
+  font-size: var(--type-small);
   line-height: 1.65;
 }
 .notice {
@@ -1038,7 +1047,7 @@ summary::marker {
   border: 1px solid #7d50625c;
   border-radius: 10px;
   padding: 12px 16px;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .review-lines {
   max-height: 250px;
@@ -1048,11 +1057,11 @@ summary::marker {
   margin: 20px 0;
 }
 .review-total {
-  font-size: 28px !important;
+  font-size: var(--type-section) !important;
   color: var(--ice);
 }
 .review-total small {
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
   display: block;
 }
@@ -1064,7 +1073,7 @@ summary::marker {
   place-items: center;
   background: var(--ice);
   color: var(--ink);
-  font-size: 28px;
+  font-size: var(--type-section);
   margin: 24px auto;
 }
 .wallet-globe {
@@ -1102,14 +1111,14 @@ summary::marker {
   min-width: 230px;
 }
 .ticket-identity .eyebrow {
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .ticket-identity h2 {
-  font-size: 20px;
+  font-size: var(--type-title);
   letter-spacing: 0;
 }
 .ticket-identity .pill {
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .claim-summary {
   display: grid;
@@ -1119,12 +1128,12 @@ summary::marker {
 }
 .claim-summary strong {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .asset-outcomes {
   padding: 0;
   list-style: none;
-  font-size: 14px;
+  font-size: var(--type-small);
   margin: 24px 0;
 }
 .asset-outcomes li {
@@ -1166,14 +1175,14 @@ summary::marker {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 10px 16px;
-  font-size: 14px;
+  font-size: var(--type-small);
   min-height: 44px;
 }
 .checkbox {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--type-small);
   min-height: 44px;
 }
 .draw-stage {
@@ -1194,7 +1203,7 @@ summary::marker {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
 }
 .chamber {
@@ -1251,7 +1260,7 @@ summary::marker {
   box-shadow: 0 10px 20px #0009;
 }
 .chamber-caption {
-  font-size: 12px;
+  font-size: var(--type-caption);
   letter-spacing: 0;
   position: absolute;
   bottom: 8px;
@@ -1276,7 +1285,7 @@ summary::marker {
 }
 
 .reveal-balls > p {
-  font-size: 12px;
+  font-size: var(--type-caption);
   margin: 15px 0;
 }
 .reveal-balls > p > span {
@@ -1295,11 +1304,11 @@ summary::marker {
   padding: 32px 5px;
 }
 .draw-result h2 {
-  font-size: 24px;
+  font-size: var(--type-title);
   color: var(--ice);
 }
 .draw-result p:not(.eyebrow) {
-  font-size: 14px;
+  font-size: var(--type-small);
   max-width: 70ch;
   color: var(--muted);
   margin-bottom: 0;
@@ -1310,11 +1319,11 @@ summary::marker {
   font-weight: 600;
 }
 .result-mark {
-  font-size: 50px;
+  font-size: var(--type-display);
   color: var(--pink);
 }
 .event-list {
-  font-size: 14px;
+  font-size: var(--type-small);
   line-height: 2;
   color: var(--ice);
 }
@@ -1330,11 +1339,11 @@ summary::marker {
   align-items: center;
 }
 .history-row h2 {
-  font-size: 24px;
+  font-size: var(--type-title);
   color: var(--ice);
 }
 .history-row p:not(.eyebrow) {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
   max-width: 65ch;
 }
@@ -1368,10 +1377,10 @@ summary::marker {
 }
 .faq-layout aside > h2 {
   color: var(--ice);
-  font-size: 28px;
+  font-size: var(--type-section);
 }
 .faq-layout aside p {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
   max-width: 30ch;
 }
@@ -1379,7 +1388,7 @@ summary::marker {
   padding: 22px 0;
 }
 .faq-list summary {
-  font-size: 16px;
+  font-size: var(--type-body);
   padding-inline-end: 14px;
 }
 .faq-list details p {
@@ -1465,7 +1474,7 @@ summary::marker {
     padding-inline: 23px;
   }
   .jackpot-amount h3 {
-    font-size: 44px;
+    font-size: var(--type-display);
   }
   .jackpot-amount > .globe-large {
     width: 78px;
@@ -1535,14 +1544,14 @@ summary::marker {
     margin-top: 11px;
   }
   .site-header nav a {
-    font-size: 12px;
+    font-size: var(--type-caption);
     min-height: 35px;
   }
   .site-header nav a.active:after {
     bottom: 0;
   }
   .wallet-button {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .main {
     padding-inline: 24px;
@@ -1557,14 +1566,14 @@ summary::marker {
     padding-bottom: 15px;
   }
   .hero .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
     letter-spacing: 0;
   }
   .tagline {
-    font-size: 18px;
+    font-size: var(--type-body);
   }
   .hero-description {
-    font-size: 14px;
+    font-size: var(--type-small);
   }
   .hero-actions {
     flex-direction: column;
@@ -1572,14 +1581,14 @@ summary::marker {
     gap: 12px;
   }
   .hero-actions .button {
-    font-size: 14px;
+    font-size: var(--type-small);
     min-height: 44px;
   }
   .art-label {
     display: none;
   }
   .hero-note {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .jackpot-grid {
     gap: 16px;
@@ -1589,7 +1598,7 @@ summary::marker {
     gap: 10px;
   }
   .section-heading.compact h2 {
-    font-size: 20px;
+    font-size: var(--type-title);
   }
   .section-heading.compact > .fine {
     max-width: 160px;
@@ -1602,17 +1611,17 @@ summary::marker {
     flex-wrap: wrap;
   }
   .jackpot-amount h3 {
-    font-size: 36px;
+    font-size: var(--type-display);
   }
   .jackpot-amount > .globe-large {
     width: 65px;
     height: 65px;
   }
   .jackpot-amount h3 > span {
-    font-size: 20px;
+    font-size: var(--type-title);
   }
   .jackpot-amount p {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .jackpot-footer {
     flex-wrap: wrap;
@@ -1630,7 +1639,7 @@ summary::marker {
     grid-column: 1/-1;
   }
   .jackpot-footer .countdown {
-    font-size: 14px;
+    font-size: var(--type-small);
   }
   .steps {
     gap: 24px;
@@ -1644,17 +1653,17 @@ summary::marker {
     margin-bottom: 18px;
   }
   .steps h3 {
-    font-size: 16px;
+    font-size: var(--type-body);
   }
   .steps p {
-    font-size: 14px;
+    font-size: var(--type-small);
   }
   .how-section {
     margin-top: 60px;
   }
 
   .section-heading .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .section-heading > .fine {
     max-width: 160px;
@@ -1675,7 +1684,7 @@ summary::marker {
     padding: 28px;
   }
   .closing-banner h2 {
-    font-size: 24px;
+    font-size: var(--type-title);
   }
   .footer {
     padding-inline: 24px;
@@ -1721,7 +1730,7 @@ summary::marker {
     gap: 12px;
   }
   .play-layout .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .picker-bottom .button {
     flex: auto;
@@ -1735,7 +1744,7 @@ summary::marker {
     height: 40px;
   }
   .ticket-slip h2 {
-    font-size: 20px;
+    font-size: var(--type-title);
   }
   .faq-layout {
     grid-template-columns: 1fr 2fr;
@@ -1750,7 +1759,7 @@ summary::marker {
 }
 @media (max-width: 620px) {
   .demo-banner {
-    font-size: 12px;
+    font-size: var(--type-caption);
     padding-block: 7px;
     letter-spacing: 0;
   }
@@ -1772,7 +1781,7 @@ summary::marker {
     gap: 10px;
   }
   .site-header nav a {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .wallet-button {
     padding: 7px 12px;
@@ -1797,7 +1806,7 @@ summary::marker {
   }
   .hero .eyebrow {
     justify-content: center;
-    font-size: 12px;
+    font-size: var(--type-caption);
     margin-bottom: 13px;
     letter-spacing: 0;
   }
@@ -1809,12 +1818,12 @@ summary::marker {
     margin: 0 auto;
   }
   .tagline {
-    font-size: 20px;
+    font-size: var(--type-title);
     max-width: 350px;
     margin: 0 auto 16px;
   }
   .hero-description {
-    font-size: 14px;
+    font-size: var(--type-small);
     max-width: 32ch;
     margin: 0 auto 22px;
   }
@@ -1828,16 +1837,16 @@ summary::marker {
     align-items: center;
   }
   .hero-actions .button {
-    font-size: 12px;
+    font-size: var(--type-caption);
     padding: 13px 16px;
   }
   .watch-link {
-    font-size: 12px;
+    font-size: var(--type-caption);
     gap: 7px;
   }
   .hero-note {
     margin-top: 12px;
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .hero-art {
     height: 250px;
@@ -1877,14 +1886,14 @@ summary::marker {
     margin-bottom: 20px;
   }
   .section-heading.compact h2 {
-    font-size: 20px;
+    font-size: var(--type-title);
   }
   .section-heading.compact > .fine {
     display: block;
     max-width: none;
     text-align: start;
     margin-top: 9px;
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .jackpot-grid {
     grid-template-columns: 1fr;
@@ -1899,19 +1908,16 @@ summary::marker {
   .jackpot-amount {
     margin: 22px 0 17px;
   }
-  .jackpot-amount h3 {
-    font-size: 49px;
-  }
   .jackpot-amount > .globe-large {
     width: 92px;
     height: 92px;
   }
   .jackpot-amount p {
-    font-size: 12px;
+    font-size: var(--type-caption);
     max-width: 200px;
   }
   .jackpot-amount h3 > span {
-    font-size: 24px;
+    font-size: var(--type-title);
   }
   .jackpot-footer {
     flex-wrap: nowrap;
@@ -1922,7 +1928,7 @@ summary::marker {
     width: auto;
   }
   .jackpot-footer .countdown {
-    font-size: 16px;
+    font-size: var(--type-body);
   }
   .jackpot-footer > .button {
     width: auto;
@@ -1936,11 +1942,11 @@ summary::marker {
     padding-bottom: 36px;
   }
   .section-heading h2 {
-    font-size: 28px;
+    font-size: var(--type-section);
     max-width: 350px;
   }
   .section-heading .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .steps {
     grid-template-columns: 1fr;
@@ -1957,10 +1963,10 @@ summary::marker {
     margin: 0;
   }
   .steps h3 {
-    font-size: 18px;
+    font-size: var(--type-body);
   }
   .steps p {
-    font-size: 14px;
+    font-size: var(--type-small);
     margin-bottom: 0;
     max-width: 42ch;
   }
@@ -1987,7 +1993,7 @@ summary::marker {
     height: 48px;
   }
   .recent-result h3 {
-    font-size: 24px;
+    font-size: var(--type-title);
   }
 
   .section-heading > .fine {
@@ -2002,7 +2008,7 @@ summary::marker {
     text-align: center;
   }
   .closing-banner h2 {
-    font-size: 24px;
+    font-size: var(--type-title);
   }
   .closing-banner .button {
     margin-top: 23px;
@@ -2023,11 +2029,11 @@ summary::marker {
     padding: 40px 0 30px;
   }
   .page-head h1 {
-    font-size: 36px;
+    font-size: var(--type-display);
     letter-spacing: -1.6px;
   }
   .page-head > p:last-child {
-    font-size: 14px;
+    font-size: var(--type-small);
   }
   .play-layout {
     grid-template-columns: 1fr;
@@ -2058,7 +2064,7 @@ summary::marker {
     flex-wrap: nowrap;
   }
   .play-layout .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .picker-bottom {
     flex-wrap: nowrap;
@@ -2068,7 +2074,7 @@ summary::marker {
     width: auto;
     flex: 1;
     padding-inline: 12px;
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .ticket-slip .balls {
     gap: 9px;
@@ -2115,11 +2121,11 @@ summary::marker {
     border-radius: 22px;
   }
   .draw-topline {
-    font-size: 12px;
+    font-size: var(--type-caption);
     gap: 8px;
   }
   .draw-topline .pill {
-    font-size: 12px;
+    font-size: var(--type-caption);
     padding-inline: 9px;
   }
   .chamber {
@@ -2159,7 +2165,7 @@ summary::marker {
     gap: 10px;
   }
   .draw-controls .button {
-    font-size: 12px;
+    font-size: var(--type-caption);
     min-height: 44px;
     padding: 11px 14px;
     gap: 10px;
@@ -2169,10 +2175,10 @@ summary::marker {
     gap: 14px;
   }
   .draw-result h2 {
-    font-size: 20px;
+    font-size: var(--type-title);
   }
   .result-mark {
-    font-size: 36px;
+    font-size: var(--type-display);
   }
   .history-row {
     grid-template-columns: 1fr;
@@ -2192,7 +2198,7 @@ summary::marker {
     display: none;
   }
   .faq-list summary {
-    font-size: 14px;
+    font-size: var(--type-small);
   }
   .campaign-banner {
     margin-top: 40px;
@@ -2202,13 +2208,13 @@ summary::marker {
     padding: 22px;
   }
   .modal-top h2 {
-    font-size: 24px;
+    font-size: var(--type-title);
   }
   .notice {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .modal .notice {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
 }
 @media (max-width: 360px) {
@@ -2222,7 +2228,7 @@ summary::marker {
     gap: 8px;
   }
   .site-header nav a {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .hero-actions {
     gap: 11px;
@@ -2231,23 +2237,23 @@ summary::marker {
     padding-inline: 12px;
   }
   .watch-link {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .tagline {
-    font-size: 18px;
+    font-size: var(--type-body);
   }
   .jackpot {
     padding-inline: 18px;
   }
   .jackpot-amount h3 {
-    font-size: 44px;
+    font-size: var(--type-display);
   }
   .jackpot-amount > .globe-large {
     width: 75px;
     height: 75px;
   }
   .jackpot-top .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
 
   .number-choice .globe {
@@ -2269,7 +2275,7 @@ summary::marker {
     margin-inline: -17px;
   }
   .play-layout .eyebrow {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .quick-pick {
     padding-inline: 10px;
@@ -2295,22 +2301,22 @@ summary::marker {
     flex-wrap: wrap;
   }
   .chamber-caption {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .draw-toolbar .row {
     gap: 10px;
   }
   .checkbox {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .quiet {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
   .picker-bottom {
     gap: 12px;
   }
   .quantity {
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
 }
 @media (forced-colors: active) {
@@ -2369,18 +2375,18 @@ summary::marker {
 }
 .budget-bar h2 {
   margin: 0 0 10px;
-  font-size: 20px;
+  font-size: var(--type-title);
 }
 .budget-input {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
+  font-size: var(--type-small);
   max-width: 260px;
 }
 .budget-input input,
 .generate-row input {
-  font-size: 18px;
+  font-size: var(--type-body);
   padding: 10px 14px;
   border-radius: 14px;
   border: 1px solid var(--line);
@@ -2398,11 +2404,11 @@ summary::marker {
   border: 1px solid #abd8ed33;
 }
 .budget-answer strong {
-  font-size: 24px;
+  font-size: var(--type-title);
   color: var(--ice);
 }
 .budget-answer span {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
 }
 .round-facts {
@@ -2421,7 +2427,7 @@ summary::marker {
   border: 1px solid var(--line);
 }
 .round-facts strong {
-  font-size: 20px;
+  font-size: var(--type-title);
   color: var(--ice);
   font-variant-numeric: tabular-nums;
 }
@@ -2429,7 +2435,7 @@ summary::marker {
   color: var(--pink);
 }
 .sharing-note {
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--cream);
   padding: 10px 14px;
   border-left: 3px solid var(--pink);
@@ -2447,7 +2453,7 @@ summary::marker {
   border-radius: 11px;
   background: var(--pink);
   color: var(--ink);
-  font-size: 12px;
+  font-size: var(--type-caption);
   font-weight: 700;
 }
 .generate-row {
@@ -2461,7 +2467,7 @@ summary::marker {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .generate-row input {
   width: 110px;
@@ -2469,7 +2475,7 @@ summary::marker {
 .ticket-totals dd small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
   font-weight: 400;
 }
 .ticket-totals .over dd {
@@ -2495,7 +2501,7 @@ summary::marker {
 }
 .review-total small {
   display: block;
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
 }
 .ticket-section {
@@ -2510,7 +2516,7 @@ summary::marker {
 }
 .my-ticket h3 {
   margin: 4px 0;
-  font-size: 18px;
+  font-size: var(--type-body);
 }
 .claim-summary .fine {
   display: block;
@@ -2525,7 +2531,7 @@ summary::marker {
 .asset-outcomes li small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 .scenarios {
   margin-top: 16px;
@@ -2539,7 +2545,7 @@ summary::marker {
 .draw-status {
   margin-left: auto;
   color: var(--lavender);
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .reveal-stage {
   position: relative;
@@ -2570,7 +2576,7 @@ summary::marker {
 }
 .nft-origin {
   margin: 12px 0 20px;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .nft-origin .fine {
   display: block;
@@ -2584,7 +2590,7 @@ summary::marker {
   border: 1px dashed var(--muted);
   border-radius: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
   letter-spacing: 0;
 }
 .budget-input .fine {
@@ -2610,7 +2616,7 @@ summary::marker {
 }
 .finale h2 {
   margin: 4px 0 16px;
-  font-size: 24px;
+  font-size: var(--type-title);
 }
 .finalists {
   list-style: none;
@@ -2654,14 +2660,14 @@ summary::marker {
   border: 2px solid var(--pink);
 }
 .finale-winner strong {
-  font-size: 28px;
+  font-size: var(--type-section);
   color: var(--pink);
 }
 .my-results {
   margin: 28px 0;
 }
 .my-results h2 {
-  font-size: 20px;
+  font-size: var(--type-title);
 }
 .result-tickets {
   list-style: none;
@@ -2684,10 +2690,10 @@ summary::marker {
   border-color: var(--ice);
 }
 .result-ticket .outcome {
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .price-line {
-  font-size: 14px;
+  font-size: var(--type-small);
   margin: 6px 0 0;
 }
 .price-line small {
@@ -2728,13 +2734,13 @@ summary::marker {
   border: 1px solid var(--line);
 }
 .passport h2 {
-  font-size: 20px;
+  font-size: var(--type-title);
   margin: 0;
 }
 .passport-rule {
   margin: 8px 0 14px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .stamps {
   list-style: none;
@@ -2775,7 +2781,7 @@ summary::marker {
 .stamp-index {
   position: absolute;
   inset: auto auto -4px auto;
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
   background: var(--surface-raised);
   padding: 0 4px;
@@ -2795,11 +2801,11 @@ summary::marker {
 }
 .passport-progress strong {
   color: var(--ice);
-  font-size: 18px;
+  font-size: var(--type-body);
 }
 .passport-progress span {
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .passport-reward {
   display: flex;
@@ -2833,7 +2839,7 @@ summary::marker {
   display: none;
 }
 .passport-compact h2 {
-  font-size: 16px;
+  font-size: var(--type-body);
 }
 .reward-mode {
   display: grid;
@@ -2844,7 +2850,7 @@ summary::marker {
   border-radius: 14px;
   background: #abd8ed14;
   border: 1px solid #abd8ed55;
-  font-size: 14px;
+  font-size: var(--type-small);
 }
 .reward-line {
   border-left: 3px solid var(--pink);
@@ -2915,7 +2921,7 @@ summary::marker {
 .ledger {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: var(--type-small);
   margin: 10px 0;
 }
 .ledger th,
@@ -2941,13 +2947,13 @@ summary::marker {
   border: 1px solid var(--line);
 }
 .buy12 h3 {
-  font-size: 18px;
+  font-size: var(--type-body);
   margin: 0 0 4px;
 }
 .buy12 p {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--type-small);
   max-width: 48ch;
 }
 .buy12 > div:nth-child(2) {
@@ -2978,12 +2984,12 @@ summary::marker {
   flex: 1 1 280px;
 }
 .atlas h2 {
-  font-size: 28px;
+  font-size: var(--type-section);
   color: var(--ice);
   margin: 0 0 6px;
 }
 .atlas-line {
-  font-size: 20px;
+  font-size: var(--type-title);
   color: var(--pink);
   margin-bottom: 10px;
 }
@@ -3004,7 +3010,7 @@ summary::marker {
   display: grid;
   justify-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--type-small);
   color: var(--muted);
 }
 .atlas-globes .globe-large {
@@ -3025,5 +3031,26 @@ summary::marker {
   .ledger {
     display: block;
     overflow-x: auto;
+  }
+}
+
+/* Keep the photographed product and first jackpot on a phone’s first screen. */
+@media (max-width: 420px) {
+  .hero {
+    padding-top: 24px;
+  }
+  .hero-wordmark {
+    max-width: 280px;
+  }
+  .hero-description {
+    margin-bottom: 16px;
+  }
+  .hero-art {
+    height: 140px;
+  }
+  .hero-art > img {
+    height: 140px;
+    max-height: 140px;
+    object-fit: cover;
   }
 }

@@ -26,12 +26,6 @@ export function Home({ passport }: { passport: PassportRecord }) {
     <>
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="tiny-star" aria-hidden="true">
-              ✦
-            </span>{" "}
-            A world of possibility
-          </p>
           <h1>
             <img
               className="hero-wordmark"
@@ -60,9 +54,6 @@ export function Home({ passport }: { passport: PassportRecord }) {
               Watch demo draw
             </a>
           </div>
-          <p className="fine hero-note">
-            Explore the experience. No wallet needed.
-          </p>
         </div>
         <div className="hero-art">
           <img
@@ -87,9 +78,9 @@ export function Home({ passport }: { passport: PassportRecord }) {
             <article className={`jackpot jackpot-${r.game}`} key={r.game}>
               <div className="jackpot-top">
                 <span className="eyebrow">
-                  {r.game === 0 ? "ETH jackpot" : "NFT jackpot"}
+                  {r.game === 0 ? "ETH jackpot" : "NFT jackpot"} · Demo round{" "}
+                  {String(r.id)}
                 </span>
-                <span className="open-pill">Demo round {String(r.id)}</span>
               </div>
               <div className="jackpot-amount">
                 <div>
@@ -259,9 +250,24 @@ export function Home({ passport }: { passport: PassportRecord }) {
         <ul className="atlas-globes">
           {(
             [
-              ["ca", "CA", "Canada", "Plush maple-red globe with cream continents"],
-              ["jp", "JP", "Japan", "Plush blossom-pink globe with red continents"],
-              ["br", "BR", "Brazil", "Plush green globe with yellow continents"],
+              [
+                "ca",
+                "CA",
+                "Canada",
+                "Plush maple-red globe with cream continents",
+              ],
+              [
+                "jp",
+                "JP",
+                "Japan",
+                "Plush blossom-pink globe with red continents",
+              ],
+              [
+                "br",
+                "BR",
+                "Brazil",
+                "Plush green globe with yellow continents",
+              ],
             ] as const
           ).map(([kind, code, name, alt]) => (
             <li key={kind}>

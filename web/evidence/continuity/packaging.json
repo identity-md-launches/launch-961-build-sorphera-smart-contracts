@@ -1,0 +1,33 @@
+{
+  "limit_bytes": 8388608,
+  "conservative_gzip_snapshot_upper_bound_bytes": 8000000,
+  "method": "Tar+gzip level 9 of every extant tracked file and Git-eligible new file, excluding runner-deleted .imd/ inputs and test/scratch/. Final archive including this report verified below the stated upper bound. Archive itself stays in /tmp, outside delivery.",
+  "protected_paths_changed": [],
+  "submodules": 0,
+  "generated_dependency_cache_or_archive_files": [],
+  "required_files_checked": [
+    "dist/index.html",
+    "web/package.json",
+    "web/package-lock.json",
+    "DESIGN.md",
+    "README.md",
+    "web/scripts/plush-materials.py",
+    "web/artwork/plush-source.webp",
+    "web/evidence/continuity/index.html",
+    "web/evidence/continuity/validation.md",
+    "web/evidence/continuity/plush-comparison.jpg",
+    "web/evidence/continuity/plush-fallback-comparison.jpg",
+    "web/evidence/continuity/plush-full-turn.jpg",
+    "web/evidence/continuity/plush-fallback-full-turn.jpg",
+    "web/evidence/continuity/reveal-webgl.mp4",
+    "web/evidence/continuity/reveal-canvas.mp4"
+  ],
+  "root_export_files": 19,
+  "root_export_file_bytes": 1352551,
+  "dist_index_sha256": "3395b5b57ee816d8fbb0de4a2c9096733ca57dae5c618ea49fd3031b1cbd2ca8",
+  "git_diff_check": "passed",
+  "removed_superseded_evidence": [
+    "web/evidence/reveal-nft-tie.gif",
+    "web/evidence/iteration2/reveal-stopped.png"
+  ]
+}

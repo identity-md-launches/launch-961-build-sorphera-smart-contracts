@@ -8,21 +8,60 @@ import {
   checkPurchase,
   type Line,
 } from "./core";
-const week = 604800;
-const now = Math.floor(Date.now() / 1000);
-const cutoff = (Math.floor((now - 259200) / week) + 1) * week + 259200;
-export const demoRounds: Round[] = [0, 1].map((g) => ({
-  game: g as Game,
-  id: 42n,
-  status: Status.Sales,
-  price: 5000000000000000n,
-  start: cutoff + g * 3600 - week,
-  cutoff: cutoff + g * 3600,
-  actualETH: g === 0 ? 18420000000000000000n : 12000000000000000n,
-  securedNFTs: g === 1 ? 6 : 0,
-  pendingPulls: g === 1 ? 2 : 1,
-  salesEnabled: true,
-}));
+// Frozen UTC anchors: round 42 closes Sunday 18 October 2026, independently
+// at 00:00 (ETH) and 01:00 (NFT). New identities never move an old deadline.
+export const DEMO_WEEK = 604800;
+export const DEMO_CUTOFF = Date.UTC(2026, 9, 18) / 1000;
+export function demoRound(game: Game, id: bigint): Round | undefined {
+  if (id < 42n || id > 100000n) return undefined;
+  const cutoff = DEMO_CUTOFF + Number(id - 42n) * DEMO_WEEK + game * 3600;
+  return {
+    game,
+    id,
+    status: Status.Sales,
+    price: 5000000000000000n,
+    start: cutoff - DEMO_WEEK,
+    cutoff,
+    earliestDraw: cutoff + 1800,
+    drawDelay: 1800,
+    simulated: true,
+    actualETH: game === 0 ? 18420000000000000000n : 12000000000000000n,
+    securedNFTs: game === 1 ? 6 : 0,
+    pendingPulls: game === 1 ? 2 : 1,
+    salesEnabled: true,
+  };
+}
+function initialRound(game: Game): Round {
+  let id =
+    42n +
+    BigInt(
+      Math.max(
+        0,
+        Math.ceil((Date.now() / 1000 - DEMO_CUTOFF - game * 3600) / DEMO_WEEK),
+      ),
+    );
+  try {
+    const stored = localStorage.getItem(`sorphera.demo.schedule.v2:${game}`);
+    if (stored && /^\d+$/.test(stored) && demoRound(game, BigInt(stored)))
+      id = BigInt(stored);
+    localStorage.setItem(`sorphera.demo.schedule.v2:${game}`, String(id));
+  } catch {
+    /* Deterministic UTC identity when storage is unavailable. */
+  }
+  return demoRound(game, id)!;
+}
+export const demoRounds: Round[] = [initialRound(0), initialRound(1)];
+/** Explicit navigation only; elapsed time never reopens a stored round. */
+export function selectDemoRound(game: Game, id: bigint) {
+  const round = demoRound(game, id);
+  if (!round) return;
+  demoRounds[game] = round;
+  try {
+    localStorage.setItem(`sorphera.demo.schedule.v2:${game}`, String(id));
+  } catch {
+    /* no storage */
+  }
+}
 export interface Scenario {
   id: string;
   label: string;
@@ -139,7 +178,7 @@ export const scenarios: Scenario[] = [
 export const myRoundScenarios: Scenario[] = [
   {
     id: "eth-mine",
-    label: "Fixture replay · your ETH round 42",
+    label: "Fixture preview · ETH round 42",
     game: 0,
     round: 42n,
     prize: "18.42 ETH",
@@ -160,7 +199,7 @@ export const myRoundScenarios: Scenario[] = [
   },
   {
     id: "nft-mine",
-    label: "Fixture replay · your NFT round 42",
+    label: "Fixture preview · NFT round 42",
     game: 1,
     round: 42n,
     prize: "6 demo NFTs",
@@ -203,6 +242,8 @@ export interface DemoTicket {
   purchasedAt?: number;
   /** Passport reward ticket: a free promotional entry into the same funded draw. */
   reward?: boolean;
+  /** Frozen at confirmation; absent on legacy records rather than guessed. */
+  schedule?: { cutoff: number; earliestDraw?: number; start: number };
 }
 export const initialTickets: DemoTicket[] = [
   {
@@ -253,12 +294,15 @@ export const initialTickets: DemoTicket[] = [
 ];
 export class FixtureAdapter {
   readonly mode = "demo" as const;
-  async round(game: Game) {
-    return { ...demoRounds[game] };
+  async round(game: Game, id = demoRounds[game].id) {
+    const round =
+      id === demoRounds[game].id ? demoRounds[game] : demoRound(game, id);
+    if (!round) throw new Error("Round unavailable.");
+    return { ...round };
   }
   async buy(expected: Round, lines: Line[]) {
     checkPurchase(
-      await this.round(expected.game),
+      await this.round(expected.game, expected.id),
       expected,
       lines,
       Math.floor(Date.now() / 1000),

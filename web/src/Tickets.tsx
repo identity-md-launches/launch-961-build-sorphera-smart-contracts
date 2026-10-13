@@ -3,8 +3,9 @@ import { Balls, Globe, Modal, PageHead } from "./components";
 import { fixture, type DemoTicket } from "./fixtures";
 import type { ClaimResult } from "./core";
 import { gameName } from "./Play";
-import { localTime } from "./budget";
-import { demoRounds } from "./fixtures";
+import { RoundSchedule } from "./RoundSchedule";
+import { drawLink } from "./schedule";
+import { demoRound } from "./fixtures";
 import {
   CARD,
   eligiblePrice,
@@ -112,7 +113,8 @@ export default function Tickets({
   function card(t: DemoTicket) {
     const done = claimed.includes(key(t));
     const nftDone = results[key(t)]?.every((r) => r.state === "delivered");
-    const open = demoRounds.find((r) => r.game === t.game && r.id === t.round);
+    const base = demoRound(t.game, t.round);
+    const open = base && t.schedule ? { ...base, ...t.schedule } : undefined;
     return (
       <article className={`my-ticket game-${t.game}`} key={key(t)}>
         <div className="ticket-identity">
@@ -133,12 +135,21 @@ export default function Tickets({
         <Balls pick={t.pick} />
         <div className="claim-summary">
           <strong>{t.amount}</strong>
-          {t.kind === "entry" && open && (
-            <span className="fine">
-              Entries close {localTime(open.cutoff)}. Results follow the
-              confirmed draw; no result time is promised.
-              {t.reward && ` ${REWARD_RULE} Same results and prize rights.`}
-            </span>
+          {t.kind === "entry" &&
+            (open ? (
+              <RoundSchedule round={open} calendar />
+            ) : (
+              <p className="fine">
+                Schedule unavailable for this saved ticket.
+              </p>
+            ))}
+          {t.source === "mine" && (
+            <a className="button" href={drawLink(t.game, t.round)}>
+              View your draw
+            </a>
+          )}
+          {t.reward && (
+            <p className="fine">{REWARD_RULE} Same results and prize rights.</p>
           )}
           {t.kind !== "entry" && t.kind !== "expired" && (
             <button
@@ -162,9 +173,6 @@ export default function Tickets({
       </article>
     );
   }
-  const myRounds = [
-    ...new Set(mine.map((t) => `${t.game}:${String(t.round)}`)),
-  ];
   return (
     <>
       <PageHead
@@ -173,9 +181,8 @@ export default function Tickets({
         description="Your entries, results and claimable prizes, all in one place."
       />
       <p className="notice">
-        Demo - no real tickets or prizes. Your entries reset when you reload;
-        passport progress is demo data kept in this browser for{" "}
-        {identityLabel}.
+        Demo - no real tickets or prizes. Your entries, drafts and passport
+        progress are demo data kept in this browser for {identityLabel}.
       </p>
       <PassportCard record={passport} />
       <details className="passport-ledger">
@@ -290,29 +297,8 @@ export default function Tickets({
       <section aria-labelledby="mine-title" className="ticket-section">
         <div className="section-heading compact">
           <h2 id="mine-title">Your demo entries</h2>
-          <span className="fine">Created in this session</span>
+          <span className="fine">Saved in this browser</span>
         </div>
-        {myRounds.length > 0 && (
-          <div className="advance-row">
-            {myRounds.map((gr) => {
-              const [g, r] = gr.split(":");
-              return (
-                <a
-                  key={gr}
-                  className="button primary"
-                  href={`#draw?scenario=${g === "0" ? "eth-mine" : "nft-mine"}`}
-                >
-                  Did my ticket win? Replay {gameName(Number(g) as 0 | 1)} round{" "}
-                  {r} as a fixture ↗
-                </a>
-              );
-            })}
-            <p className="fine">
-              The replay advances your open round with simulated time and a
-              fixed sample outcome. It does not favour your picks.
-            </p>
-          </div>
-        )}
         <div className="my-ticket-list">
           {mine.map(card)}
           {!mine.length && (

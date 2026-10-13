@@ -1,3 +1,5 @@
+> Packaging note (13 October 2026): The historical 2.5 fps `reveal-nft-tie.gif` has been removed from the delivery bundle to meet its size limit. Complete current 25 fps WebGL and software recordings are in [continuity](continuity/index.html); the record below describes the earlier run.
+
 # Sorphera validation record — budget, baskets and globe reveal (continuation of PR #4)
 
 Worker-run verification on 2026-10-09. Source is `web/`; the production static export is root `dist/`. Contracts, canonical ABIs, `src/deployment.json` (demo mode, nulls, `transactionsActivated: false`) and activation safeguards are unchanged. No deployment, funding, signature, purchase or live activation happened.

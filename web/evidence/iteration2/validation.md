@@ -1,3 +1,5 @@
+> Packaging note (13 October 2026): The superseded procedural-globe `reveal-stopped.png` has been removed from the delivery bundle to meet its size limit. The current stopped globe and complete 360-degree comparisons are in [continuity](../continuity/index.html); the record below describes the earlier run.
+
 # Sorphera website iteration 2: plush globes, Passport, Atlas teaser
 
 2026-10-13. Baseline at start: `ebd87a3a2787339b2838485a0384d25040bbc44f` (merged PR #6), clean tree. Scope: one plush globe asset family matching the photographed references, the draw animation on that family, the 12-stamp Passport (demo/simulated), the three-globe Atlas teaser, documentation and the developer handoff. Contracts, ABIs, deployment settings, build configuration, dependencies, lockfiles and ignore files are unchanged.

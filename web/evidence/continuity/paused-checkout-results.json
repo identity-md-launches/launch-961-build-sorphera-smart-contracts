@@ -1,0 +1,8 @@
+{
+  "results": [
+    "Open reward checkout reacts to sales pause; adversarial handler invocation rejects and preserves reward/Passport.",
+    "Reward confirmation at cutoff rejects, keeps reserved draft and does not consume the earned reward.",
+    "Closed-round drafts stay accessible; explicit removal releases reserved rewards without changing the Passport."
+  ],
+  "errors": []
+}

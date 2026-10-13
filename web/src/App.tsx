@@ -1,9 +1,10 @@
+import { loadEntries, saveEntries } from "./demoStorage";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { asset, Modal } from "./components";
 import { Home, History, FAQ } from "./pages";
 import Play from "./Play";
 import Tickets, { type ClaimMemory } from "./Tickets";
-import { initialTickets, type DemoTicket } from "./fixtures";
+import { type DemoTicket } from "./fixtures";
 import config from "./deployment.json";
 import type { Baskets } from "./budget";
 import {
@@ -39,10 +40,14 @@ export default function App() {
     claimed: [],
     queued: [],
   });
-  const [tickets, setTickets] = useState<DemoTicket[]>(initialTickets);
+  const [tickets, setTickets] = useState<DemoTicket[]>(
+    () => loadEntries(loadIdentity()).tickets,
+  );
   // Separate baskets per game and round survive navigation. Switching views
   // never moves entries between games.
-  const [baskets, setBaskets] = useState<Baskets>({});
+  const [baskets, setBaskets] = useState<Baskets>(
+    () => loadEntries(loadIdentity()).baskets,
+  );
   const [limit, setLimit] = useState("30");
   // Passport records are isolated per demo identity. Demo wallet A starts
   // with labelled sample history; B starts empty. Switching never transfers
@@ -71,10 +76,14 @@ export default function App() {
     saveIdentity(id);
     setIdentity(id);
     setPassportState(loadStored(id));
-    setTickets(initialTickets);
-    setBaskets({});
+    const saved = loadEntries(id);
+    setTickets(saved.tickets);
+    setBaskets(saved.baskets);
     setClaimMemory({ results: {}, claimed: [], queued: [] });
   }
+  useEffect(() => {
+    saveEntries(identity, tickets, baskets);
+  }, [identity, tickets, baskets]);
   useEffect(() => {
     saveRecord(identity, passport);
     // Persist the seeded sample once so the first purchase is not re-seeded.
@@ -173,8 +182,13 @@ export default function App() {
             <Home passport={passport} />
           ) : view.path === "play" ? (
             <Play
-              key={view.params.get("game")}
+              key={`${view.params.get("game")}:${view.params.get("round")}`}
               initialGame={view.params.get("game") === "1" ? 1 : 0}
+              initialRound={
+                /^\d+$/.test(view.params.get("round") ?? "")
+                  ? BigInt(view.params.get("round")!)
+                  : undefined
+              }
               baskets={baskets}
               onBaskets={setBaskets}
               limit={limit}
@@ -187,6 +201,12 @@ export default function App() {
           ) : view.path === "draw" ? (
             <DrawRoom
               scenarioId={view.params.get("scenario") ?? undefined}
+              game={view.params.get("game") === "1" ? 1 : 0}
+              roundId={view.params.get("round") ?? undefined}
+              invalidGame={
+                view.params.has("game") &&
+                !["0", "1"].includes(view.params.get("game")!)
+              }
               tickets={tickets}
             />
           ) : view.path === "tickets" ? (

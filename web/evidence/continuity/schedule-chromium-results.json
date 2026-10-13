@@ -1,0 +1,15 @@
+{
+  "results": [
+    "Default draw room is upcoming ETH round, no reveal or invented results",
+    "Independent NFT switch and exact UTC timestamps",
+    "Distinct calendar downloads have correct times, round URLs and delay caveat",
+    "Open checkout closes exactly at cutoff, handlers reject, drafts and Passport preserved",
+    "Draw window and suspended-tab recovery cannot generate results or reopen sales",
+    "Later round has distinct identity and old deep link keeps the old deadline",
+    "Receipt and My tickets open the exact game/round after reload",
+    "Unknown game-round/replay does not silently substitute an outcome",
+    "Keyboard primary action, focus ring, reduced motion and 320/390/768/1440 reflow",
+    "Delayed draw, NFT tie delay, rollover and cancellation fixtures remain labelled simulations"
+  ],
+  "errors": []
+}

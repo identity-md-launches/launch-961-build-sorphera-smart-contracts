@@ -1,37 +1,50 @@
-# Plush material source
+# One continuous plush globe
 
-`plush-source.webp` is the blank-badge front used to reconstruct the shared
-plush mesh. It is a 1254×1254 image edit made from the supplied `eth-ball.webp`
-and the higher-resolution Sorphera brand board, using the image-generation
-tool to remove the printed digits while retaining cream fabric and its padded
-stitched rim. No flat patch was placed over the numerals.
+The supplied `eth-ball.webp`, `nft-ball.webp` and ice-blue brand board remain
+unchanged in `public/brand/`. `plush-source.webp` is PR #7's 1254×1254 edited
+blank-badge front. Its photographic fibres, applique and cream badge remain the
+source for this iteration; no new logo or replacement globe photograph is used.
+Original public brand folder: https://drive.google.com/drive/folders/1AbFGlSeh_epw4TgeGRen4C4aHgP65v0N
 
-The original brand package was retrieved from the public folder supplied in
-the task: https://drive.google.com/drive/folders/1AbFGlSeh_epw4TgeGRen4C4aHgP65v0N
-(Sorphera_Website_Package.zip, including the 1536×1024 brand board). The existing
-reference WebPs in `public/brand/` remain intact. Downloaded originals and
-intermediate images are not runtime assets and are not duplicated in the export.
+## Rebuild the maps
 
-`scripts/plush-materials.py` inverse-projects the edited front into an albedo
-map. Unseen panels use felt swatches from that source and the existing geographic
-outline, with applique thickness, softened edges, contact shading and panel
-grooves. The second map encodes land, badge and displacement. The runtime builds
-the displaced mesh and its surface normals; it rotates one continuous model.
-Rear geography is a reconstruction, not a claim that rear photographs were supplied.
-
-Optional regeneration, with Python 3, Pillow, NumPy and SciPy installed:
+With Python 3, Pillow, NumPy and SciPy available:
 
 ```sh
-python web/scripts/plush-materials.py
+python3 web/scripts/plush-materials.py
 ```
 
-Ordinary `npm run build` needs none of those Python tools or the network: the
-2048×1024 albedo and lossless displacement/material WebPs are already committed
-under `public/brand/plush/`. Source artwork is kept outside `public/` to avoid
-shipping an unused source image to visitors. All five palettes share this model;
-country codes and lottery numerals are transparent ink paths on the curved badge.
+The optional deterministic recipe writes `web/public/brand/plush/albedo.webp`
+and `surface.webp`. Both are 1024×512; the recipe works at 2048×1024 and filters
+the delivered maps. `npm run build` copies these committed runtime assets and
+needs neither Python nor image generation. The source photograph stays outside
+`public/` because it is not a browser runtime dependency.
 
-The front, 45°, side, 135° and rear were inspected alongside both original
-references at 56px and 185px. The comparison in `evidence/revision/` records the
-result. Fine fibre placement and unseen geography are reconstructed; this is
-not a photogrammetric scan or a pixel-identical reproduction of the source.
+The previous mirrored swatch recipe is replaced completely. A seeded library of
+many clean source-photo patches, rotated and smoothly overlapped in a large
+atlas, supplies non-periodic felt detail. Three sphere-space projections keep
+fibre scale continuous across the UV join and the poles. No mirrored tile or
+repeating diamond is used. Signed-distance masks join the photographed geography
+to reconstructed rear geography without transparent overlapping continents.
+Every continent has a rounded displaced edge and contact shade. Longitudinal
+panels, latitude joins and small pole caps have grooves and intermittent thread.
+
+The central front retains its photographed albedo and single padded cream
+badge. Its unobserved silhouette/side transition is reconstructed, removing the
+photo's baked rim-light band. Directional light correction uses the same model
+for the whole object. Blue/pink, pink/cream and Atlas palettes share those maps,
+relief and fibres. Back geography is a reconstruction; no rear photograph or
+photogrammetric scan was supplied.
+
+`plushModel.ts` builds one 24,576-triangle mesh. WebGL uses mip filtering; the
+Canvas fallback prefilters the same albedo, culls back-facing triangles and
+rasterizes the same mesh. Wrapped normals close the longitudinal join. Dynamic
+black glyphs are mapped only to the front badge. `paintGlobe` and its front
+caches retain their API; `renderPlush` has an optional tilt for pole inspection.
+The reveal's entry, 1.5-second eased turn, stop, 0.85-second hold and landing are
+unchanged. No image swap or hidden rear is used.
+
+Current submitted evidence is in `web/evidence/continuity/`: front/reference/side/back at the actual
+43/59px picker and 140/170px stage sizes, 45-degree full turns, pole views for
+both palettes, WebGL and software comparisons, and continuous normal-speed clips.
+See `web/evidence/continuity/validation.md` for checks, measurements and limitations.

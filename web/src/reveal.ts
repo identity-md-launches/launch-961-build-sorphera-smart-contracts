@@ -23,14 +23,15 @@ export function customerStatus(stage: string, game: Game): string {
   if (stage.startsWith("Custody review")) return "Checking the prize custody";
   if (stage.startsWith("Cancelled")) return "Round cancelled · refunds only";
   if (stage === "Awaiting draw oracle") return "Waiting for confirmed numbers";
-  if (stage === "Draw randomness received") return "Numbers confirmed · revealing";
+  if (stage === "Draw randomness received")
+    return "Randomness received · awaiting finalization";
   if (stage === "Matching tickets · tie-break required")
     return "Several tickets match · selecting the winning ticket";
   if (stage === "Tie-break required") return "Selecting the winning ticket";
   if (stage === "Awaiting tie-break oracle")
     return "Waiting for the confirmed winning ticket";
   if (stage === "Tie-break randomness received")
-    return "Winning ticket confirmed · revealing";
+    return "Tie-break randomness received · awaiting finalization";
   if (stage === "Winning ticket confirmed") return "Winning ticket confirmed";
   if (stage === "Result confirmed")
     return game === 0 ? "Jackpot shared" : "Jackpot won";
@@ -52,7 +53,12 @@ export function revealView(
   const complete = Boolean(nums) && count === BALLS;
   const resultsVisible = complete;
   const winnerVisible =
-    complete && !state.provisional && Boolean(state.winningTicket);
+    game === 1 &&
+    complete &&
+    !state.provisional &&
+    state.matches > 0 &&
+    Boolean(state.winningTicket) &&
+    state.winningTicket !== "0";
   let status: string;
   if (nums && !complete) status = "Revealing the numbers";
   else if (nums && complete) status = customerStatus(state.stage, game);
@@ -70,7 +76,9 @@ export function matchTicket(
   pick: Pick,
   shown: (number | undefined)[],
 ): TicketMatch {
-  const mainShown = shown.slice(0, 3).filter((n): n is number => n !== undefined);
+  const mainShown = shown
+    .slice(0, 3)
+    .filter((n): n is number => n !== undefined);
   const bonusShown = shown[3];
   const mainHits = pick.main.filter((n) => mainShown.includes(n));
   const bonusHit = bonusShown !== undefined && bonusShown === pick.bonus;

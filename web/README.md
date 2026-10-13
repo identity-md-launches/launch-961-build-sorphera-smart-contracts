@@ -1,74 +1,63 @@
 # Sorphera website
 
-A responsive React 19 / TypeScript / Vite static site using the supplied Sorphera artwork. The default experience is **Demo - no real tickets or prizes**. It includes Home, Play, Draw room, My tickets, History and FAQ, with hash routes that survive static-host reloads.
+The existing React 19 / TypeScript / Vite static site uses the supplied Sorphera artwork. Home, Play, Draw room, My tickets, History and FAQ use hash routes. The default is **Demo - no real tickets or prizes**.
 
 ## Install, preview and rebuild
 
-Use Node.js 22.12+ (built for this iteration with Node 22.23.3 and npm 10.9.9).
+Use Node 22.12+ (validated here with Node 24.21.0 and npm 11.19.0).
 
 ```sh
 cd web
 npm ci
 npm run typecheck
 npm test
+npx tsx --test src/schedule.test.ts
 npm run build
 npm run preview
 ```
 
-The build writes the repository-root **`dist/`**, not `web/dist/`. `npm run preview` serves this export. `npm run dev` is available for editing. The checked-in `package-lock.json` pins the frontend dependencies; no contract build settings or dependencies are changed. If the user's npm cache is read-only, run `npm ci --cache /tmp/sorphera-npm-cache`.
-
-The finished export also works without npm or a backend:
+The unchanged `package.json` and `package-lock.json` pin dependencies. The build writes repository-root **`dist/`**. `npm run dev` is available for editing; preview serves the built export. With a read-only npm cache, use `npm ci --cache /tmp/sorphera-npm-cache`. To serve the export without Node:
 
 ```sh
 python3 -m http.server 4173 --directory dist
 ```
 
-Visit `http://localhost:4173/`. To check an IPFS-style subpath, serve a parent directory with `dist` beneath it and visit `/dist/`. Serve over HTTP(S); browsers do not support module scripts reliably from `file://`.
+Open `http://localhost:4173/`. Use HTTP(S), not `file://`, for module scripts. Serve the entire `dist/` directory, including `assets/` and `brand/`. Relative asset URLs (`base: './'`) and hash routes work at a gateway subpath without a rewrite service. No external font, registry mirror, private credential or backend is needed to serve the demo. Publication belongs to the launch platform; this task ran no publishing command.
 
-## Publish
+## Current globe and schedule update
 
-The publisher must serve the **contents of root `dist/`**, including its `assets/` and `brand/` directories. No rebuild, rewrite service, secret or assumed backend is needed. Vite's `base: './'` emits relative URLs. Routes use fragments such as `#play?game=1` and `#draw?scenario=nft-tie`.
+- **One continuous plush family.** Source-photo fibres are synthesized without mirrored swatches, joined in sphere space, and combined with raised, rounded applique, contact shadows, panel seams and one front badge. The approved central front photograph and dynamic curved black digits remain. Blue/pink and pink/cream share the material, mesh and lighting across pickers, stage, slots, baskets, receipts and software fallback. Source/provenance and deterministic rebuild instructions: [artwork/README.md](artwork/README.md). The animation still enters badge-away, eases through a 1.5-second turn, stops, holds for 0.85 seconds and travels to its slot. Pause/resume, replay, skip, muted-default audio and reduced motion remain.
+- **Two independent schedules.** Round 42 cutoff anchors are ETH `2026-10-18T00:00:00Z` and NFT `2026-10-18T01:00:00Z`. The explicitly simulated draw-window gap is 30 minutes, not a production policy. Later rounds add seven days and use different IDs. The first visit selects an identity by the UTC week; the selection persists. Time passing never advances a stored round. After cutoff, an explicit “Explore next simulated round” action can select the next identity. Exact round links keep their original deadline.
+- **Cutoff is not draw time.** `Round` / `ContractAdapter` carry the contract's `earliestDraw`, `settlementDeadline` and `requestedAt`; `drawDelay` is derived from `earliestDraw - cutoff`, with no ABI change. `earliestDraw` is the earliest request time, after FWA reconciliation. Fulfillment, finalization and possible NFT tie-breaks can delay numbers. One shared clock displays days/hours/minutes, adding seconds inside the final hour, and refreshes on visibility/focus/page resume. UTC timestamps are stored internally; dates show local time with a zone. Missing times are labelled unavailable.
+- **Upcoming Draw Room.** `#draw` defaults to upcoming rounds, with an ETH/NFT switch and the draw-window countdown first. `#draw?game=1&round=42` opens that exact round. Past replay and fixture previews are explicitly separate simulations; existing `#draw?scenario=nft-tie` and other scenarios still work. Unknown game/round/replay links do not substitute results. Only supplied confirmed events enable reveal outcomes; a zero countdown cannot create a winner or reopen sales.
+- **Safe drafts and records.** At cutoff both paid and reward review/confirmation disable, including a modal opened earlier. Confirmation checks again before and after the demo pending delay. Pauses, closure and delayed results preserve budgets, Passport stamps and unused rewards. Entries, timestamps and per-round drafts persist per demo identity in a new `sorphera.demo.entries.v2:*` namespace. Existing Passport v1 records remain untouched; missing old ticket schedules are not replaced with guessed deadlines. Old drafts can be revisited or explicitly removed to release reserved rewards.
+- **Honest calendars.** “Add draw-window opening to calendar” and “Add sales-closing reminder” create distinct RFC5545 events, UIDs, timestamps and filenames. Both include the exact game/round link; the draw event includes the delay caveat. No sales reminder is relabelled as a draw appointment.
 
-For the IdentityMD Website workflow, select this repository/source submission and set the static export directory to `dist`. Publish the labelled demo with `web/src/deployment.json` unchanged. For IPFS, add the complete `dist` directory and use the resulting gateway path; do not copy only `index.html`.
+## Preserved product behavior
 
-**Publication result:** `imd site publish dist --name sorphera-a-world-of-possibility` bundled the export (601,174 bytes) but exited 1: **503 `member_sites_closed`: “this plane names no member sites.”** No updated public URL or CID was returned. The supplied existing demo is https://sorphera-a-world-of-possibility.sites.imd.fun/; this worker did not update it. The launch platform can publish the committed export under its existing site name after submission. See `evidence/iteration/publication.json`. The temporary local preview is not a public website URL.
+USD budget limits, exact wei arithmetic, estimated fees and the illustrative US$2,500/ETH rate remain. Invalid or exceeded budgets block checkout in the UI and handlers. Demo wallet identities remain isolated. No provider, signer, transaction or real prize is used in demo mode.
 
-## Visual revision (2026-10-13)
+The **Passport** earns one stamp per finalized eligible paid ticket; every 12 earns one free entry, shared across games. Pending, refunded, failed and free entries do not incorrectly earn stamps. Reward entries have the same draw rights; the network fee remains visible. The **Atlas** teaser retains Canada, Japan and Brazil concept globes without a sale, mint or utility claim. See [Passport handoff](../docs/PASSPORT-HANDOFF.md).
 
-The shared globe now uses a photo-derived displaced cloth mesh, preserving felt detail, raised applique and a blank padded badge. Dynamic rounded ink follows the curved surface; front renders remain cached by kind and number. WebGL and Canvas fallbacks share the mesh and material. Source/provenance: [artwork/README.md](artwork/README.md). The original draw clock and Passport accounting are unchanged.
+## Checks and evidence
 
-The six type roles are 12/14/18/20/28px plus one 36–64px display clamp. Home combines the demo round with its jackpot label and shortens the mobile hero. At 390×844 both the primary action and first jackpot amount are visible. See [the measured revision review](evidence/revision/validation.md) for all four finding responses, checks, screenshots and limitations. This revision’s evidence supersedes the older procedural-globe and type-scale descriptions below.
+See [current validation](evidence/continuity/validation.md) and the [comparison/clip viewer](evidence/continuity/index.html). These supersede the visual and timing descriptions in earlier evidence directories. Current results include build/typecheck, 46 unchanged unit tests, 12 added timing tests, 10 production-export browser flows, 3 paused/reward flows and 16/16 pinned design-probe checks. Both WebGL and software reveal checks were run separately; actual outcomes and frame timings are recorded with the clips.
 
-Optional renderer regression (external test tools can live in `/tmp`; no extra production dependencies):
+From the repository root, with Playwright installed as **external test tooling**:
 
 ```sh
-PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs \
-ESBUILD_MODULE=/path/to/esbuild/lib/main.js \
-node web/tests/plush.mjs
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node web/tests/schedule.mjs
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs ESBUILD_MODULE=/path/to/esbuild/lib/main.js node web/tests/paused-checkout.mjs
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs ESBUILD_MODULE=/path/to/esbuild/lib/main.js node web/tests/plush.mjs
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node web/tests/reveal.mjs
+SOFTWARE=1 PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node web/tests/reveal.mjs
 ```
 
-Run that command from the repository root. It serves the production export at a subpath and writes comparisons to `test/scratch/plush/`. It checks all twenty number prints, five orientations, hidden rear printing, WebGL-disabled fallback, reflow and the 390px first-screen positions. Visual fidelity still needs inspection of its reference/model comparison, not a test verdict.
+Scripts start/close their own bounded HTTP servers. `PLAYWRIGHT_BROWSERS_PATH` can select an external browser installation; schedule/reveal also support `CHROMIUM_PATH`. The pause test bundles real components with a test-only sales-state hook; this hook is absent from `dist/`. Schedule/reveal tests serve the production export under `/preview/`. The plush harness bundles the renderer source against built material assets and also checks export reflow. `npm test` runs the existing suite; the additional schedule suite is invoked explicitly because the package manifest is preserved.
 
-## Iteration 2 (2026-10-13): plush globes, Passport, Atlas teaser
+The pinned design probe command was `node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste` with `IMD_PLAYWRIGHT` pointing to external tooling. Pinned inputs are removed by the runner; the report is preserved here. Chromium used SwiftShader for WebGL and a forced WebGL-disabled Canvas run. WebKit did not complete a launch; physical devices, screen readers and native 200% zoom were not tested. A passing automated check is not a security or accessibility guarantee.
 
-- **One plush globe asset family.** `src/PlushGlobe.tsx` renders every ball (picker, baskets, receipts, My tickets, reveal stage, slots, fallbacks) from one textured sphere model whose materials were sampled from `public/brand/eth-ball.webp`, `nft-ball.webp` and the brand board: felt with fibre nap, quilted stitched seams, raised continents with rounded edges and contact shadows, a padded cream badge with a stitched rim, and bold rounded black numerals drawn at render time on a blank badge. Main balls are ice blue with pink continents; the bonus ball is pink with cream continents in both games. Front renders at angle 0 are cached per number; focus and selection rings stay outside the art. Rear and side views are true renders of the same sphere, so the badge and digits follow the curved surface through the draw animation (badge-away entry, 1.5s decelerating turn, stop facing the viewer, 0.85s hold, travel into the slot).
-- **Passport: every 12 paid tickets earns 1 free ticket (DEMO / SIMULATED).** `src/passport.ts` holds the rules; `src/Passport.tsx` the 12-stamp card. One stamp per eligible paid ticket at the standard price, shared across both games, carried across purchases and rounds, no expiry, weekly limit, streak, mission, NFT requirement or enrollment. Pending purchases are shown separately until finalized; refunded, failed and free tickets earn nothing. Each purchase counts once (idempotent id across retries), rewards are consumed only after a successful demo confirmation, rejection/failure/closed rounds preserve them, and reserved rewards cannot be used twice. The card appears on Home, Play and My tickets; the basket shows current and projected progress with paid and reward lines; checkout shows the paid subtotal, reward tickets at zero, the estimated network fee and the all-in total (no gas-free promise); the receipt shows quantities, progress and an accessible card-completion animation. Reward tickets appear in My tickets and the Draw Room as "Reward ticket" with the same results and prize rights: "Reward tickets enter the same draw and are included in the total number of entries." Records are browser local storage per demo wallet (switch in the Wallet dialog); switching never transfers progress. Developer handoff: `../docs/PASSPORT-HANDOFF.md`.
-- **Sorphera Atlas teaser.** Three plush country globes (Canada, Japan, Brazil) with CA/JP/BR badges above the homepage footer, with the requested copy and a "Concept artwork." label. No mint, sale, waitlist, date, price, rarity, token, utility, reward or wallet call to action. Atlas art is separate from FWA jackpot inventory, which keeps its placeholders and provenance.
-- **Design review fixes.** The tracked-capitals label token was replaced with normal-case text, the type scale was consolidated to 12/14/16/18/20/24/28px plus display clamps, weights to 400/600/700, the footer no longer repeats the tagline, and `index.html` carries og:title, og:description and og:image. Validation, Better Interface coverage and limitations: `evidence/iteration2/validation.md`.
-
-## What works in the demo
-
-- **Budget first.** An editable budget for this purchase (default US$30) shows how many whole tickets fit after an estimated network fee, plus subtotal, estimated fee, all-in USD/ETH total and remaining budget, and explains when one ticket is unaffordable. The ETH/USD rate (US$2,500) and fee (0.0004 ETH) are fixed illustrative demo values in `src/budget.ts`, labelled everywhere and never a live quote. Wei arithmetic stays exact; the all-in value is rounded once to USD cents. Review and confirm are blocked in both UI and handlers when the budget is invalid or exceeded. Acceptance rechecks the current budget, basket and round after the pending delay. Duplicate confirmation is latched synchronously; rejection and failure keep the budget and basket. Nothing is added or purchased automatically.
-- ETH and NFT selections with separate per game/round baskets that survive navigation; switching views never retargets entries. Accessible main/bonus globe picker, Quick Pick (selection only), "Generate N different entries" (distinct combinations), "Repeat these numbers", editable/removable lines, duplicate combinations, a flagged closed round and a maximum of 100 tickets per transaction.
-- Round facts above the picker: prize, ETH + USD price, closing countdown with local time and timezone, ETH sharing versus one NFT winner, and expandable odds (1 in 5,700, no partial prizes).
-- Review with one explicit demo-confirm action (rejection is an optional demonstration), then a receipt with the numbers, ticket count, amount, local closing time, countdown, "View your draw", "My tickets" and a calendar download.
-- Nine event-based draw replays: ETH split, NFT tie, ETH rollover, NFT rollover, empty-inventory cancellation review, delayed draw oracle, delayed tie oracle, and two labelled fixture replays of the customer's own open rounds (simulated time, fixed outcomes independent of picks). Ball reveals follow supplied result events; no client random function chooses a result.
-- Shared textured globe reveal: each ball arrives with its badge facing away, turns with Natural Earth continents and a cream patch mapped onto a curved sphere, decelerates to a stop with the number facing the camera, holds, then the same pixel-identical globe moves into its slot; the pink bonus globe has its own reveal. Numbers, match counts, payouts and winners (including screen-reader announcements) are withheld until the balls stop. Personal entries are highlighted as balls stop, with a per-ticket outcome; multiple NFT matches end in a paginated tie finale that reveals the confirmed winner only after the separate tie-break result.
-- Pause/resume, replay, skip-to-results, sound (muted by default; spoken callouts only after enabling) and reduced-motion controls (static quick reveals). The reveal stage is lazy-loaded with a lightweight fallback; results and controls are identical either way.
-- My tickets separates your demo entries from labelled sample winners/refunds/rewards and lets you advance your own round into the fixture replay. The default NFT claim succeeds with a receipt and neutral “Demo NFT” placeholders; failed delivery, incompatible recipient and per-asset retry sit under "Demo scenarios". Separate incidental ETH, claim limits, claims during paused sales and purchaser reward queue versus delivery are preserved. Claim state survives navigation in this page session. Reloading resets synthetic tickets and claims.
-- Result history, explanatory disclosures and contract/risk FAQ. The fictional “little worlds” gallery and details are removed. NFT jackpot prizes come from FWA pulls; the demo has not pulled, secured or awarded any NFT. All amounts, identifiers, inventory, schedules and results in this experience are fixture data, not deployed values. There are no fabricated explorer transaction hashes or actual NFT valuations.
-
-The demo adapter accepts no wallet/provider, exposes no signer and never signs or broadcasts. The Wallet button explains that connection is unavailable in the demo. The live wallet library and contract workspace are in a separate lazy chunk.
+The runner ignores root `artifacts/` already. Tests write there or in `test/scratch/`; deliverable evidence is copied once to **`web/evidence/continuity/`** so it survives submission. No ignore file was edited. No dependency directory, registry archive or cache belongs in the submission. The finished runtime maps remain in both `web/public/` and `dist/`, as required for rebuild and static serving.
 
 ## Integration inputs and activation
 
@@ -91,29 +80,3 @@ ETH wins and cancellation refunds both call `claimETH`; claims are not gated on 
 For a large deployment, an optional indexer can persist logs and owner filters outside the browser. It must retain block hashes, remove orphaned logs, partition chain/contract/game/round/request identities and deliver only events with the selected confirmation policy. Cross-check its claims, latest round state and custody through the RPC before signing. This export assumes no such service. The supplied implementation rebuilds the in-memory index after a page reload and caps the visible result list to the latest 20 indexed rounds.
 
 NFT metadata is untrusted: `safeMetadata` limits name length and allows only HTTPS image URLs, React renders text without HTML injection, and no iframe/SVG/data-URL metadata is executed. The demo uses neutral NFT placeholders and performs no third-party metadata fetch; the globes are branding and lottery balls, not prize NFTs.
-
-## Validation and limitations
-
-**Iteration 2 (current):** see **`evidence/iteration2/validation.md`**. Typecheck exit 0; 46 unit tests passed; production build exit 0; a Playwright Chromium interaction flow passed 35 of 35 checks (passport boundaries, double submit, failed redemption, free-only checkout, account switching, reload, reveal) with no console or resource errors; the taste@1 probe passed 14 of 16 checks (remaining: the round pill above jackpot amounts, and 9 type sizes counted at 390). WebKit, physical devices and screen readers were not tested. Browser checks are the worker's own evidence; the verifier does not certify behaviour.
-
-See **`evidence/iteration/validation.md`** for the previous iteration’s actual results, six-domain Better Interface review and limitations; `evidence/iteration/` contains before/after screenshots, reveal stages, the 25 fps normal-speed clip and its accessible preview (`index.html`). Earlier files in `evidence/` are historical PR #5 evidence, not proof of this iteration.
-
-The existing unit suite plus the new budget regressions run via `npm test`. Interaction checks run against root `dist/` served under a temporary `/preview/` subpath:
-
-```sh
-# From the repository root, with Playwright installed as external tooling:
-PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node web/tests/browser.mjs
-PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node web/tests/reveal.mjs
-```
-
-`CHROMIUM_PATH` and `PLAYWRIGHT_BROWSERS_PATH` can point to an existing Chromium/FFmpeg installation. Each script starts and closes its own bounded HTTP server and browser. Outputs go to `artifacts/`. No new runtime package, package-manifest change or vendored npm registry is required. The worker installed the unchanged `web/package-lock.json` in an isolated `/tmp` mirror and copied the final `dist/` back; the repository has no generated dependency directory.
-
-The recorded clip is continuous Playwright browser video, not a screenshot GIF. It is 25 fps at normal playback speed; see the timing report for the actual headless-browser frame intervals. It does not establish physical-phone or cross-browser smoothness. Native screen-reader sessions, physical-device testing and browser-native 200% zoom were not performed.
-
-No genuine deployment inputs were provided, so the live adapter and workspace are implemented and typechecked, with mocked receipt/index/claim tests, but not verified through a funded wallet or a live lottery. Real VRF, wallet extensions, collection behavior, RPC CORS/rate limits and cross-wallet interoperability remain untested. The production draw view uses confirmed data and a lightweight results presentation; the theatrical replay experience is the default demo. No screen-reader session, physical-device test or exhaustive accessibility certification is claimed.
-
-## Packaging
-
-Submit source in `web/`, root `dist/`, root `DESIGN.md` and the validation/screenshots in `artifacts/`. Keep the package manifest and lockfile. Exclude generated `node_modules` at every depth, package caches, traces and the original ZIP. No ignore file is changed. Dependencies and tooling remain outside the repository; the submission byte check is recorded in the validation evidence. All four supplied images are optimized locally, with alpha and proportions preserved; cropped board details are additional derivative assets. See `THIRD_PARTY_NOTICES.md` and `licenses/`.
-
-The runner already excludes root `artifacts/` from Git. Attachment originals remain there; `web/evidence/iteration/` preserves the current validation, logs, clip and screenshots in the source submission. No Git exclude or ignore configuration was modified. The byte-budget report counts Git-eligible deliverable files, with the evidence included once.

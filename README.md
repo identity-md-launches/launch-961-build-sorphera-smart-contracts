@@ -2,27 +2,25 @@
 
 **Weekly ETH & NFT lottery ball jackpots. Powered by FWA.**
 
-
 ## Website demo
 
-The Sorphera website source is in **[web/](web/README.md)** and its finished static export is in **[dist/](dist/index.html)**. It defaults to **Demo - no real tickets or prizes**. All deployment addresses remain null; this work deploys no contracts and enables no public sales.
+The existing React/TypeScript website is in [web/](web/README.md); the complete static export is [dist/](dist/index.html). It remains a labelled demo with USD budgets, the buy-12-get-1 Passport and the Atlas concept teaser. No contract, ABI, dependency or deployment configuration was changed by this website task.
 
 ```sh
 cd web
 npm ci
 npm run typecheck
 npm test
+npx tsx --test src/schedule.test.ts
 npm run build
 npm run preview
 ```
 
-`npm run build` writes root `dist/`. Publish that complete directory with the Website workflow or any static/IPFS host; assets are relative and routes use hashes. The worker attempted IMD CLI publishing, but the service refused it with **503 `member_sites_closed`**; public publication is still pending. The local preview and exported pages were tested; no public preview URL is invented.
+Use Node 22.12+; this delivery used Node 24.21.0. The production build writes root `dist/`, with relative assets and hash routes suitable for static hosting. The publisher serves that complete export; no publication or on-chain action was attempted in this task.
 
-Iteration 2 (2026-10-13) adds one plush globe asset family matched to the brand photography, the demo/simulated **Passport: every 12 paid tickets earns 1 free ticket** (shared across both games, rewards usable in either; see [the contracts handoff](docs/PASSPORT-HANDOFF.md)), and the three-globe **Sorphera Atlas** concept teaser above the homepage footer. Validation for this iteration: [web/evidence/iteration2/validation.md](web/evidence/iteration2/validation.md).
+The current update completes the photo-derived globe around the sides, back and poles with shared raised felt materials in WebGL and software rendering. Both independent games now show sales cutoff and draw-window opening on Home, Play, checkout, receipts, My tickets and the upcoming Draw Room. Round 42 retains Sunday 18 October 2026 00:00 UTC (ETH) / 01:00 UTC (NFT) cutoff anchors; each simulated window opens 30 minutes later. This illustrative delay is not a production policy or a result-time promise. Saved rounds keep their timestamps, even after cutoff or reload. Checkout rechecks eligibility and preserves closed drafts and unused rewards.
 
-The visual revision replaces the rejected procedural globe with a photo-derived displaced mesh and a matching software fallback, consolidates typography to six roles, combines the round label, and brings the first jackpot onto the 390px first screen. The production build, typecheck, 46 unit tests, interaction/reveal checks and all 16 taste probe checks pass. See [revision evidence and limitations](web/evidence/revision/validation.md). No publishing command was run in this revision.
-
-See [install, preview, rebuild, publish and integration setup](web/README.md), [implemented design](DESIGN.md), [previous checks and limitations](web/evidence/iteration/validation.md), and [before/after screenshots and continuous reveal clip](web/evidence/iteration/index.html). The supplied four brand PNGs were inspected and optimized. Contract source, tests, configuration and original ABI exports are preserved. The demo is a useful website deliverable, not a claim of launch readiness.
+Build, typecheck, 46 existing unit tests, 12 timing regressions, 10 controlled-clock browser flows, 3 paused/reward checkout flows and all 16 design-probe checks passed. Full checks and limitations: [current validation](web/evidence/continuity/validation.md). See [reference/360-degree comparisons and continuous reveal clips](web/evidence/continuity/index.html), [implemented design](DESIGN.md), and [install/rebuild/integration details](web/README.md). Earlier evidence directories describe previous iterations.
 
 Ethereum mainnet contracts, offline Foundry tests, pinned mainnet-fork integration tests, deployment rehearsals and ABI artifacts. A labelled demo website is now included; no new token/pool. No transaction was broadcast and public sales remain disabled.
 

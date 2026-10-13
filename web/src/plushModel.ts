@@ -52,12 +52,20 @@ function image(name: string): Promise<HTMLImageElement> {
     img.src = `${import.meta.env.BASE_URL}brand/plush/${name}`;
   });
 }
-function pixels(img: HTMLImageElement) {
+function pixels(img: HTMLImageElement, prefilter = false) {
   const c = document.createElement("canvas");
   c.width = img.width;
   c.height = img.height;
   const ctx = c.getContext("2d")!;
-  ctx.drawImage(img, 0, 0);
+  if (prefilter) {
+    // Software equivalent of the albedo mip filter: average subpixel fibres
+    // before sampling, preventing a different glittery material in fallback.
+    const mip = document.createElement("canvas");
+    mip.width = img.width / 2;
+    mip.height = img.height / 2;
+    mip.getContext("2d")!.drawImage(img, 0, 0, mip.width, mip.height);
+    ctx.drawImage(mip, 0, 0, c.width, c.height);
+  } else ctx.drawImage(img, 0, 0);
   return ctx.getImageData(0, 0, c.width, c.height).data;
 }
 export function loadPlushModel(): Promise<void> {
@@ -99,8 +107,8 @@ export function loadPlushModel(): Promise<void> {
       for (let i = 0; i <= NX; i++) {
         const n = j * (NX + 1) + i,
           p = n * 8;
-        const left = (j * (NX + 1) + Math.max(0, i - 1)) * 8,
-          right = (j * (NX + 1) + Math.min(NX, i + 1)) * 8;
+        const left = (j * (NX + 1) + ((i + NX - 1) % NX)) * 8,
+          right = (j * (NX + 1) + ((i + 1) % NX)) * 8;
         const up = (Math.max(0, j - 1) * (NX + 1) + i) * 8,
           down = (Math.min(NY, j + 1) * (NX + 1) + i) * 8;
         const tx = [0, 1, 2].map(
@@ -125,7 +133,7 @@ export function loadPlushModel(): Promise<void> {
         );
       }
     model = {
-      pixels: pixels(albedo),
+      pixels: pixels(albedo, true),
       map,
       width,
       height,
@@ -202,17 +210,19 @@ function createGPU() {
   });
   if (!gl) return;
   const vertex = `attribute vec3 position; attribute vec2 uv; attribute vec3 normal;attribute vec3 surfaceNormal;
-    uniform float angle; varying vec2 tex; varying vec3 original; varying vec3 rotated;
+    uniform float angle; uniform float tilt; varying vec2 tex; varying vec3 original; varying vec3 rotated;
     void main(){float c=cos(angle),s=sin(angle);vec3 p=vec3(c*position.x-s*position.z,position.y,s*position.x+c*position.z);
-      original=normal;rotated=vec3(c*surfaceNormal.x-s*surfaceNormal.z,surfaceNormal.y,s*surfaceNormal.x+c*surfaceNormal.z);tex=uv;
+      original=normal;rotated=vec3(c*surfaceNormal.x-s*surfaceNormal.z,surfaceNormal.y,s*surfaceNormal.x+c*surfaceNormal.z);
+      float ct=cos(tilt),st=sin(tilt);p=vec3(p.x,ct*p.y-st*p.z,st*p.y+ct*p.z);rotated=vec3(rotated.x,ct*rotated.y-st*rotated.z,st*rotated.y+ct*rotated.z);tex=uv;
       gl_Position=vec4(p.x*.94921875,p.y*.94921875,-p.z*.5,1.);}`;
   const fragment = `precision mediump float; uniform sampler2D albedo;uniform sampler2D surface;uniform sampler2D ink;
     uniform vec3 baseColor;uniform vec3 landColor;uniform float recolor;varying vec2 tex;varying vec3 original;varying vec3 rotated;
     void main(){vec3 m=texture2D(surface,tex).rgb; vec3 c=texture2D(albedo,tex).rgb;
       float luminance=dot(c,vec3(.2126,.7152,.0722));
       c=mix(c,luminance*mix(baseColor,landColor,m.r),recolor*(1.-m.g));
-      vec3 light=vec3(-.25,.52,.81);
-      float ref=.52+.48*max(0.,dot(original,light));float lit=.52+.48*max(0.,dot(normalize(rotated),light));
+      vec3 n=normalize(rotated);
+      float ref=.72+.18*original.x+.30*original.y+.10*max(0.,original.z);
+      float lit=.72+.18*n.x+.30*n.y+.10*max(0.,n.z);
       vec2 printUV=vec2(original.x/.60+.5, .5-(original.y-.005)/.60);
       if(m.g>.5 && original.z>.85 && min(printUV.x,printUV.y)>=0. && max(printUV.x,printUV.y)<=1.) {
         vec4 mark=texture2D(ink,printUV);c=mix(c,mark.rgb,mark.a);}
@@ -266,6 +276,14 @@ function createGPU() {
       gl!.UNSIGNED_BYTE,
       source,
     );
+    if (name === "albedo") {
+      gl!.generateMipmap(gl!.TEXTURE_2D);
+      gl!.texParameteri(
+        gl!.TEXTURE_2D,
+        gl!.TEXTURE_MIN_FILTER,
+        gl!.LINEAR_MIPMAP_LINEAR,
+      );
+    }
     gl!.uniform1i(gl!.getUniformLocation(program, name), unit);
   }
   upload(model.albedo, 0, "albedo");
@@ -276,9 +294,15 @@ function createGPU() {
   let lastInk: HTMLCanvasElement;
   return {
     canvas,
-    draw(kind: GlobeKind, angle: number, print: HTMLCanvasElement) {
+    draw(
+      kind: GlobeKind,
+      angle: number,
+      print: HTMLCanvasElement,
+      tilt: number,
+    ) {
       if (gl.isContextLost()) return false;
       gl.uniform1f(gl.getUniformLocation(program, "angle"), angle);
+      gl.uniform1f(gl.getUniformLocation(program, "tilt"), tilt);
       gl.uniform1f(
         gl.getUniformLocation(program, "recolor"),
         kind === "eth" ? 0 : 1,
@@ -315,6 +339,7 @@ function software(
   kind: GlobeKind,
   angle: number,
   print: HTMLCanvasElement,
+  tilt: number,
 ) {
   const frame = ctx.createImageData(SIZE, SIZE),
     depth = new Float32Array(SIZE * SIZE).fill(-Infinity);
@@ -322,12 +347,15 @@ function software(
   const verts = model.vertices,
     transformed = new Float32Array((verts.length / 8) * 3),
     c = Math.cos(angle),
-    s = Math.sin(angle);
+    s = Math.sin(angle),
+    ct = Math.cos(tilt),
+    st = Math.sin(tilt);
   for (let i = 0; i < verts.length / 8; i++) {
     const v = i * 8;
     transformed[i * 3] = 128 + R * (c * verts[v] - s * verts[v + 2]);
-    transformed[i * 3 + 1] = 128 - R * verts[v + 1];
-    transformed[i * 3 + 2] = s * verts[v] + c * verts[v + 2];
+    const rz = s * verts[v] + c * verts[v + 2];
+    transformed[i * 3 + 1] = 128 - R * (ct * verts[v + 1] - st * rz);
+    transformed[i * 3 + 2] = st * verts[v + 1] + ct * rz;
   }
   const [base, land] = materials[kind];
   for (let t = 0; t < model.indices.length; t += 3) {
@@ -344,7 +372,7 @@ function software(
       cx = transformed[d],
       cy = transformed[d + 1];
     const den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
-    if (Math.abs(den) < 0.001) continue;
+    if (den >= -0.001) continue; // Cull rear-facing triangles before rasterization.
     const minX = Math.max(0, Math.floor(Math.min(ax, bx, cx))),
       maxX = Math.min(255, Math.ceil(Math.max(ax, bx, cx)));
     const minY = Math.max(0, Math.floor(Math.min(ay, by, cy))),
@@ -380,20 +408,20 @@ function software(
           4;
         const lm = model.map[q] / 255,
           bm = model.map[q + 1] / 255;
-        const surfaceNormal = [0, 1, 2].map(
-          (k) =>
-            w1 * model.normals[ia * 3 + k] +
-            w2 * model.normals[ib * 3 + k] +
-            w3 * model.normals[ic * 3 + k],
-        );
-        const normalLength = Math.hypot(...surfaceNormal),
-          snx = (c * surfaceNormal[0] - s * surfaceNormal[2]) / normalLength,
-          sny = surfaceNormal[1] / normalLength,
-          snz = (s * surfaceNormal[0] + c * surfaceNormal[2]) / normalLength;
+        const norms = model.normals;
+        const nx = w1 * norms[a] + w2 * norms[b] + w3 * norms[d],
+          ny = w1 * norms[a + 1] + w2 * norms[b + 1] + w3 * norms[d + 1],
+          nz = w1 * norms[a + 2] + w2 * norms[b + 2] + w3 * norms[d + 2];
+        const normalLength = Math.hypot(nx, ny, nz),
+          snx = (c * nx - s * nz) / normalLength,
+          yn = ny / normalLength,
+          zn = (s * nx + c * nz) / normalLength,
+          sny = ct * yn - st * zn,
+          snz = st * yn + ct * zn;
         const weight = Math.max(0, Math.min(1, (oz - 0.28) / 0.3));
         const light = Math.min(
-          (0.52 + 0.48 * Math.max(0, -0.25 * snx + 0.52 * sny + 0.81 * snz)) /
-            (0.52 + 0.48 * Math.max(0, -0.25 * ox + 0.52 * oy + 0.81 * oz)),
+          (0.72 + 0.18 * snx + 0.3 * sny + 0.1 * Math.max(0, snz)) /
+            (0.72 + 0.18 * ox + 0.3 * oy + 0.1 * Math.max(0, oz)),
           2.08 - weight * weight * (3 - 2 * weight),
         );
         const ix = Math.floor((ox / 0.6 + 0.5) * 256),
@@ -423,9 +451,16 @@ function software(
 }
 // Fine curved fibres rotate with the cloth at the silhouette. They are actual
 // surface-anchored strands, independent of the photographed albedo's detail.
-function fibres(ctx: CanvasRenderingContext2D, kind: GlobeKind, angle: number) {
+function fibres(
+  ctx: CanvasRenderingContext2D,
+  kind: GlobeKind,
+  angle: number,
+  tilt: number,
+) {
   const c = Math.cos(angle),
     s = Math.sin(angle),
+    ct = Math.cos(tilt),
+    st = Math.sin(tilt),
     [base, land] = materials[kind];
   let seed = 37;
   const rand = () => {
@@ -441,7 +476,9 @@ function fibres(ctx: CanvasRenderingContext2D, kind: GlobeKind, angle: number) {
       y = Math.sin(lat),
       z = Math.cos(lon) * Math.cos(lat),
       rx = c * x - s * z,
-      rz = s * x + c * z;
+      zy = s * x + c * z,
+      ry = ct * y - st * zy,
+      rz = st * y + ct * zy;
     const length = 0.006 + rand() * 0.017,
       bend = (rand() - 0.5) * 0.012;
     if (rz < -0.02 || rz > 0.29) continue;
@@ -454,8 +491,8 @@ function fibres(ctx: CanvasRenderingContext2D, kind: GlobeKind, angle: number) {
       bm = model.map[p + 1] / 255;
     const r = 1 + (model.map[p + 2] / 255) * 0.09 - 0.012;
     const light =
-      (0.52 + 0.48 * Math.max(0, -0.25 * rx + 0.52 * y + 0.81 * rz)) /
-      (0.52 + 0.48 * Math.max(0, -0.25 * x + 0.52 * y + 0.81 * z));
+      (0.72 + 0.18 * rx + 0.3 * ry + 0.1 * Math.max(0, rz)) /
+      (0.72 + 0.18 * x + 0.3 * y + 0.1 * Math.max(0, z));
     const lum =
       model.pixels[p] * 0.2126 +
       model.pixels[p + 1] * 0.7152 +
@@ -471,12 +508,12 @@ function fibres(ctx: CanvasRenderingContext2D, kind: GlobeKind, angle: number) {
     ctx.strokeStyle = `rgba(${color.join(",")},.52)`;
     ctx.lineWidth = 0.42;
     ctx.beginPath();
-    ctx.moveTo(128 + R * rx * r, 128 - R * y * r * 1.015);
+    ctx.moveTo(128 + R * rx * r, 128 - R * ry * r * 1.015);
     ctx.quadraticCurveTo(
       128 + R * (rx * (r + length) + bend),
-      128 - R * y * (r + length) * 1.015,
+      128 - R * ry * (r + length) * 1.015,
       128 + R * (rx * (r + length * 0.6) + bend),
-      128 - R * y * (r + length * 0.6) * 1.015,
+      128 - R * ry * (r + length * 0.6) * 1.015,
     );
     ctx.stroke();
   }
@@ -486,15 +523,16 @@ export function renderPlush(
   kind: GlobeKind,
   angle: number,
   number?: number | string,
+  tilt = 0,
 ) {
   const ctx = canvas.getContext("2d")!,
     print = ink(number);
-  if (gpu?.draw(kind, angle, print)) {
+  if (gpu?.draw(kind, angle, print, tilt)) {
     ctx.drawImage(gpu.canvas, 0, 0);
     canvas.dataset.renderer = "mesh-webgl";
   } else {
-    software(ctx, kind, angle, print);
+    software(ctx, kind, angle, print, tilt);
     canvas.dataset.renderer = "mesh-canvas";
   }
-  fibres(ctx, kind, angle);
+  fibres(ctx, kind, angle, tilt);
 }

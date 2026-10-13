@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sorphera demo//EN
+BEGIN:VEVENT
+UID:sorphera-demo-1-42-draw@sorphera
+DTSTAMP:20261017T235801Z
+DTSTART:20261018T013000Z
+DTEND:20261018T014500Z
+SUMMARY:Sorphera simulated NFT round 42 · draw window opens
+DESCRIPTION:Earliest draw REQUEST time\; not a guaranteed result time. FWA reconciliation\, randomness fulfillment and finalization must finish. NFT ties may need another request. Numbers follow once the prize pool and draw are confirmed. Delays are possible. Simulated schedule. The 30-minute gap is illustrative\, not production policy. No real tickets or prizes.
+URL:http://127.0.0.1:46795/preview/#draw?game=1&round=42
+END:VEVENT
+END:VCALENDAR

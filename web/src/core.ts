@@ -114,6 +114,12 @@ export interface Round {
   price: bigint;
   start: number;
   cutoff: number;
+  /** Earliest request time, never a promise of result availability. */
+  earliestDraw?: number;
+  drawDelay?: number;
+  settlementDeadline?: number;
+  requestedAt?: number;
+  simulated?: boolean;
   actualETH: bigint;
   securedNFTs: number;
   pendingPulls: number;

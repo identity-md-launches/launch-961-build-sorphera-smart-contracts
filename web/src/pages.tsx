@@ -1,26 +1,12 @@
-import { useEffect, useState } from "react";
+import { RoundSchedule } from "./RoundSchedule";
+import { useState } from "react";
 import { asset, Balls, Globe, PageHead, SectionHeading } from "./components";
 import { demoRounds, scenarios } from "./fixtures";
 import { eth, replay } from "./core";
-import { demoQuote, localTime, usd } from "./budget";
+import { demoQuote, usd } from "./budget";
 import { customerStatus } from "./reveal";
 import { PassportCard } from "./Passport";
 import { type PassportRecord } from "./passport";
-export function Countdown({ cutoff }: { cutoff: number }) {
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  const diff = Math.max(0, cutoff - Math.floor(now / 1000));
-  return (
-    <span className="countdown">
-      {diff
-        ? `${Math.floor(diff / 86400)}d ${String(Math.floor((diff % 86400) / 3600)).padStart(2, "0")}h ${String(Math.floor((diff % 3600) / 60)).padStart(2, "0")}m`
-        : "Cutoff reached · awaiting settlement"}
-    </span>
-  );
-}
 export function Home({ passport }: { passport: PassportRecord }) {
   return (
     <>
@@ -51,7 +37,7 @@ export function Home({ passport }: { passport: PassportRecord }) {
               <span className="play-icon" aria-hidden="true">
                 ▷
               </span>{" "}
-              Watch demo draw
+              View upcoming draws
             </a>
           </div>
         </div>
@@ -109,14 +95,8 @@ export function Home({ passport }: { passport: PassportRecord }) {
                   </span>
                 </p>
               )}
+              <RoundSchedule round={r} />
               <div className="jackpot-footer">
-                <div>
-                  <span className="fine">Entries close in</span>
-                  <strong>
-                    <Countdown cutoff={r.cutoff} />
-                  </strong>
-                  <span className="cutoff">{localTime(r.cutoff)}</span>
-                </div>
                 <a
                   className={`button ${r.game === 0 ? "ice" : "pink-button"}`}
                   href={`#play?game=${r.game}`}

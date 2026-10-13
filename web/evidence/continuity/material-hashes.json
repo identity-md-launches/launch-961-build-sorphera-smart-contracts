@@ -1,0 +1,8 @@
+{
+  "recipe_rebuild_identical": true,
+  "source_and_export_identical": true,
+  "sha256": {
+    "albedo.webp": "47eaed1723641b413758ef1b35175025e367de2b4e86ed00891a94932280d9b1",
+    "surface.webp": "2f6692fed9968b9c96b425a4362707fd0f96088c7173d8c66c86b8463859ec46"
+  }
+}

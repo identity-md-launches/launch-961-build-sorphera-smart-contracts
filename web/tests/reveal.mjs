@@ -6,7 +6,9 @@ const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE || "playwright"
 );
 const root = resolve("dist"),
-  out = resolve("artifacts");
+  out = resolve(
+    process.env.SOFTWARE ? "test/scratch/reveal-software" : "artifacts",
+  );
 await mkdir(out, { recursive: true });
 const server = http.createServer(async (req, res) => {
   try {
@@ -40,13 +42,25 @@ const browser = await chromium.launch({
     XDG_CONFIG_HOME: "/tmp/sorphera-chrome-config",
     XDG_CACHE_HOME: "/tmp/sorphera-chrome-cache",
   },
-  args: ["--no-sandbox"],
+  args: [
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+  ],
 });
 const results = [],
   errors = [];
 const context = await browser.newContext({
   viewport: { width: 1100, height: 850 },
 });
+if (process.env.SOFTWARE)
+  await context.addInitScript(() => {
+    const get = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+      return type.startsWith("webgl") ? null : get.call(this, type, ...args);
+    };
+  });
 const page = await context.newPage();
 page.on("pageerror", (e) => errors.push(e.message));
 const btn = (name) => page.getByRole("button", { name, exact: true });
@@ -184,6 +198,13 @@ try {
     viewport: { width: 960, height: 760 },
     recordVideo: { dir: `${out}/video-tmp`, size: { width: 960, height: 760 } },
   });
+  if (process.env.SOFTWARE)
+    await recording.addInitScript(() => {
+      const get = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+        return type.startsWith("webgl") ? null : get.call(this, type, ...args);
+      };
+    });
   const film = await recording.newPage();
   film.on("pageerror", (e) => errors.push(e.message));
   await film.goto(`${base}#draw?scenario=nft-tie`);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Balls, Globe, Modal, PageHead } from "./components";
-import { Countdown } from "./pages";
+import { RoundSchedule, useNow } from "./RoundSchedule";
+import { drawLink, entriesOpen } from "./schedule";
 import {
   checkPurchase,
   eth,
@@ -18,7 +19,6 @@ import {
   basketRewardCount,
   reservedRewards,
   setBasketRewards,
-  calendarEvent,
   cents,
   demoQuote,
   generateDistinct,
@@ -30,7 +30,7 @@ import {
   usd,
   type Baskets,
 } from "./budget";
-import { demoRounds, fixture, type DemoTicket } from "./fixtures";
+import { demoRound, demoRounds, fixture, type DemoTicket } from "./fixtures";
 import {
   CARD,
   eligiblePrice,
@@ -45,7 +45,6 @@ import { PassportCard, REWARD_RULE, Stamps } from "./Passport";
 export const gameName = (g: Game) => (g === 0 ? "ETH jackpot" : "NFT jackpot");
 
 export function RoundFacts({ round }: { round: Round }) {
-  const closed = Date.now() / 1000 >= round.cutoff;
   return (
     <div className={`round-facts game-${round.game}`}>
       <div>
@@ -66,24 +65,14 @@ export function RoundFacts({ round }: { round: Round }) {
         <strong>{eth(round.price)} ETH</strong>
         <span className="fine">≈ {usd(round.price)} illustrative</span>
       </div>
-      <div>
-        <span className="fine">Entries close in</span>
-        <strong>
-          <Countdown cutoff={round.cutoff} />
-        </strong>
-        <span className="fine">
-          {closed ? "Closed " : ""}
-          <time dateTime={new Date(round.cutoff * 1000).toISOString()}>
-            {localTime(round.cutoff)}
-          </time>
-        </span>
-      </div>
+      <RoundSchedule round={round} />
     </div>
   );
 }
 
 export default function Play({
   initialGame,
+  initialRound,
   baskets,
   onBaskets,
   onTickets,
@@ -94,6 +83,7 @@ export default function Play({
   identity,
 }: {
   initialGame: Game;
+  initialRound?: bigint;
   baskets: Baskets;
   onBaskets: (b: Baskets) => void;
   onTickets: (t: DemoTicket[]) => void;
@@ -104,7 +94,10 @@ export default function Play({
   identity: string;
 }) {
   const [game, setGame] = useState<Game>(initialGame);
-  const round = demoRounds[game];
+  const round =
+    game === initialGame && initialRound !== undefined
+      ? (demoRound(game, initialRound) ?? demoRounds[game])
+      : demoRounds[game];
   const key = basketKey(game, round.id);
   const basket = baskets[key];
   const lines = basket?.lines ?? [];
@@ -135,7 +128,8 @@ export default function Play({
   } | null>(null);
   const count = basketCount(basket);
   const rewardCount = basketRewardCount(basket);
-  const roundClosed = Date.now() / 1000 >= round.cutoff;
+  const now = useNow();
+  const roundClosed = !entriesOpen(round, now);
   const plan = planBudget(
     limit,
     round.price,
@@ -295,7 +289,7 @@ export default function Play({
     try {
       requireAffordable(planFor(limit, round.price));
       requireRewards(round.price);
-      const fresh = await fixture.round(game);
+      const fresh = await fixture.round(game, round.id);
       const current = latest.current;
       if (
         !mounted.current ||
@@ -343,7 +337,7 @@ export default function Play({
       setError("");
       await fixture.buy(review, [...lines, ...rewards]);
       await new Promise((resolve) => setTimeout(resolve, 650));
-      const fresh = await fixture.round(game);
+      const fresh = await fixture.round(game, round.id);
       const final = latest.current;
       if (!mounted.current) return;
       if (
@@ -401,6 +395,11 @@ export default function Play({
           amount: "Entered this demo round",
           source: "mine" as const,
           purchasedAt: stamp,
+          schedule: {
+            start: review.start,
+            cutoff: review.cutoff,
+            earliestDraw: review.earliestDraw,
+          },
         })),
         ...rewardEntries.map((p, i) => ({
           id: `local-${stamp}-reward-${i + 1}`,
@@ -411,6 +410,11 @@ export default function Play({
           amount: "Reward ticket · free entry",
           source: "mine" as const,
           purchasedAt: stamp,
+          schedule: {
+            start: review.start,
+            cutoff: review.cutoff,
+            earliestDraw: review.earliestDraw,
+          },
           reward: true,
         })),
       ]);
@@ -422,27 +426,20 @@ export default function Play({
         before: final.passport,
       });
       setTx("confirmed");
-      onBaskets(setBasketRewards(setBasketLines(baskets, game, round.id, []), game, round.id, []));
+      onBaskets(
+        setBasketRewards(
+          setBasketLines(baskets, game, round.id, []),
+          game,
+          round.id,
+          [],
+        ),
+      );
     } catch (e) {
       setTx("failed");
       setError((e as Error).message);
     } finally {
       submitting.current = false;
     }
-  }
-  function downloadCalendar() {
-    const ics = calendarEvent(
-      `Sorphera demo · ${gameName(game)} round ${String(round.id)} entries close`,
-      round.cutoff,
-      location.href.replace(/#.*$/, "#draw"),
-      `sorphera-demo-${game}-${String(round.id)}@demo`,
-    );
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `sorphera-demo-round-${String(round.id)}.ics`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   const sharing =
     game === 0
@@ -485,6 +482,40 @@ export default function Play({
           )}
         </div>
       </section>
+      {Object.values(baskets).some(
+        (b) => b.round !== demoRounds[b.game].id,
+      ) && (
+        <details className="saved-drafts">
+          <summary>Saved drafts from other rounds</summary>
+          <p className="fine">
+            Drafts never move into another draw. Removing a draft releases its
+            reserved free tickets; earned Passport rewards stay yours.
+          </p>
+          {Object.values(baskets)
+            .filter((b) => b.round !== demoRounds[b.game].id)
+            .map((b) => (
+              <div className="row wrap" key={basketKey(b.game, b.round)}>
+                <a
+                  className="button"
+                  href={`#play?game=${b.game}&round=${b.round}`}
+                >
+                  {gameName(b.game)} round {String(b.round)} ·{" "}
+                  {basketCount(b) + basketRewardCount(b)} saved
+                </a>
+                <button
+                  className="text-button"
+                  onClick={() => {
+                    const next = { ...baskets };
+                    delete next[basketKey(b.game, b.round)];
+                    onBaskets(next);
+                  }}
+                >
+                  Remove draft and release rewards
+                </button>
+              </div>
+            ))}
+        </details>
+      )}
       <div className="play-layout">
         <section className="picker-panel">
           <div className="game-switch" aria-label="Choose jackpot">
@@ -513,8 +544,8 @@ export default function Play({
           </div>
           <RoundFacts round={round} />
           <p className="fine">
-            Closing time is when entries stop. The draw itself depends on
-            settlement and confirmed randomness, so results can take longer.
+            Simulated: the 30-minute gap is illustrative, not production policy
+            or a promise of results.
           </p>
           <p className="sharing-note">{sharing}</p>
           {game === 1 && (
@@ -723,57 +754,56 @@ export default function Play({
           </p>
           {roundClosed && (
             <p className="notice">
-              This round has closed. Saved drafts here cannot be entered.
+              Entries are unavailable for this round. Your saved drafts and
+              unused Passport rewards are kept.
             </p>
           )}
           <div className="slip-cut" />
           <div className="ticket-lines">
-            {lines.length ? (
-              lines.map((line, i) => (
-                <div className="ticket-line" key={i}>
-                  <div className="row between">
-                    <span className="fine">
-                      Line {i + 1} · {line.quantity}{" "}
-                      {line.quantity === 1 ? "ticket" : "tickets"} ·{" "}
-                      {usd(round.price * BigInt(line.quantity))}
-                    </span>
-                    <div className="row">
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          setMain([...line.main]);
-                          setBonus(line.bonus);
-                          setQuantity(line.quantity);
-                          setEditing(i);
-                          document.getElementById("picker")?.focus();
-                        }}
-                      >
-                        Edit<span className="sr-only"> line {i + 1}</span>
-                      </button>
-                      <button
-                        className="icon-button"
-                        aria-label={`Remove line ${i + 1}`}
-                        onClick={() => {
-                          setLines(lines.filter((_, j) => j !== i));
-                          setEditing(null);
-                        }}
-                      >
-                        ×
-                      </button>
+            {lines.length
+              ? lines.map((line, i) => (
+                  <div className="ticket-line" key={i}>
+                    <div className="row between">
+                      <span className="fine">
+                        Line {i + 1} · {line.quantity}{" "}
+                        {line.quantity === 1 ? "ticket" : "tickets"} ·{" "}
+                        {usd(round.price * BigInt(line.quantity))}
+                      </span>
+                      <div className="row">
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            setMain([...line.main]);
+                            setBonus(line.bonus);
+                            setQuantity(line.quantity);
+                            setEditing(i);
+                            document.getElementById("picker")?.focus();
+                          }}
+                        >
+                          Edit<span className="sr-only"> line {i + 1}</span>
+                        </button>
+                        <button
+                          className="icon-button"
+                          aria-label={`Remove line ${i + 1}`}
+                          onClick={() => {
+                            setLines(lines.filter((_, j) => j !== i));
+                            setEditing(null);
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
                     </div>
+                    <Balls pick={line} />
                   </div>
-                  <Balls pick={line} />
-                </div>
-              ))
-            ) : (
-              !rewards.length && (
-                <div className="empty-ticket">
-                  <Globe number="?" size="large" />
-                  <h3>Every world starts somewhere.</h3>
-                  <p>Pick your numbers to add your first entry.</p>
-                </div>
-              )
-            )}
+                ))
+              : !rewards.length && (
+                  <div className="empty-ticket">
+                    <Globe number="?" size="large" />
+                    <h3>Every world starts somewhere.</h3>
+                    <p>Pick your numbers to add your first entry.</p>
+                  </div>
+                )}
             {rewards.map((line, i) => (
               <div className="ticket-line reward-line" key={`r${i}`}>
                 <div className="row between">
@@ -954,15 +984,8 @@ export default function Play({
                     {cents(receipt.plan.remainingCents)}
                   </dd>
                 </div>
-                <div>
-                  <dt>Entries close</dt>
-                  <dd>
-                    {localTime(receipt.round.cutoff)}
-                    <br />
-                    <Countdown cutoff={receipt.round.cutoff} />
-                  </dd>
-                </div>
               </dl>
+              <RoundSchedule round={receipt.round} calendar />
               {eligiblePrice(receipt.round.price) && (
                 <div className="receipt-passport">
                   <Stamps
@@ -1005,7 +1028,7 @@ export default function Play({
               <div className="stack">
                 <a
                   className="button primary full"
-                  href={`#draw?scenario=${game === 0 ? "eth-mine" : "nft-mine"}`}
+                  href={drawLink(receipt.round.game, receipt.round.id)}
                   onClick={() => setReview(null)}
                 >
                   View your draw
@@ -1017,9 +1040,6 @@ export default function Play({
                 >
                   My tickets
                 </a>
-                <button className="button full" onClick={downloadCalendar}>
-                  Add closing time to calendar
-                </button>
               </div>
             </div>
           ) : (
@@ -1030,6 +1050,13 @@ export default function Play({
                 {rewardCount > 0 &&
                   ` · ${rewardCount} reward ticket${rewardCount === 1 ? "" : "s"}`}
               </p>
+              <RoundSchedule
+                round={{
+                  ...review,
+                  status: round.status,
+                  salesEnabled: round.salesEnabled,
+                }}
+              />
               {budgetField("review-budget", tx === "pending")}
               <div className="review-lines">
                 {lines.map((l, i) => (
@@ -1066,7 +1093,8 @@ export default function Play({
                 <div>
                   <dt>Estimated network fee</dt>
                   <dd>
-                    {eth(plan.feeWei)} ETH <small>≈ {cents(plan.feeCents)}</small>
+                    {eth(plan.feeWei)} ETH{" "}
+                    <small>≈ {cents(plan.feeCents)}</small>
                   </dd>
                 </div>
                 <div className="total">
@@ -1102,6 +1130,12 @@ export default function Play({
                       ? error
                       : ""}
               </p>
+              {roundClosed && (
+                <p className="notice" role="status">
+                  Entries closed or sales paused. Your draft and unused rewards
+                  are saved.
+                </p>
+              )}
               <button
                 className="button primary full"
                 onClick={confirm}

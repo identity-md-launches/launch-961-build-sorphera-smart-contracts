@@ -205,30 +205,55 @@ export function calendarEvent(
   cutoff: number,
   url: string,
   uid: string,
+  description = "Entries close; no fixed result time is promised. Demo - no real tickets or prizes.",
 ): string {
+  const escape = (s: string) =>
+    s.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/[,;]/g, "\\$&");
   const stamp = (t: number) =>
     new Date(t * 1000)
       .toISOString()
       .replace(/[-:]/g, "")
       .replace(/\.\d{3}/, "");
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Sorphera demo//EN",
-    "BEGIN:VEVENT",
-    `UID:${uid}`,
-    `DTSTAMP:${stamp(Math.floor(Date.now() / 1000))}`,
-    `DTSTART:${stamp(cutoff)}`,
-    `DTEND:${stamp(cutoff + 900)}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:Entries close. Results follow once the draw is confirmed; no fixed result time is promised. Demo - no real tickets or prizes.`,
-    `URL:${url}`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
+  // RFC 5545 folding: 75 octets per physical line, including continuation space.
+  const fold = (line: string) => {
+    const parts: string[] = [];
+    let part = "",
+      bytes = 0;
+    for (const char of line) {
+      const size = new TextEncoder().encode(char).length;
+      if (bytes + size > 75) {
+        parts.push(part);
+        part = " ";
+        bytes = 1;
+      }
+      part += char;
+      bytes += size;
+    }
+    return [...parts, part].join("\r\n");
+  };
+  return (
+    [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Sorphera demo//EN",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${stamp(Math.floor(Date.now() / 1000))}`,
+      `DTSTART:${stamp(cutoff)}`,
+      `DTEND:${stamp(cutoff + 900)}`,
+      `SUMMARY:${escape(title)}`,
+      `DESCRIPTION:${escape(description)}`,
+      `URL:${url}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ]
+      .map(fold)
+      .join("\r\n") + "\r\n"
+  );
 }
 export const localTime = (unix: number) =>
   new Date(unix * 1000).toLocaleString(undefined, {
+    year: "numeric",
     weekday: "short",
     month: "short",
     day: "numeric",

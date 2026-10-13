@@ -1,0 +1,11 @@
+{
+  "results": [
+    "Pause freezes spinning pixels, phase, announcements and match gating; resume uses remaining duration.",
+    "Pause also holds travel; stopped and travelling globe pixel buffers match exactly.",
+    "Landed and stopped globe pixel buffers are byte-identical: same texture, lighting, badge and orientation.",
+    "Bonus has its own pink stop. NFT winner remains hidden until the separate tie-break.",
+    "Replay, skip and reduced motion preserve the same results and globe design, including the NFT winner.",
+    "Recorded full normal-speed NFT replay, all four balls and tie-break, with browser video and rAF timing data."
+  ],
+  "errors": []
+}

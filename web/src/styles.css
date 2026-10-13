@@ -3054,3 +3054,159 @@ summary::marker {
     object-fit: cover;
   }
 }
+
+/* Factual round schedules: shared on every entry and return surface. */
+.round-schedule {
+  margin: 16px 0;
+  min-width: 0;
+}
+.schedule-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: var(--type-caption);
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.schedule-status {
+  color: var(--ice);
+}
+.schedule-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.schedule-time {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--type-small);
+  min-width: 0;
+}
+.schedule-time strong {
+  font-size: var(--type-title);
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+.schedule-time time {
+  font-size: var(--type-caption);
+  color: var(--muted);
+}
+.schedule-caveat {
+  font-size: var(--type-caption);
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 12px 0 0;
+}
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 12px 0;
+}
+.calendar-actions button {
+  text-align: left;
+  font-size: var(--type-small);
+  min-height: 44px;
+}
+.round-facts {
+  grid-template-columns: 1fr 1fr;
+}
+.round-facts > .round-schedule {
+  grid-column: 1 / -1;
+  display: block;
+  padding: 0;
+}
+.round-facts .schedule-time strong {
+  font-size: var(--type-title);
+  color: var(--cream);
+}
+.game-switch a {
+  flex: 1;
+  padding: 12px 18px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.game-switch a.active {
+  background: var(--ice);
+  color: var(--ink);
+}
+.game-switch a:nth-child(2).active {
+  background: var(--pink);
+}
+.upcoming-draw {
+  margin: 24px 0 36px;
+  padding: 32px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.upcoming-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.upcoming-heading h2 {
+  font-size: var(--type-section);
+  margin: 0;
+}
+.upcoming-heading .globe {
+  flex-shrink: 0;
+}
+.schedule-priority .schedule-times {
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+}
+.schedule-priority .schedule-draw strong {
+  font-size: var(--type-display);
+  color: var(--ice);
+  letter-spacing: -0.03em;
+}
+.upcoming-state {
+  font-weight: 600;
+  font-size: var(--type-title);
+}
+.sample-replays {
+  margin: 40px 0;
+}
+.replay-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.claim-summary {
+  min-width: 0;
+}
+.claim-summary .schedule-times {
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .upcoming-draw {
+    padding: 20px;
+  }
+  .upcoming-heading .globe {
+    width: 66px;
+    height: 66px;
+  }
+  .schedule-times {
+    gap: 12px;
+  }
+  .schedule-time strong,
+  .round-facts .schedule-time strong {
+    font-size: var(--type-body);
+  }
+  .schedule-priority .schedule-times {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .schedule-priority .schedule-draw strong {
+    font-size: 36px;
+  }
+  .upcoming-heading h2 {
+    font-size: var(--type-title);
+  }
+}

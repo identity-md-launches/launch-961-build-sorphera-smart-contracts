@@ -1,0 +1,25 @@
+✔ frozen round anchors are Sunday 00:00/01:00 UTC with independent illustrative gaps (1.765738ms)
+✔ later rounds have distinct identities; old timestamps do not depend on the clock (0.312915ms)
+✔ strict cutoff applies to paid and reward lines while status is still Sales (0.993651ms)
+✔ window opens without claiming a request, a winner, or opening sales (0.269517ms)
+✔ known oracle and NFT tie states stay separate from elapsed time (0.261996ms)
+✔ confirmed or cancelled state outranks a client clock before the reference window (32.468183ms)
+✔ sales pause does not move times or spend any Passport reward (1.284193ms)
+✔ missing earliestDraw is reported honestly (0.343682ms)
+✔ countdown adds seconds only in final hour, recovers from clock jumps, never negative (0.317606ms)
+✔ calendar actions have separate UTC times, UIDs, labels, exact round URLs and caveat (2.123791ms)
+✔ ContractAdapter preserves the getRound timestamps without ABI changes (0.650165ms)
+✔ rollover never renders ticket zero and fulfilled randomness is not a final result (0.515234ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3276.730315
+npm notice
+npm notice New major version of npm available! 11.19.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

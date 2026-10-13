@@ -16,11 +16,12 @@ const result = await build({
   write: false,
   define: { "import.meta.env.BASE_URL": '"./"' },
 });
-const html = `<html><head><style>body{background:#19171c;color:#f7ecdf;font:16px Arial;margin:24px}section{display:flex;align-items:center;gap:18px;margin:24px 0}figure{margin:0;text-align:center}canvas,img{object-fit:contain;display:block}figcaption{margin-top:8px;font-size:12px}h1{font-size:24px}h2{font-size:18px}</style></head><body><h1>Photographic reference / shared plush model</h1><div id="comparison"></div><h2>Same model through a half-turn · blank badge</h2><div id="turns"></div><h2>Atlas material variants</h2><div id="atlas"></div><script type="module">
+const html = `<html><head><style>body{background:#19171c;color:#f7ecdf;font:16px Arial;margin:24px}section{display:flex;align-items:center;gap:18px;margin:24px 0}figure{margin:0;text-align:center}figure{flex-shrink:0}canvas,img{object-fit:contain;display:block}figcaption{margin-top:8px;font-size:12px}h1{font-size:24px}h2{font-size:18px}</style></head><body><h1>Photographic reference / shared plush model</h1><div id="comparison"></div><h2>Full turn · one front badge</h2><div id="turns"></div><h2>Atlas material variants</h2><div id="atlas"></div><script type="module">
 import{loadPlushModel,renderPlush}from './model.js';await loadPlushModel();window.render=renderPlush;
-function canvas(section,kind,angle,number,size,label){const f=document.createElement('figure');const c=document.createElement('canvas');c.width=c.height=256;c.style.width=c.style.height=size+'px';renderPlush(c,kind,angle,number);f.append(c);const cap=document.createElement('figcaption');cap.textContent=label;f.append(cap);section.append(f);return c}
-for(const kind of ['eth','nft']){const s=document.createElement('section');comparison.append(s);for(const size of [56,185]){const f=document.createElement('figure');f.innerHTML='<img src="./brand/'+kind+'-ball.webp" width="'+size+'" height="'+size+'"><figcaption>Reference '+size+'px</figcaption>';s.append(f);canvas(s,kind,0,kind==='eth'?7:4,size,'Model '+size+'px');}}
-for(const kind of ['eth','nft']){const s=document.createElement('section');turns.append(s);for(const deg of [0,45,90,135,180])canvas(s,kind,deg*Math.PI/180,undefined,150,kind+' '+deg+'°');}
+function canvas(section,kind,angle,number,size,label,tilt=0){const f=document.createElement('figure');const c=document.createElement('canvas');c.width=c.height=256;c.style.width=c.style.height=size+'px';renderPlush(c,kind,angle,number,tilt);f.append(c);const cap=document.createElement('figcaption');cap.textContent=label;f.append(cap);section.append(f);return c}
+for(const kind of ['eth','nft'])for(const size of [43,59,140,170]){const s=document.createElement('section');comparison.append(s);const f=document.createElement('figure');f.innerHTML='<img src="./brand/'+kind+'-ball.webp" width="'+size+'" height="'+size+'"><figcaption>'+kind+' reference '+size+'px</figcaption>';s.append(f);for(const deg of [0,90,180,270])canvas(s,kind,deg*Math.PI/180,kind==='eth'?7:4,size,deg+'° · '+size+'px');}
+for(const kind of ['eth','nft']){const s=document.createElement('section');turns.append(s);for(const deg of [0,45,90,135,180,225,270,315])canvas(s,kind,deg*Math.PI/180,kind==='eth'?7:4,170,kind+' '+deg+'°');}
+for(const kind of ['eth','nft']){const s=document.createElement('section');turns.append(s);canvas(s,kind,0,7,170,kind+' north pole',Math.PI/2);canvas(s,kind,0,7,170,kind+' south pole',-Math.PI/2);}
 const s=document.createElement('section');atlas.append(s);for(const kind of ['ca','jp','br'])canvas(s,kind,0,kind.toUpperCase(),150,kind.toUpperCase());window.ready=true;
 </script></body></html>`;
 const server = createServer(async (req, res) => {
@@ -61,19 +62,29 @@ await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({
   headless: true,
-  args: ["--no-sandbox"],
+  args: [
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+  ],
 });
 const errors = [];
 const records = {};
 try {
   const page = await browser.newPage({
-    viewport: { width: 1000, height: 1100 },
-    deviceScaleFactor: 2,
+    viewport: { width: 1560, height: 1100 },
+    deviceScaleFactor: 1,
   });
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base + "/comparison.html");
   await page.waitForFunction(() => window.ready);
-  await page.screenshot({ path: out + "/comparison.png", fullPage: true });
+  await page
+    .locator("#comparison")
+    .screenshot({ path: out + "/comparison.jpg", type: "jpeg", quality: 88 });
+  await page
+    .locator("#turns")
+    .screenshot({ path: out + "/full-turn.jpg", type: "jpeg", quality: 88 });
   records.mesh = await page.evaluate(() => {
     const c = document.createElement("canvas");
     c.width = c.height = 256;
@@ -135,8 +146,8 @@ try {
     }
   }
   const fallback = await browser.newPage({
-    viewport: { width: 1000, height: 1100 },
-    deviceScaleFactor: 2,
+    viewport: { width: 1560, height: 1100 },
+    deviceScaleFactor: 1,
   });
   await fallback.addInitScript(() => {
     const get = HTMLCanvasElement.prototype.getContext;
@@ -151,7 +162,27 @@ try {
     await fallback.locator("canvas").first().getAttribute("data-renderer"),
     "mesh-canvas",
   );
-  await fallback.screenshot({ path: out + "/fallback.png", fullPage: true });
+  await fallback.locator("#comparison").screenshot({
+    path: out + "/fallback-comparison.jpg",
+    type: "jpeg",
+    quality: 88,
+  });
+  await fallback.locator("#turns").screenshot({
+    path: out + "/fallback-full-turn.jpg",
+    type: "jpeg",
+    quality: 88,
+  });
+  records.fallback = await fallback.evaluate(() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const durations = [];
+    for (let i = 0; i < 40; i++) {
+      const t = performance.now();
+      window.render(c, "eth", i * 0.15, 7);
+      durations.push(performance.now() - t);
+    }
+    return { renderer: c.dataset.renderer, durations };
+  });
   assert.deepEqual(errors, []);
   records.errors = errors;
   await writeFile(out + "/results.json", JSON.stringify(records, null, 2));

@@ -1,0 +1,63 @@
+
+> sorphera-web@1.0.0 test
+> tsx --test src/core.test.ts
+
+✔ number validation rejects repeats, out-of-range and fractional numbers (3.889207ms)
+✔ all 5,700 Solidity packed combinations round-trip exactly (25.799556ms)
+✔ Quick Pick selects only valid entries and cannot mutate confirmed fixtures (70.893608ms)
+✔ ticket expansion is unordered, allows duplicate combinations and respects 100 (1.252615ms)
+✔ ETH totals stay exact in wei, including sub-micro ETH (0.870313ms)
+✔ recheck rejects cutoff, price, round, game, paused sales and invalid status (0.751034ms)
+✔ terminal statuses match the baseline exactly; appended ties stay nonterminal (0.369453ms)
+✔ NFT tie remains provisional through both oracle phases (0.70142ms)
+✔ unbound randomness and premature result cannot reveal a winner (0.426685ms)
+✔ cancellation review is progress, not cancellation or draw request (0.347424ms)
+✔ oracle and tie delays remain indefinite and do not release claims (0.236744ms)
+✔ replay and skip end in identical deterministic contract-derived results (0.491288ms)
+✔ both rollover fixtures expire old tickets and never name an NFT winner (0.32336ms)
+✔ claim batching is capped at 20 and preserves every asset (0.561169ms)
+✔ failed NFT delivery is per asset; retry excludes delivered assets (0.68405ms)
+✔ demo adapter never has a wallet transport or transaction hash (0.933999ms)
+✔ activation fails closed for missing inputs, wrong chain and read-only mode (0.303392ms)
+✔ ABI copies preserve all canonical contract exports (1.34941ms)
+✔ metadata refuses active and non-HTTPS images; treats names as text (0.596699ms)
+✔ cache identities separate chains, lotteries, games, rounds and requests (0.250363ms)
+✔ log indexer pages, caches, deduplicates concurrent reads and rebuilds after reorg (8.241006ms)
+✔ actual ETH/refund claim uses entitlement and simulation even if sales are paused (1.005564ms)
+✔ finalized receipt failure cannot become a confirmed claim (0.338061ms)
+✔ ABI fingerprint is stable and nonempty (38.726105ms)
+✔ NFT receipt processing distinguishes delivery, failure and shared votes (4.643026ms)
+✔ reward queueing is never mistaken for delivery; helper Claimed is required (4.71552ms)
+✔ a shared vote followed by delivery reports one final delivered asset (2.726951ms)
+✔ receipt timeouts stay pending after broadcast and cannot imply a safe repurchase (0.952745ms)
+✔ USD conversion is illustrative, exact in cents and consistent (29.510233ms)
+✔ US$30 buys 2 whole tickets after the estimated fee; math stays in wei (1.453983ms)
+✔ Generate N different entries never repeats; repeats stay allowed (4.706304ms)
+✔ baskets are separate per game and round; switching never retargets (0.541464ms)
+✔ calendar export carries the closing time and no result promise (1.895523ms)
+✔ reveal never exposes numbers, matches or winners before balls stop (0.735884ms)
+✔ customer statuses hide contract jargon (0.155632ms)
+✔ match highlighting follows revealed balls only; partial is never a win (0.294811ms)
+✔ skip, replay and reduced motion all end on identical results (0.641859ms)
+✔ fixture replays of the open rounds keep game/round identity and fixed outcomes (0.25022ms)
+✔ finalist pagination is bounded (0.315023ms)
+✔ purchase affordability rejects invalid edits and respects the exact cent boundary (0.560554ms)
+✔ suggestions and checkout use the same rounded exact-wei total (0.222748ms)
+✔ passport boundaries: 11+1, 11+3 and 24 tickets (0.787489ms)
+✔ passport excludes free, pending, refunded, failed and off-price tickets (0.363645ms)
+✔ passport counts a purchase once and consumes a reward once (0.52743ms)
+✔ projected rewards are shown but not spendable; carry remains across rounds (0.487444ms)
+✔ free-only checkout keeps the network fee and reward baskets stay separate per game (0.556254ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2694.249467
+npm notice
+npm notice New major version of npm available! 11.19.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

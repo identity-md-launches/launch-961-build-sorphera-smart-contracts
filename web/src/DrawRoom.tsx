@@ -1,7 +1,8 @@
+import UpcomingDraw from "./UpcomingDraw";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Balls, Globe, PageHead } from "./components";
 import { allScenarios, type DemoTicket } from "./fixtures";
-import { replay } from "./core";
+import { replay, type Game } from "./core";
 import { BALLS, matchTicket, paginate, revealView, timing } from "./reveal";
 import type { RevealPhase } from "./Chamber";
 import { gameName } from "./Play";
@@ -11,6 +12,49 @@ const EVENT_MS = 1100;
 const ballName = (i: number) => (i === 3 ? "Bonus ball" : `Ball ${i + 1}`);
 
 export default function DrawRoom({
+  scenarioId,
+  game = 0,
+  roundId,
+  invalidGame = false,
+  tickets,
+}: {
+  scenarioId?: string;
+  game?: Game;
+  roundId?: string;
+  invalidGame?: boolean;
+  tickets: DemoTicket[];
+}) {
+  if (invalidGame)
+    return (
+      <>
+        <PageHead
+          eyebrow="The draw room"
+          title="Game unavailable"
+          description="This game identity is not known. No other round has been substituted."
+        />
+        <a className="button" href="#draw">
+          View upcoming draws
+        </a>
+      </>
+    );
+  if (!scenarioId)
+    return <UpcomingDraw game={game} roundId={roundId} tickets={tickets} />;
+  if (!allScenarios.some((s) => s.id === scenarioId))
+    return (
+      <>
+        <PageHead
+          eyebrow="The draw room"
+          title="Replay unavailable"
+          description="This replay identity is not known. No alternate result has been substituted."
+        />
+        <a className="button" href="#draw">
+          View upcoming draws
+        </a>
+      </>
+    );
+  return <DrawReplay scenarioId={scenarioId} tickets={tickets} />;
+}
+function DrawReplay({
   scenarioId,
   tickets,
 }: {
@@ -216,10 +260,22 @@ export default function DrawRoom({
         title="Let the world unfold."
         description="Follow every ball, from the first turn to the final result."
       />
+      <a className="inline-link" href="#draw">
+        ← Upcoming draws
+      </a>
+      <p className="notice">
+        Simulation only. This sample replay does not confirm or change an open
+        round.
+      </p>
       <div className="draw-toolbar">
         <label>
           Explore a demo draw
-          <select value={id} onChange={(e) => setId(e.target.value)}>
+          <select
+            value={id}
+            onChange={(e) => {
+              location.hash = `draw?scenario=${e.target.value}`;
+            }}
+          >
             {allScenarios.map((s) => (
               <option value={s.id} key={s.id}>
                 {s.label}

@@ -1,3 +1,5 @@
+import { RoundSchedule, useNow } from "./RoundSchedule";
+import { entriesOpen, roundStatus } from "./schedule";
 import { useEffect, useMemo, useState } from "react";
 import {
   createWalletClient,
@@ -49,6 +51,7 @@ interface OwnedTicket {
   combination: number;
 }
 export default function LiveWorkspace() {
+  const now = useNow();
   const c = deployment as Deployment;
   const unavailable = activationError(c);
   const adapter = useMemo(
@@ -66,6 +69,10 @@ export default function LiveWorkspace() {
   const [picks, setPicks] = useState<Pick>(quickPick);
   const [quantity, setQuantity] = useState(1);
   const [review, setReview] = useState<Round | null>(null);
+  const selectedRound = rounds.find((r) => r.game === game);
+  const reviewedRound = review
+    ? rounds.find((r) => r.game === review.game && r.id === review.id)
+    : undefined;
   const [draws, setDraws] = useState<Record<string, DrawState>>({});
   const [owned, setOwned] = useState<OwnedTicket[]>([]);
   const [page, setPage] = useState(0);
@@ -343,10 +350,8 @@ export default function LiveWorkspace() {
                 DrawRequested or Cancelled evidence.
               </p>
             )}
-            <p>
-              {eth(r.price)} ETH per ticket · Cutoff{" "}
-              {new Date(r.cutoff * 1000).toUTCString()}
-            </p>
+            <p>{eth(r.price)} ETH per ticket</p>
+            <RoundSchedule round={r} calendar />
           </article>
         ))}
       </div>
@@ -438,13 +443,19 @@ export default function LiveWorkspace() {
             disabled={
               !writable ||
               !wallet ||
-              !rounds.length ||
+              !selectedRound ||
+              !entriesOpen(selectedRound, now) ||
               tx === "pending" ||
               tx === "awaiting-approval"
             }
             onClick={() => {
+              if (
+                !selectedRound ||
+                !entriesOpen(selectedRound, Date.now() / 1000)
+              )
+                return;
               setError("");
-              setReview(rounds[game]);
+              setReview(selectedRound);
             }}
           >
             Review tickets
@@ -579,6 +590,7 @@ export default function LiveWorkspace() {
             {String(review.id)}
           </p>
           <Balls pick={picks} />
+          <RoundSchedule round={reviewedRound ?? review} />
           <p>
             {quantity} tickets × {eth(review.price)} ETH. Plus network gas.
           </p>
@@ -588,7 +600,12 @@ export default function LiveWorkspace() {
           </p>
           <button
             className="button primary full"
-            disabled={tx === "pending" || tx === "awaiting-approval"}
+            disabled={
+              tx === "pending" ||
+              tx === "awaiting-approval" ||
+              !reviewedRound ||
+              !entriesOpen(reviewedRound, now)
+            }
             onClick={() =>
               void send(() =>
                 adapter!.buy(wallet!, review, [{ ...picks, quantity } as Line]),
@@ -599,6 +616,14 @@ export default function LiveWorkspace() {
           >
             Confirm in wallet
           </button>
+          {(!reviewedRound || !entriesOpen(reviewedRound, now)) && (
+            <p role="status">
+              {reviewedRound
+                ? roundStatus(reviewedRound, now)
+                : "Current round data unavailable"}
+              . Your picks are preserved.
+            </p>
+          )}
           <p role="alert">{error}</p>
         </Modal>
       )}

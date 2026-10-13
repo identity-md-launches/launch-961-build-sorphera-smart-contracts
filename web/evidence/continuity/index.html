@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sorphera · 360-degree and schedule evidence</title>
+<meta name="description" content="Current Sorphera globe comparisons, continuous reveal recordings and timing validation.">
+<style>
+:root{color-scheme:dark}body{margin:0;background:#19171c;color:#f7ecdf;font:16px/1.6 Arial,Helvetica,sans-serif}main{max-width:1200px;margin:auto;padding:32px 20px}h1,h2{color:#abd8ed;line-height:1.2}h1{font-size:32px}h2{font-size:24px;margin-top:48px}a{color:#f5a0c5}a:focus-visible,video:focus-visible{outline:3px solid #c8edff;outline-offset:4px}video{display:block;width:100%;max-width:960px;background:#111}figure{margin:24px 0}figcaption{color:#b7aeb9;margin-top:8px}.sheet{overflow-x:auto;background:#19171c}.sheet img{display:block;max-width:none}.screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}.screens img{max-width:100%;height:auto;vertical-align:top}.screens a{display:block}code{overflow-wrap:anywhere}.note{background:#222027;padding:16px;border-radius:12px}nav{display:flex;gap:24px;flex-wrap:wrap}
+</style>
+</head>
+<body><main>
+<h1>Sorphera: the whole globe</h1>
+<p>Current delivery evidence, 13 October 2026. The blue/pink main ball and pink/cream bonus share the photo-derived mesh, felt and raised applique through a full turn.</p>
+<nav><a href="validation.md">Checks and limitations</a><a href="../../../dist/index.html">Open the static website</a><a href="../revision/plush-comparison.jpg">PR #7 defect comparison</a></nav>
+<h2>Normal-speed reveal, WebGL</h2>
+<p>Uninterrupted entry, turn, stop, hold, landing and the separate NFT tie-break. Muted by default. 960×760, 25 fps, 27.80 seconds.</p>
+<video controls muted playsinline preload="metadata" poster="globe-away.jpg" aria-label="Normal-speed WebGL sample reveal with blue main balls and pink bonus"><source src="reveal-webgl.mp4" type="video/mp4"><a href="reveal-webgl.mp4">Download the WebGL recording</a></video>
+<p>Sequence description: three blue balls enter with their badges facing away, rotate, stop on 7, 12 and 19, hold and travel to their slots. The pink bonus follows on 4. The sample then requests a separate tie-break before confirming ticket 118. These are supplied simulation results.</p>
+<h2>Normal-speed reveal, software fallback</h2>
+<p>The same interaction with WebGL disabled. 960×760, 25 fps, 25.08 seconds.</p>
+<video controls muted playsinline preload="metadata" poster="globe-away.jpg" aria-label="Normal-speed Canvas software sample reveal"><source src="reveal-canvas.mp4" type="video/mp4"><a href="reveal-canvas.mp4">Download the software recording</a></video>
+<p class="note">The clips preserve original timestamps. Headless rendering has occasional stalls; 25 fps encoding does not promise 25 unique rendered frames every second. <a href="motion-summary.json">Actual frame intervals and phase timings</a> are included. No acceleration, cut or image swap hides the back.</p>
+<h2>Actual picker and draw sizes</h2>
+<p>Reference, front (0°), side (90°), back (180°) and opposite side (270°). Rows use 43/59px picker and 140/170px draw sizes for both palettes. Sheets below retain their native pixel dimensions; scroll within the sheet or open the image.</p>
+<figure><div class="sheet" tabindex="0" aria-label="Scrollable WebGL size comparison"><img src="plush-comparison.jpg" alt="Supplied blue and pink globe references beside WebGL front, side and rear renders at four actual interface sizes"></div><figcaption><a href="plush-comparison.jpg">WebGL comparison, original size</a></figcaption></figure>
+<figure><div class="sheet" tabindex="0" aria-label="Scrollable software size comparison"><img src="plush-fallback-comparison.jpg" alt="The same reference and size comparisons with the Canvas software renderer"></div><figcaption><a href="plush-fallback-comparison.jpg">Software comparison, original size</a></figcaption></figure>
+<h2>Full turns and poles</h2>
+<p>Each palette at 0°, 45°, 90°, 135°, 180°, 225°, 270° and 315°, followed by north and south pole views. The front badge is not duplicated on the unseen hemisphere.</p>
+<figure><div class="sheet" tabindex="0" aria-label="Scrollable WebGL full turn"><img src="plush-full-turn.jpg" alt="Blue and pink WebGL globes at eight 45-degree intervals and both poles"></div><figcaption><a href="plush-full-turn.jpg">WebGL full turn</a></figcaption></figure>
+<figure><div class="sheet" tabindex="0" aria-label="Scrollable software full turn"><img src="plush-fallback-full-turn.jpg" alt="Blue and pink Canvas globes at eight 45-degree intervals and both poles"></div><figcaption><a href="plush-fallback-full-turn.jpg">Software full turn</a></figcaption></figure>
+<h2>Schedules and checkout</h2>
+<p>Controlled-clock screenshots use America/New_York, with EDT labels and UTC values internally. The countdowns are factual simulated schedule data; no result appears at zero.</p>
+<figure><a href="upcoming-desktop.jpg"><img style="width:100%;height:auto" src="upcoming-desktop.jpg" alt="Desktop upcoming Draw Room prioritizes draw-window time with sales cutoff alongside"></a></figure>
+<div class="screens">
+<figure><a href="home-390.jpg"><img src="home-390.jpg" alt="390px Home first screen shows Sorphera, tagline, Make your picks and the first jackpot"></a><figcaption>Home first screen at 390px.</figcaption></figure>
+<figure><a href="draw-390.jpg"><img src="draw-390.jpg" alt="390px Draw Room with NFT round identity, both timers, calendar actions and separate sample replays"></a><figcaption>Upcoming NFT round at 390px.</figcaption></figure>
+<figure><a href="tickets-390.jpg"><img src="tickets-390.jpg" alt="My tickets with saved exact-round entry"></a><figcaption>Saved tickets at 390px.</figcaption></figure>
+<figure><a href="play-schedule-390.jpg"><img src="play-schedule-390.jpg" alt="Play round facts show independent NFT sales and draw-window times"></a><figcaption>Compact Play schedule.</figcaption><a href="checkout-cutoff.jpg"><img src="checkout-cutoff.jpg" alt="Open checkout at cutoff displays Entries closed and disables confirmation"></a><figcaption>Previously open checkout at cutoff.</figcaption></figure>
+</div>
+<p><a href="sorphera-nft-42-draw-window.ics">Captured draw-window event</a> · <a href="sorphera-nft-42-sales-closing.ics">Captured sales-closing event</a>. These test captures contain a local preview URL; the website generates the exact link for the host where it runs.</p>
+<p><a href="validation.md">Full results, six-domain design review, source findings and limitations</a>.</p>
+</main></body></html>

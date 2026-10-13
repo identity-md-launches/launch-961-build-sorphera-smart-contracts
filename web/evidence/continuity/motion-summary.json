@@ -1,0 +1,162 @@
+{
+  "webgl": {
+    "frame_count": 1023,
+    "sampled_seconds": 26.665634,
+    "mean_fps": 38.32648419310038,
+    "median_ms": 16.700000000000045,
+    "p95_ms": 99.89999999999964,
+    "max_ms": 133.40000000000146,
+    "over40ms": 131,
+    "phases": [
+      {
+        "key": "0:away",
+        "at": 898.266
+      },
+      {
+        "key": "0:spinning",
+        "at": 4698
+      },
+      {
+        "key": "0:hold",
+        "at": 7364.6
+      },
+      {
+        "key": "0:travel",
+        "at": 8331.2
+      },
+      {
+        "key": "1:away",
+        "at": 8797.9
+      },
+      {
+        "key": "1:spinning",
+        "at": 9197.9
+      },
+      {
+        "key": "1:hold",
+        "at": 11831.1
+      },
+      {
+        "key": "1:travel",
+        "at": 12731.1
+      },
+      {
+        "key": "2:away",
+        "at": 13197.7
+      },
+      {
+        "key": "2:spinning",
+        "at": 13597.8
+      },
+      {
+        "key": "2:hold",
+        "at": 16130.9
+      },
+      {
+        "key": "2:travel",
+        "at": 17064.2
+      },
+      {
+        "key": "3:away",
+        "at": 17564.2
+      },
+      {
+        "key": "3:spinning",
+        "at": 17947.5
+      },
+      {
+        "key": "3:hold",
+        "at": 20447.4
+      },
+      {
+        "key": "3:travel",
+        "at": 21364.1
+      },
+      {
+        "key": "4:away",
+        "at": 21847.4
+      }
+    ],
+    "video_bytes": 322230
+  },
+  "canvas": {
+    "frame_count": 1053,
+    "sampled_seconds": 23.215799999999998,
+    "mean_fps": 45.313967211984945,
+    "median_ms": 16.700000000000273,
+    "p95_ms": 50.100000000000364,
+    "max_ms": 83.39999999999964,
+    "over40ms": 112,
+    "phases": [
+      {
+        "key": "0:away",
+        "at": 1197
+      },
+      {
+        "key": "0:spinning",
+        "at": 5096.8
+      },
+      {
+        "key": "0:hold",
+        "at": 6896.8
+      },
+      {
+        "key": "0:travel",
+        "at": 7746.7
+      },
+      {
+        "key": "1:away",
+        "at": 8213.4
+      },
+      {
+        "key": "1:spinning",
+        "at": 8613.4
+      },
+      {
+        "key": "1:hold",
+        "at": 10380
+      },
+      {
+        "key": "1:travel",
+        "at": 11213.3
+      },
+      {
+        "key": "2:away",
+        "at": 11696.6
+      },
+      {
+        "key": "2:spinning",
+        "at": 12080
+      },
+      {
+        "key": "2:hold",
+        "at": 13779.9
+      },
+      {
+        "key": "2:travel",
+        "at": 14613.1
+      },
+      {
+        "key": "3:away",
+        "at": 15113.1
+      },
+      {
+        "key": "3:spinning",
+        "at": 15513.1
+      },
+      {
+        "key": "3:hold",
+        "at": 17296.3
+      },
+      {
+        "key": "3:travel",
+        "at": 18146.3
+      },
+      {
+        "key": "4:away",
+        "at": 18646.4
+      }
+    ],
+    "video_bytes": 315207
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "results": [
+    "#home rendered without external network",
+    "#play?game=0 rendered without external network",
+    "#play?game=1 rendered without external network",
+    "#draw?game=0&round=42 rendered without external network",
+    "#draw?scenario=nft-tie rendered without external network",
+    "#tickets rendered without external network",
+    "#history rendered without external network",
+    "#faq rendered without external network",
+    "Share metadata, keyboard dialog Escape/focus return; no external requests or missing assets"
+  ],
+  "external": [],
+  "errors": []
+}

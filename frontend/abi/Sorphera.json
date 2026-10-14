@@ -420,6 +420,51 @@
   },
   {
     "type": "function",
+    "name": "enter",
+    "inputs": [
+      {
+        "name": "player",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "game",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "picks",
+        "type": "tuple[]",
+        "internalType": "struct Sorphera.Pick[]",
+        "components": [
+          {
+            "name": "main",
+            "type": "uint8[3]",
+            "internalType": "uint8[3]"
+          },
+          {
+            "name": "bonus",
+            "type": "uint8",
+            "internalType": "uint8"
+          }
+        ]
+      },
+      {
+        "name": "rewards",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
     "name": "entitlement",
     "inputs": [
       {
@@ -446,6 +491,40 @@
     "outputs": [
       {
         "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "entriesOf",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "paid",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "reward",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -683,6 +762,16 @@
           },
           {
             "name": "tieBreakWord",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "paidEntries",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "rewardEntries",
             "type": "uint256",
             "internalType": "uint256"
           }
@@ -982,6 +1071,19 @@
   {
     "type": "function",
     "name": "owner",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "passport",
     "inputs": [],
     "outputs": [
       {
@@ -1298,6 +1400,19 @@
   },
   {
     "type": "function",
+    "name": "setPassport",
+    "inputs": [
+      {
+        "name": "passport_",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setSalesEnabled",
     "inputs": [
       {
@@ -1339,6 +1454,11 @@
         "name": "combination",
         "type": "uint32",
         "internalType": "uint32"
+      },
+      {
+        "name": "reward",
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -1639,6 +1759,19 @@
     "inputs": [
       {
         "name": "next",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "PassportRegistered",
+    "inputs": [
+      {
+        "name": "passport",
         "type": "address",
         "indexed": true,
         "internalType": "address"

@@ -240,7 +240,7 @@ contract SorpheraHandler is Test {
         if (terminal == 0) return;
         Sorphera.Round memory r = lottery.getRound(game, terminal);
         uint256 ticket = bound(rawTicket, 1, r.sold);
-        (address player, uint32 combination) = lottery.tickets(game, terminal, ticket);
+        (address player, uint32 combination,) = lottery.tickets(game, terminal, ticket);
         uint256 already = lottery.claimedETH(game, group, ticket);
         bool winning = r.status == Sorphera.Status.Cancelled
             || (combination == r.winningKey && (game == 0 || ticket == r.winningTicket));
@@ -273,7 +273,7 @@ contract SorpheraHandler is Test {
         uint256 index = bound(rawIndex, 0, v.assetCount() - 1);
         (, uint256 tokenId,,, bool claimed) = v.assets(index);
         if (claimed) return;
-        (address player,) = lottery.tickets(game, terminal, r.winningTicket);
+        (address player,,) = lottery.tickets(game, terminal, r.winningTicket);
         pool.nft().setRejected(tokenId, reject);
         vm.prank(player);
         v.claimNFTs(r.winningTicket, _one(index), player);
@@ -328,7 +328,7 @@ contract SorpheraHandler is Test {
         if (terminal == 0) return;
         Sorphera.Round memory r = lottery.getRound(game, terminal);
         uint256 ticket = bound(rawTicket, 1, r.sold);
-        (address player, uint32 key) = lottery.tickets(game, terminal, ticket);
+        (address player, uint32 key,) = lottery.tickets(game, terminal, ticket);
         if (
             r.status == Sorphera.Status.Won
                 && (key != r.winningKey || (game == 1 && ticket != r.winningTicket))
@@ -452,7 +452,7 @@ contract SorpheraInvariantTest is SorpheraFixture {
                         assertGt(r.matches, 0);
                         assertEq(lottery.matchCount(game, id, r.winningKey), r.matches);
                         if (game == 1) {
-                            (, uint32 combination) = lottery.tickets(game, id, r.winningTicket);
+                            (, uint32 combination,) = lottery.tickets(game, id, r.winningTicket);
                             assertTrue(r.winningTicket >= 1 && r.winningTicket <= r.sold);
                             assertEq(combination, r.winningKey, "Sorphera: tie-break outside matches");
                         }

@@ -7,7 +7,7 @@ root = Path(__file__).resolve().parent.parent
 abi_dir = root / "frontend" / "abi"
 abi_dir.mkdir(parents=True, exist_ok=True)
 sizes = {}
-for name in ("Sorphera", "SorpheraRouter", "SorpheraVaultFactory", "SorpheraVault"):
+for name in ("Sorphera", "SorpheraPassport", "SorpheraRouter", "SorpheraVaultFactory", "SorpheraVault"):
     artifact = json.loads((root / "out" / f"{name}.sol" / f"{name}.json").read_text())
     (abi_dir / f"{name}.json").write_text(json.dumps(artifact["abi"], indent=2) + "\n")
     runtime = artifact["deployedBytecode"]["object"].removeprefix("0x")

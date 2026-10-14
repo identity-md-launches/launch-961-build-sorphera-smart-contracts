@@ -70,6 +70,10 @@ contract Sorphera is Guard, Owned {
         uint256 frozenNFTs;
         uint256 tieBreakRequestId;
         uint256 tieBreakWord;
+        // Passport accounting. `sold` stays the total entry count (matching, zero-ticket and draw
+        // checks); only `paidEntries` holds cancellation-recovery rights.
+        uint256 paidEntries;
+        uint256 rewardEntries;
     }
 
     struct Group {
@@ -84,11 +88,17 @@ contract Sorphera is Guard, Owned {
     struct Ticket {
         address player;
         uint32 combination;
+        bool reward;
     }
 
     struct Pick {
         uint8[3] main;
         uint8 bonus;
+    }
+
+    struct Entries {
+        uint256 paid;
+        uint256 reward;
     }
 
     struct RequestBinding {
@@ -123,6 +133,12 @@ contract Sorphera is Guard, Owned {
     mapping(uint8 => mapping(uint256 => uint256)) public releasedFees;
     uint256 public operatorFees;
     uint256 public totalLiabilities;
+    /// @notice The one Passport contract allowed to issue reward entries on a player's behalf.
+    address public passport;
+    /// @notice Paid and reward entries per game/round/wallet. Paid entries are the Passport's only stamp
+    ///         source; reward entries are restored once if that round is cancelled.
+    mapping(uint8 => mapping(uint256 => mapping(address => Entries))) public entriesOf;
+    event PassportRegistered(address indexed passport);
     event RulesConfigured(uint8 indexed game, Rules rules);
     event RandomnessConfigured(RandomConfig config);
     event VRFReserveConfigured(uint96 minimumLinkBalance, uint96 minimumNativeBalance);
@@ -334,7 +350,32 @@ contract Sorphera is Guard, Owned {
         );
     }
 
+    /// @notice Binds the Passport once. Until then reward entries are impossible; paid buys are unaffected.
+    function setPassport(address passport_) external onlyOwner {
+        require(passport == address(0) && passport_.code.length != 0, "Sorphera: passport binding");
+        passport = passport_;
+        emit PassportRegistered(passport_);
+    }
+
     function buy(uint8 game, uint256 id, Pick[] calldata picks) external payable nonReentrant {
+        _enter(msg.sender, game, id, picks, 0);
+    }
+
+    /// @notice Passport-only entry: the first `picks.length - rewards` picks are paid at the frozen price,
+    ///         the last `rewards` are zero-price reward entries. Tickets always belong to `player`.
+    /// @dev Credit is consumed by the Passport before this call and refunded by its revert. Reward entries
+    ///      pay no fee, fund no vault budget and trigger no FWA pull.
+    function enter(address player, uint8 game, uint256 id, Pick[] calldata picks, uint256 rewards)
+        external
+        payable
+        nonReentrant
+    {
+        // An unbound passport is address(0), which no caller can be: unconfigured means nobody may enter.
+        require(msg.sender == passport, "Sorphera: passport only");
+        _enter(player, game, id, picks, rewards);
+    }
+
+    function _enter(address player, uint8 game, uint256 id, Pick[] calldata picks, uint256 rewards) internal {
         Round storage r = rounds[game][id];
         require(
             salesEnabled && r.status == Status.Sales && block.timestamp >= r.start
@@ -342,21 +383,29 @@ contract Sorphera is Guard, Owned {
             "Sorphera: sales closed"
         );
         require(
-            picks.length > 0 && picks.length <= MAX_TICKETS_PER_TX && msg.value == picks.length * r.price,
+            picks.length > 0 && picks.length <= MAX_TICKETS_PER_TX && rewards <= picks.length
+                && msg.value == (picks.length - rewards) * r.price,
             "Sorphera: tickets/payment"
         );
+        uint256 paid = picks.length - rewards;
         require(block.chainid == deploymentChainId, "Sorphera: chain changed");
         factory.router().validate(address(SorpheraVault(payable(r.vault)).pool()));
-        uint256 fee = msg.value / 10;
-        r.fees += fee;
-        totalLiabilities += fee;
         for (uint256 i; i < picks.length; ++i) {
             uint32 combination = Balls.key(picks[i].main, picks[i].bonus);
             uint256 ticket = ++r.sold;
-            tickets[game][id][ticket] = Ticket(msg.sender, combination);
+            tickets[game][id][ticket] = Ticket(player, combination, i >= paid);
             matching[game][id][combination].push(ticket);
-            emit TicketBought(game, id, ticket, msg.sender, combination);
+            emit TicketBought(game, id, ticket, player, combination);
         }
+        r.paidEntries += paid;
+        r.rewardEntries += rewards;
+        Entries storage e = entriesOf[game][id][player];
+        e.paid += paid;
+        e.reward += rewards;
+        // Reward entries carry no value: a free-only batch adds no fee, liability or vault budget.
+        uint256 fee = msg.value / 10;
+        r.fees += fee;
+        totalLiabilities += fee;
         SorpheraVault(payable(r.vault)).fund{value: msg.value - fee}();
     }
 
@@ -558,11 +607,13 @@ contract Sorphera is Guard, Owned {
         r.status = Status.Cancelled;
         Group storage g = groups[game][r.group];
         g.terminalRound = id;
-        g.divisor = r.sold;
+        // Only the paid cohort shares recoveries. Dividing by `sold` would hand reward entries a slice of
+        // the paid players' refunds and FWA tokens.
+        g.divisor = r.paidEntries;
         g.cash += r.fees;
         r.fees = 0;
         ++currentGroup[game];
-        emit Cancelled(game, id, g.cash, r.sold);
+        emit Cancelled(game, id, g.cash, r.paidEntries);
         _distribute(game, r.group);
     }
 
@@ -576,11 +627,13 @@ contract Sorphera is Guard, Owned {
 
     function _distribute(uint8 game, uint256 group) internal {
         Group storage g = groups[game][group];
-        uint256 share = g.cash / g.divisor;
+        // A cancelled round whose entries were all rewards has no recovery cohort (divisor 0): carried
+        // dust and any later recovery credited to it move forward to the game's current group.
+        uint256 share = g.divisor == 0 ? 0 : g.cash / g.divisor;
         g.perTicket += share;
         g.cash -= share * g.divisor;
         // Cancelled refunds retain remainder for future recovery accumulation. Winning ETH dust rolls.
-        if (rounds[game][g.terminalRound].status == Status.Won && g.cash != 0) {
+        if ((g.divisor == 0 || rounds[game][g.terminalRound].status == Status.Won) && g.cash != 0) {
             uint256 dust = g.cash;
             g.cash = 0;
             groups[game][currentGroup[game]].cash += dust;
@@ -606,6 +659,8 @@ contract Sorphera is Guard, Owned {
             );
         } else {
             require(r.status == Status.Cancelled, "Sorphera: prize state");
+            // Reward entries never bought anything: no refund cash, FWA tokens or NFT release votes.
+            require(!t.reward, "Sorphera: reward entry");
         }
         return g.divisor;
     }

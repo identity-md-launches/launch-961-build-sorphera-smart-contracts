@@ -1,41 +1,96 @@
-# Sorphera Passport: developer handoff for the contracts iteration
+# Sorphera Passport: contracts handoff (buy 12 paid tickets, earn 1 free)
 
-Status: the website implements the Passport (**every 12 paid tickets earns 1 free ticket**) as a **DEMO / SIMULATED** feature. All records live in the browser's local storage, keyed by a demo identity. No Solidity, ABI, pricing, payout or protected deployment file was changed, and nothing here performs an on-chain redemption. This document lists what the contracts must establish so the website can replace its demo accounting with authoritative data.
+Status: **implemented in contracts** (`src/SorpheraPassport.sol` plus `src/Sorphera.sol` changes) and covered by `test/SorpheraPassport.t.sol`. Nothing is deployed by this iteration; the website still runs its labelled browser-storage demo and must not import that data as entitlements. Wiring the site to these contracts is a later Website task.
 
-The demo rules are implemented in `web/src/passport.ts` and exercised by the unit tests appended to `web/src/core.test.ts`. Read them as the product specification the contracts should confirm or correct.
+Customer copy the contracts support: **"Rewards become available after the qualifying round completes. A cancelled reward entry returns your free ticket."**
 
-## Product rules the demo follows
+## 1. Product rules as implemented
 
-| Rule | Demo behaviour | Where |
-| --- | --- | --- |
-| One stamp = one eligible paid ticket | `paid` tickets of a purchase at the standard price count once the purchase is `finalized` | `passportView` |
-| Every 12 tickets earns one reward; leftovers carry | `earn(n)` = `floor(n / 12)` rewards, `n mod 12` stamps. 11+1 = 1 reward / 0 stamps, 11+3 = 1 reward / 2 stamps, 24 = 2 rewards / 0 stamps | `earn`, tests |
-| Shared across ETH and NFT games | Both demo rounds share the standard price 0.005 ETH; progress is one counter; the reward can be used in either game | `STANDARD_PRICE`, `eligiblePrice` |
-| Different-price rounds are ineligible | Purchases whose round price differs from the standard price earn no stamps and cannot take reward tickets | `eligiblePrice`, `redeemReward` |
-| Free, reward, sponsored, failed, cancelled, refunded tickets earn nothing | Only `state === "finalized"` purchases count; `refunded` and `failed` purchases count zero; reward tickets are recorded as redemptions, never as paid tickets | `passportView` |
-| Pending versus finalized | New demo purchases are recorded `pending` and shown separately on the card. "Simulate finality" and "Simulate refund" controls on My tickets model the contract outcome | `setPurchaseState`, `Tickets.tsx` |
-| Count each purchase once | A purchase id is generated when a review opens; retries after failure reuse it and `recordPurchase` ignores duplicate ids | `recordPurchase`, `Play.tsx` |
-| Isolated by identity | Records are stored per demo wallet (`demo-a`, `demo-b`). Switching never transfers progress, tickets or baskets | `loadRecord`, `App.tsx` |
-| No expiry, limits or enrollment | No weekly limit, streak, reset, mission, NFT requirement or sign-up | by omission |
-| Reward consumption | One reward is consumed per reward ticket **only after** a successful demo confirmation. Rejection, failure and closed rounds leave it untouched. Reserved rewards in saved baskets cannot be used twice, and a synchronous latch blocks concurrent confirmation | `redeemReward`, `reservedRewards`, `Play.tsx` |
-| Redeeming earns no stamp and needs no extra purchase | A free-only basket records a purchase with `paid = 0` and consumes the reward; the network fee still applies (no gas-free promise) | `planBudget(..., freeCount)` |
-| Reward tickets are promotional entries into the existing funded jackpot | Added to the entry count with equal winning and claim rights; never counted as paid revenue or jackpot funding; no extra FWA purchase is simulated. Rule text shown to players: "Reward tickets enter the same draw and are included in the total number of entries." | `REWARD_RULE`, `Tickets.tsx` |
+| Rule | Contract behaviour |
+| --- | --- |
+| One stamp per qualifying paid ticket | `Sorphera.entriesOf(game, round, wallet).paid` is the only stamp source. Reward entries, cancelled rounds and other-priced rounds add nothing. |
+| 12 stamps = 1 reward, remainders carry | `SorpheraPassport` keeps one cumulative `finalizedPaid` per wallet. `earned = finalizedPaid / 12`, `stamps = finalizedPaid % 12`. 11+1 => 1/0, 11+3 => 1/2, 24 => 2/0; transaction and wallet splitting cannot change the result. |
+| Shared across ETH and NFT games, weeks, purchases | The counter is per wallet only; rounds of both games feed it. |
+| One immutable qualifying price | `SorpheraPassport.qualifyingPrice` is a constructor argument (0.005 ETH in local fixtures; production value is an owner input before deployment). Earning and redemption require the round's frozen `price` to equal it. Nothing can reprice rewards later. |
+| No expiry, cap, enrollment, NFT, token, tier, streak, transfer, admin grant | By omission: there is no owner function on the Passport at all. |
+| Finality | A wallet's paid entries in a round count only once **that round** is `Won` or `Rolled`. Cutoff, `Closed`, `Requested`, `RandomReady`, tie-break states and pending FWA work are not finality. `Cancelled` credits zero stamps. Rounds that never settle stay pending. |
+| Idempotent, bounded, permissionless finalization | `process(wallet, keys[])` (≤ 50 keys) credits only `wallet`, from the lottery's own counts, each (game, round) at most once (`processed(wallet, game, round)` outcome). Anyone may call it. No loop over players or history. |
+| Redemption | `enter(game, round, picks, rewards, finalizeFirst)`: the last `rewards` picks are free, the first `picks.length - rewards` are paid at the frozen price (`msg.value` must equal exactly that). `rewards = 0` is an ordinary paid buy; `rewards = picks.length` is free-only with `msg.value = 0`. `finalizeFirst` lets the player finalize their own terminal rounds in the same transaction. All-or-nothing: any revert restores credit. |
+| Reward tickets | Owned by the redeeming wallet, same matching index, same winning-number eligibility, equal ETH share per matching ticket, same NFT tie-break chance and claim rights. They earn no stamps. |
+| Cancellation | Only **paid** entries share the recovery pool (`Group.divisor = paidEntries`). Reward tickets receive no cancellation ETH, FWA tokens, late recoveries or shared-NFT release votes (`entitlement` reverts `Sorphera: reward entry`). Each reward redeemed in a cancelled round is restored exactly once (`restored`), earns no stamp and leaves no active entry. |
 
-## What the contracts must establish
+## 2. Accounting
 
-1. **Authoritative paid-ticket counts and finality.** Which event or state marks a purchase as irrevocably paid (for example, round closed or draw requested), and how the frontend reads per-owner eligible paid counts. The demo's `pending` versus `finalized` states are placeholders for that rule.
-2. **Price eligibility.** The canonical standard price, and whether a round frozen at a different price is excluded from earning and from redemption (the demo excludes both).
-3. **One-use reward consumption.** A reward must be consumed atomically with the entry it creates, so a failed or reverted redemption leaves the reward intact and a successful one cannot be replayed. The demo uses idempotent purchase and redemption ids; the contract should use nonces or on-chain balances.
-4. **Cancellation and refunds.** A refunded or cancelled purchase must remove its stamps, including stamps that already contributed to an earned reward. Decide whether an already-used reward from a later-refunded card creates a debt, is forgiven, or blocks the refund. The demo simply recounts from the remaining finalized purchases, so a refund can make `earned` fall below `used`; `available` floors at zero.
-5. **Player ownership and claim rights.** Reward tickets must be owned by the redeeming player, enter the same round's entry set, and carry the same winning, tie-break and claim rights as paid tickets, including NFT vault claims and ETH shares.
-6. **Accounting.** Reward tickets add to the entry count only. They must not add to paid revenue, to the 90% FWA acquisition budget, or to operator fees, and they must not trigger extra FWA purchases. Prize-sharing math (equal split per matching ticket) includes them.
-7. **Identity.** Progress is per wallet address, never transferable between accounts, and not affected by connecting or disconnecting.
+- `Round.sold` remains **total entries** and is still used for the matching index, the zero-ticket skip in `requestDraw`, `RoundClosed` and `Rollover`. `Round.paidEntries` and `Round.rewardEntries` were appended to the struct.
+- Fees are still `msg.value / 10` and the vault still receives the other 90%: reward entries add no fee, liability, budget or FWA pull. A free-only batch forwards zero value; vault checks are not faked.
+- `Cancelled(game, round, available, tickets)` now reports **paid** entries in `tickets`, because that is the refund cohort.
+- **Regression fixed**: `_cancel` previously set `divisor = sold`. With reward entries present that would have diluted paid refunds and FWA token shares and handed reward tickets cancellation proceeds. `test/SorpheraPassport.t.sol::testCancellationDividesRecoveryAmongPaidEntriesOnly` and `testRewardTicketHasNoTokenOrNFTRecoveryRights` pin the fix.
+- **Zero paid recipients**: a cancelled round with only reward entries has `divisor = 0`. `_distribute` then carries any cash (carried dust, or a late `credit` from its vault) forward to the game's **current group** (`DustCarried(game, toGroup, amount)`), never to the owner. Such a round has no vault budget, so it cannot hold FWA requests, tokens or NFTs; that invariant is asserted by the test above and in the vault no entitlement exists for anyone to claim them.
+- Cancellation payouts remain shares of actual recoveries (fees + unspent budget + refunds + late settlements), not a guaranteed full refund.
+- Invariants stated and tested: `address(lottery).balance == totalLiabilities`; `available = finalizedPaid/12 + restored - redeemed ≥ 0`; a (wallet, game, round) is processed at most once; `rewardEntries` of a round equals the sum of `RewardsRedeemed` counts into it; a reward ticket never passes `entitlement` in a cancelled round; a Won/Rolled round never restores.
 
-## Frontend integration points
+## 3. Interfaces (ABI changes)
 
-- `web/src/passport.ts`: replace `loadRecord` / `saveRecord` with reads from the indexer or contract views; keep `passportView`, `earn` and `projectPurchase` as the display logic.
-- `web/src/Play.tsx`: `recordPurchase` and `redeemReward` run after the demo confirmation; in live mode they should run after the confirmed receipt, or be replaced by re-reading on-chain state.
-- `web/src/Tickets.tsx`: the ledger and the two demo controls ("Simulate finality", "Simulate refund") are demo-only and should be removed when live data exists.
-- Reward tickets are `DemoTicket` entries with `reward: true`; the Draw Room and My tickets already label them and treat results identically.
+New contract `SorpheraPassport(address lottery, uint256 qualifyingPrice)` (no owner):
 
-No live funding, deployment or token change is requested by this handoff.
+| Item | Purpose |
+| --- | --- |
+| `qualifyingPrice()`, `STAMPS_PER_REWARD()`, `MAX_PROCESS()` | Immutable rule parameters |
+| `summary(wallet) → (finalizedPaid, stamps, earned, restored, redeemed, available)` | Authoritative credit |
+| `availableRewards(wallet)`, `stamps(wallet)` | Convenience views |
+| `roundCredit(wallet, game, round) → (pendingPaid, pendingRestore, processable, outcome)` | Bounded per-round preview; `outcome` 0 Pending, 1 Credited, 2 Restored, 3 Ineligible |
+| `processed(wallet, game, round) → outcome` | Idempotency record |
+| `process(wallet, RoundKey[] keys) → changed` | Finalization / restoration |
+| `enter(game, round, Pick[] picks, rewards, RoundKey[] finalizeFirst) payable` | Redemption and mixed batches |
+| events `StampsCredited(wallet, game, round, paid, finalizedPaid)`, `RewardsRestored(wallet, game, round, count)`, `RoundIneligible(wallet, game, round, price)`, `RewardsRedeemed(wallet, game, round, count, firstRewardTicket, lastRewardTicket)` | All three address/game/round topics indexed |
+
+`Sorphera` changes:
+
+| Item | Change |
+| --- | --- |
+| `Round` tuple | appended `paidEntries`, `rewardEntries` (`getRound` decoders must be regenerated) |
+| `tickets(game, round, id)` | now returns `(player, combination, reward)` |
+| `entriesOf(game, round, wallet) → (paid, reward)` | per-wallet counts |
+| `passport()`, `setPassport(address)` (owner, once, requires code), event `PassportRegistered` | Passport binding; until bound, `enter` reverts `Sorphera: passport only` |
+| `enter(player, game, round, picks, rewards) payable` | Passport-only entry path; `buy` is unchanged |
+| `TicketBought` | emitted for paid **and** reward tickets; reward issuance is distinguished by the Passport's `RewardsRedeemed` range and `tickets(...).reward` |
+| `Cancelled.tickets` | paid entries |
+| `DustCarried` | also emitted when a zero-cohort cancelled group forwards cash |
+
+Canonical ABIs were regenerated with the permitted workflow (`forge build && python3 tools/export.py`, which now also exports `SorpheraPassport.json`). `frontend/bytecode-sizes.json` is regenerated; `Sorphera` runtime is 24,366 bytes (EIP-170 limit 24,576), which is why no further views were added to the lottery itself.
+
+## 4. Example reads and calls
+
+Finalize after a round completes (anyone, for any wallet):
+
+```
+# is the round terminal and does the wallet have pending credit?
+cast call $PASSPORT "roundCredit(address,uint8,uint256)(uint256,uint256,bool,uint8)" $WALLET 0 $ROUND
+# credit it (no-op if already processed or not terminal)
+cast send $PASSPORT "process(address,(uint8,uint256)[])" $WALLET "[(0,$ROUND)]"
+cast call $PASSPORT "summary(address)(uint256,uint256,uint256,uint256,uint256,uint256)" $WALLET
+```
+
+Redeem one free ticket plus two paid tickets into ETH round `$R`, finalizing an earlier round first:
+
+```
+cast send $PASSPORT --value $((2 * 5000000000000000)) \
+  "enter(uint8,uint256,(uint8[3],uint8)[],uint256,(uint8,uint256)[])" \
+  0 $R "[([1,2,3],1),([4,5,6],2),([7,8,9],3)]" 1 "[(0,$EARLIER)]"
+```
+
+Restoration after cancellation is the same `process` call; `RewardsRestored` is emitted once.
+
+Confirmation and reorg handling: treat `StampsCredited`, `RewardsRestored` and `RewardsRedeemed` as pending until the block is final (the project's existing confirmation policy), then re-read `summary` and `roundCredit` rather than trusting a locally computed count. Optimistic UI state is never spendable authority: `enter` reverts with `Sorphera: insufficient rewards` if the chain disagrees. A redemption transaction dropped by a reorg leaves credit intact because the state and the ticket are written atomically.
+
+## 5. Compatibility, deployment and operations
+
+- **New launch contract**: `SorpheraPassport` must be deployed after `Sorphera` with the launch chain's qualifying price, then bound with `Sorphera.setPassport(passport)` (owner, once). The existing `launch.json` lists three contracts and was not edited here; the manifest step must add `SorpheraPassport` with `["$contract:Sorphera", <qualifyingPriceWei>]` and the owner must perform `setPassport`. Add this to the "After launch" checklist.
+- **Protected hashes**: the `Sorphera` bytecode changed, so any protected release/runtime hashes (`frontend/bytecode-sizes.json`, deployment evidence) must be regenerated from this source by the release process. No hash was hand-edited and nothing activates the existing site's writes.
+- **Keeper / tooling**: `tools/keeper.py` reads `r["sold"]`; that remains the total entry count and keeps its meaning. `frontend/configuration.json` status values are unchanged.
+- **Oracle policy** is unchanged: no new VRF requests, no timeouts, no admin repricing.
+- **Website**: replace `web/src/passport.ts` storage with `summary`, `roundCredit`, `processed` reads and the three indexed events; redemption goes through `SorpheraPassport.enter`, never `Sorphera.buy`. Remove the "Simulate finality/refund" controls. Never import browser demo records as entitlements.
+
+## 6. Verification
+
+`forge build`, `forge fmt --check` and `forge test` (offline, with `FOUNDRY_FUZZ_SEED=0xe7299debecaa06bd09234c7d201c1d942afcbf5f4709a9889ad32bf790259939`) pass; see `docs/TESTING.md`. The Passport suite covers thresholds and remainders, fuzzed batch/order equivalence, wallet splitting, mixed games, price exclusion, pending/Won/Rolled/Cancelled finality, duplicate processing, wallet isolation, free-only and mixed batches, pause/cutoff/invalid picks/insufficient credit/rollback, nested redemption in a contract wallet, paid and reward winners sharing ETH, a reward ticket winning an NFT tie-break, no recursive stamps, one-time restoration, no reward cancellation rights, zero-paid cancelled rounds with carried late recoveries, bounded processing gas and non-inflatable rewards. Tests passing are not an audit; an independent adversarial review is still required before funds are at risk.

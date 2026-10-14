@@ -1,7 +1,11 @@
 {
   "Sorphera": {
-    "runtimeBytes": 22261,
-    "initBytesWithoutArgs": 22830
+    "runtimeBytes": 24366,
+    "initBytesWithoutArgs": 24949
+  },
+  "SorpheraPassport": {
+    "runtimeBytes": 4582,
+    "initBytesWithoutArgs": 4920
   },
   "SorpheraRouter": {
     "runtimeBytes": 8424,

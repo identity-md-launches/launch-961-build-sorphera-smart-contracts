@@ -57,7 +57,9 @@ At 2,000 matching tickets and 104 NFTs: measured draw finalization **138,634 gas
 
 The fixture performs many bounded calls in one test harness; its aggregate 187.9 million test gas is not a proposed transaction/block. Keeper/user operations split sales, acquisitions, settlement and claims into their enforced batch limits. Counts can grow without a cap on total sales. A future estimate must use the actual mainnet pool/collection/current gas state, not mock batch figures.
 
-Runtime sizes: Sorphera **21,485**, router **8,424**, factory **15,710**, vault **12,914** bytes. All are below EIP-170; all initcode sizes are below EIP-3860. ABI/size exports are regenerated from build artifacts.
+Passport iteration: `test/SorpheraPassport.t.sol` (27 tests, one 256-run fuzz) and `test/SorpheraPassportInvariant.t.sol` (two properties, 64 runs × 40 calls) were added and the whole offline suite re-run with `FOUNDRY_FUZZ_SEED=0xe7299debecaa06bd09234c7d201c1d942afcbf5f4709a9889ad32bf790259939`. The regression for the all-ticket refund divisor is `testCancellationDividesRecoveryAmongPaidEntriesOnly`. After this iteration the `Sorphera` runtime is **24,366** bytes (limit 24,576), `SorpheraPassport` 4,582; see `frontend/bytecode-sizes.json`. Fork/integration suites were not re-run here (no network); they exercise `buy`, whose behaviour is unchanged.
+
+Historical runtime sizes before the Passport: Sorphera **21,485**, router **8,424**, factory **15,710**, vault **12,914** bytes. All are below EIP-170; all initcode sizes are below EIP-3860. ABI/size exports are regenerated from build artifacts.
 
 ## Repairs during testing and limits
 

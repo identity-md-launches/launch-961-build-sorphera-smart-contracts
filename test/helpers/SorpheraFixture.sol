@@ -4,6 +4,7 @@ import {SimulatedSorphera} from "./SimulatedSorphera.sol";
 import {Test} from "forge-std/Test.sol";
 import {Sorphera} from "../../src/Sorphera.sol";
 import {SorpheraVault} from "../../src/SorpheraVault.sol";
+import {SorpheraPassport} from "../../src/SorpheraPassport.sol";
 import {SorpheraRouter} from "../../src/SorpheraRouter.sol";
 import {SorpheraVaultFactory} from "../../src/SorpheraVaultFactory.sol";
 import {Balls} from "../../src/lib/Balls.sol";
@@ -20,6 +21,7 @@ import {
 
 abstract contract SorpheraFixture is Test {
     Sorphera internal lottery;
+    SorpheraPassport internal passport;
     SorpheraRouter internal router;
     SorpheraVaultFactory internal factory;
     MockNFT internal nft;
@@ -53,6 +55,8 @@ abstract contract SorpheraFixture is Test {
         vrf = new MockVRF();
         lottery = new SimulatedSorphera(address(this), address(factory), address(vrf));
         factory.setLottery(address(lottery));
+        passport = new SorpheraPassport(address(lottery), 0.005 ether);
+        lottery.setPassport(address(passport));
         vrf.setConsumer(address(lottery));
         cutoff = vm.getBlockTimestamp() + 7 days;
         lottery.configureRules(0, _rules(cutoff));
@@ -88,6 +92,33 @@ abstract contract SorpheraFixture is Test {
         }
         vm.prank(player);
         lottery.buy{value: 0.005 ether * count}(game, id, picks);
+    }
+
+    /// @dev Passport entry: the last `rewards` picks are free, the rest are paid at 0.005 ETH.
+    function _enter(
+        uint8 game,
+        uint256 id,
+        address player,
+        Sorphera.Pick memory p,
+        uint256 count,
+        uint256 rewards,
+        SorpheraPassport.RoundKey[] memory finalizeFirst
+    ) internal {
+        Sorphera.Pick[] memory picks = new Sorphera.Pick[](count);
+        for (uint256 i; i < count; ++i) {
+            picks[i] = p;
+        }
+        vm.prank(player);
+        passport.enter{value: 0.005 ether * (count - rewards)}(game, id, picks, rewards, finalizeFirst);
+    }
+
+    function _key(uint8 game, uint256 id) internal pure returns (SorpheraPassport.RoundKey[] memory k) {
+        k = new SorpheraPassport.RoundKey[](1);
+        k[0] = SorpheraPassport.RoundKey(game, id);
+    }
+
+    function _noKeys() internal pure returns (SorpheraPassport.RoundKey[] memory k) {
+        k = new SorpheraPassport.RoundKey[](0);
     }
 
     function _draw(uint8 game, uint256 id, uint256 word) internal {

@@ -34,7 +34,8 @@
     "eachGameMaxAcquisitionFeeMaxTotalMinWeightedValueAndSlippage",
     "companyOwnedFundedLotteryVRFSubscription",
     "verifiedVRFKeyHashConfirmationsCallbackGasAndPaymentCurrency",
-    "companySelectedVRFReserveFloorsBeforeOpeningRounds"
+    "companySelectedVRFReserveFloorsBeforeOpeningRounds",
+    "deploySorpheraPassportWithQualifyingPriceThenLotterySetPassport"
   ],
   "constructorCoordinator": "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a",
   "configurationStatus": "mainnet-preparation-unset-not-deployed",
@@ -58,5 +59,13 @@
   ],
   "nftTieBreak": "Separate VRF request, one winning ticket, all inventory; no claims before TieBreakResult",
   "cancellationReview": "requestDraw may commit bounded custody review and remain Closed; observe CancellationReviewed and retry",
-  "oracleFailure": "Accepted draw/tie requests cannot be replaced or cancelled; permanent nonfulfillment remains unresolved"
+  "oracleFailure": "Accepted draw/tie requests cannot be replaced or cancelled; permanent nonfulfillment remains unresolved",
+  "passport": {
+    "contract": "SorpheraPassport",
+    "stampsPerReward": 12,
+    "qualifyingPriceWei": "owner input before deployment; 5000000000000000 in local fixtures; immutable",
+    "processBatch": 50,
+    "finality": "own round Won or Rolled; Cancelled restores redeemed rewards once and earns nothing",
+    "customerCopy": "Rewards become available after the qualifying round completes. A cancelled reward entry returns your free ticket."
+  }
 }

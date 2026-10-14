@@ -1,0 +1,83 @@
+{
+  "sourceRevision": "working tree on bbe3fa9 (after PR #9); publication commit assigned by the platform",
+  "toolchain": {
+    "forge": "1.8.3 cae51ad458f6abb64852b7709eb784352429825d",
+    "solc": "0.8.26",
+    "optimizer": 200,
+    "viaIR": true,
+    "evmVersion": "cancun",
+    "bytecodeHash": "none",
+    "python": "3.12"
+  },
+  "fuzzSeed": "0x9d6409c255b9eaceb9006c4d992dc2b3264ebfab44a255a1463634c19f415f0a",
+  "offline": {
+    "build": "PASS",
+    "forgeTest": {
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 9,
+      "new": "test/SorpheraRelease.t.sol 5/5"
+    },
+    "fmtCheck": "PASS (default and integration profiles)",
+    "pythonTooling": {
+      "passed": 49,
+      "failed": 0
+    }
+  },
+  "sizes": {
+    "Sorphera": 24366,
+    "SorpheraPassport": 4582,
+    "SorpheraRouter": 8424,
+    "SorpheraVaultFactory": 16188,
+    "SorpheraVault": 13378,
+    "limit": 24576,
+    "sorpheraHeadroom": 210
+  },
+  "mainnetFork": {
+    "chainId": 1,
+    "block": 26145236,
+    "blockHash": "0xf7795aa3ff4975e1f907099acb0bdbefcead6ee7d85b0cca23584ce0704de179",
+    "rpc": "https://one.valve.city/rpc/vk_demo/evm/1 (public, no key)",
+    "passed": 12,
+    "failed": 0,
+    "passportTest": "testRealPassportPaidEntriesEarnRewardAndFreeEntryFundsNothing",
+    "dependencyBytecode": "unchanged",
+    "callbacks": "coordinator impersonation on fork only; not live VRF",
+    "funding": "vm.deal and fork-only subscription"
+  },
+  "sepoliaFork": {
+    "chainId": 11155111,
+    "block": 11866914,
+    "blockHash": "0x06d1c4d2944979bd9048d237637ab747cd808508b1ff83768d9ea178ba20dd99",
+    "rpc": "https://one.valve.city/rpc/vk_demo/evm/11155111",
+    "passed": 3,
+    "failed": 0,
+    "prunedEndpoint": "https://ethereum-sepolia-rpc.publicnode.com refuses blocks before 11901040"
+  },
+  "notRun": {
+    "liveSepoliaCanary": "company signer, subscription, test funds and authorization required",
+    "privateIMDGate": "runner unavailable",
+    "rehearseScriptWithProductionInputs": "owner and qualifying price unapproved",
+    "independentAudit": "required before funds are at risk"
+  },
+  "deployment": {
+    "order": [
+      "SorpheraRouter",
+      "SorpheraVaultFactory",
+      "Sorphera",
+      "SorpheraPassport"
+    ],
+    "bindings": [
+      "factory.setLottery",
+      "lottery.setPassport"
+    ],
+    "salesEnabledAtCompletion": false,
+    "qualifyingPriceWei": "UNSET for production; 5000000000000000 local fixture only"
+  },
+  "protectedRecords": {
+    "launch.json": "unchanged; candidate patch at deployments/sepolia.launch.candidate.json",
+    "historicalEvidence": "unchanged"
+  },
+  "knownIssueRecordedSeparately": "permanent accepted-VRF nonfulfillment (docs/REVIEW-CONTINUATION.md); no reroll/replacement/cancellation added"
+}

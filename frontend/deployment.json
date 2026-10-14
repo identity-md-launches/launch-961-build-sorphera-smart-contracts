@@ -15,6 +15,14 @@
     "Sorphera": {
       "address": null,
       "deploymentBlock": null
+    },
+    "SorpheraPassport": {
+      "address": null,
+      "deploymentBlock": null,
+      "constructorArgs": [
+        "Sorphera address",
+        "qualifyingPriceWei (unset; 5000000000000000 only in local fixtures)"
+      ]
     }
   },
   "roundVaultDiscoveryEvent": "VaultCreated(address,uint8,uint256,address)",
@@ -25,5 +33,15 @@
     "number": 961,
     "chainId": 11155111,
     "manifest": "../launch.json"
+  },
+  "postDeploymentBindings": [
+    "SorpheraVaultFactory.setLottery(Sorphera)",
+    "Sorphera.setPassport(SorpheraPassport)"
+  ],
+  "passportDiscovery": {
+    "lotteryGetter": "passport()",
+    "passportGetter": "lottery()",
+    "event": "PassportRegistered(address)",
+    "rewardIssuance": "RewardsRedeemed(wallet,game,round,count,firstRewardTicket,lastRewardTicket) on SorpheraPassport; tickets(game,round,id).reward on Sorphera"
   }
 }

@@ -1,6 +1,6 @@
 # Test report — historical PR #2 baseline
 
-The current continuation results are in [CONTINUATION.md](CONTINUATION.md) and `continuation-validation.json`. The remainder records PR #2 evidence and its original toolchain.
+The Passport deployment-integration results (fresh offline, tooling and pinned mainnet-fork runs with the validation table) are in [RELEASE-REHEARSAL.md](RELEASE-REHEARSAL.md). The earlier continuation results are in [CONTINUATION.md](CONTINUATION.md) and `continuation-validation.json`. The remainder records PR #2 evidence and its original toolchain.
 
 Use `docs/validation.json` and `docs/evidence/` for final execution counts and logs. Toolchain: Forge **1.8.5**, Solidity **0.8.26**, optimizer 200, via IR, Cancun, metadata hash none. Existing build configuration and vendored dependencies are unchanged. Tests never read/set environment variables; default tests run offline. CLI RPC/profile parameters select the separate integration suite.
 

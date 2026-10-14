@@ -9,5 +9,7 @@
   "broadcast": false,
   "router": null,
   "factory": null,
-  "lottery": null
+  "lottery": null,
+  "passport": null,
+  "qualifyingPriceWei": "5000000000000000 (fork fixture only)"
 }

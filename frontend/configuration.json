@@ -66,6 +66,23 @@
     "qualifyingPriceWei": "owner input before deployment; 5000000000000000 in local fixtures; immutable",
     "processBatch": 50,
     "finality": "own round Won or Rolled; Cancelled restores redeemed rewards once and earns nothing",
-    "customerCopy": "Rewards become available after the qualifying round completes. A cancelled reward entry returns your free ticket."
-  }
+    "customerCopy": "Rewards become available after the qualifying round completes. A cancelled reward entry returns your free ticket.",
+    "constructorArgs": [
+      "Sorphera",
+      "qualifyingPriceWei"
+    ],
+    "postDeployment": "Sorphera.setPassport(passport) once by the owner; verify lottery.passport()==passport and passport.lottery()==lottery and passport.qualifyingPrice()==qualifyingPriceWei",
+    "roundFieldsAppended": [
+      "paidEntries",
+      "rewardEntries"
+    ],
+    "cancelledEventTickets": "paid entries (refund cohort), not total entries"
+  },
+  "websiteFollowUp": [
+    "use frontend/abi/SorpheraPassport.json and the regenerated Sorphera.json (Round has paidEntries/rewardEntries; tickets returns reward)",
+    "read summary/roundCredit/processed and the StampsCredited/RewardsRestored/RewardsRedeemed events",
+    "redeem through SorpheraPassport.enter, never Sorphera.buy",
+    "show Cancelled.tickets as the paid cohort",
+    "add the Passport address and qualifyingPriceWei to deployment.json once deployed"
+  ]
 }

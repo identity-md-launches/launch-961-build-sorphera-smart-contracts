@@ -6,6 +6,8 @@
   "router": null,
   "factory": null,
   "lottery": null,
+  "passport": null,
+  "qualifyingPriceWei": null,
   "salesEnabled": false,
   "pool": "0x958C41181182e76F221331b2755b77D9e1426A98",
   "helper": "0xcE6d5B618e034f87C7a8B6dCa65FB8669b8c301B",

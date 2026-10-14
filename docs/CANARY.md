@@ -46,9 +46,12 @@ dominate the cost. The example gas cap is a ceiling, not a cost estimate.
 ## What executes
 
 1. Deploy `CanaryDependencies(companyOperator)` on chain 11155111, then production
-   `SorpheraRouter(controller)`, `SorpheraVaultFactory(router,controller)` and
-   `Sorphera(controller,factory,publishedSepoliaCoordinator)`. Read component addresses,
-   verify code, bind factory and configure router through the controller.
+   `SorpheraRouter(controller)`, `SorpheraVaultFactory(router,controller)`,
+   `Sorphera(controller,factory,publishedSepoliaCoordinator)` and
+   `SorpheraPassport(lottery, ticketPriceWei)`. Read component addresses, verify code, bind
+   factory, configure router and bind the Passport through the controller, then verify
+   `factory.lottery`, `lottery.passport`, `passport.lottery`, the qualifying price and disabled
+   sales before any subscription work (a mismatch halts).
 2. Create a company subscription when `subscription` is null, recording its actual
    `SubscriptionCreated` receipt, or inspect a supplied nonzero ID owned by the sender.
    Register only the production lottery consumer. `nativeTopUpWei` authorizes one initial
@@ -72,7 +75,9 @@ dominate the cost. The example gas cap is a ceiling, not a cost estimate.
 6. Finalize each draw. Exhaustive coverage guarantees exactly one ETH matching ticket
    and two NFT matching tickets. Request the **independent** NFT tie-break, await its real
    callback, finalize, then claim both cash entitlements and NFT custody to the company
-   sender. Empty, rolled or cancelled guaranteed-coverage rounds stop with an error.
+   sender. Empty, rolled or cancelled guaranteed-coverage rounds stop with an error. After both
+   rounds are `Won`, `process` the controller's Passport credit once (17,100 paid entries →
+   1,425 rewards, journaled as `evidence.passport`); no reward is redeemed by the canary.
 
 `script/CanaryDependencies.sol` is **not FWA**. It is a controlled synthetic acquisition
 pool and NFT, with token/rewards/helper wiring stubs. Only the supplied company operator

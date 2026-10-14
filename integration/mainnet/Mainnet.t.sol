@@ -6,6 +6,8 @@ import {Sorphera} from "../../src/Sorphera.sol";
 import {SorpheraRouter} from "../../src/SorpheraRouter.sol";
 import {SorpheraVaultFactory} from "../../src/SorpheraVaultFactory.sol";
 import {SorpheraVault} from "../../src/SorpheraVault.sol";
+import {SorpheraPassport} from "../../src/SorpheraPassport.sol";
+import {ReleaseChecks} from "../../script/ReleaseChecks.sol";
 import {IFWA, IRewards, IFWAToken, IERC721} from "../../src/interfaces/External.sol";
 import {Balls} from "../../src/lib/Balls.sol";
 
@@ -59,6 +61,7 @@ contract SorpheraMainnetForkTest is Test {
     Sorphera lottery;
     SorpheraRouter router;
     SorpheraVaultFactory factory;
+    SorpheraPassport passport;
     uint256 subId;
     address alice = makeAddr("fork-only ticket holder");
     address treasury = makeAddr("fork-only company treasury");
@@ -73,6 +76,9 @@ contract SorpheraMainnetForkTest is Test {
         factory = new SorpheraVaultFactory(address(router), address(this));
         lottery = new Sorphera(address(this), address(factory), COORDINATOR);
         factory.setLottery(address(lottery));
+        // Release order: Passport after the lottery, both owner bindings. 0.005 ETH is a fork fixture price.
+        passport = new SorpheraPassport(address(lottery), 0.005 ether);
+        lottery.setPassport(address(passport));
         subId = LiveCoordinator(COORDINATOR).createSubscription();
         LiveCoordinator(COORDINATOR).addConsumer(subId, address(lottery));
         LiveCoordinator(COORDINATOR).fundSubscriptionWithNative{value: 5 ether}(subId);
@@ -95,7 +101,80 @@ contract SorpheraMainnetForkTest is Test {
         lottery.configureRules(1, rules);
         lottery.validateLaunch();
         assertFalse(lottery.salesEnabled());
+        ReleaseChecks.Report memory report = new ReleaseChecks()
+            .requireReady(
+                ReleaseChecks.Expected(
+                    1,
+                    address(this),
+                    address(router),
+                    address(factory),
+                    address(lottery),
+                    address(passport),
+                    COORDINATOR,
+                    0.005 ether
+                )
+            );
+        assertTrue(report.rulesConfigured[0] && report.rulesConfigured[1] && report.launchValidated);
         lottery.setSalesEnabled(true); // FORK ONLY: there is no broadcast or live sales activation.
+    }
+
+    function _keys(uint8 game, uint256 round) internal pure returns (SorpheraPassport.RoundKey[] memory k) {
+        k = new SorpheraPassport.RoundKey[](1);
+        k[0] = SorpheraPassport.RoundKey(game, round);
+    }
+
+    /// @notice Passport paid entries through the real pool: exact ETH forwarding, stamps after the round
+    ///         is terminal, and a free reward entry into the next round that funds nothing.
+    function testRealPassportPaidEntriesEarnRewardAndFreeEntryFundsNothing() public {
+        lottery.openRound(0);
+        SorpheraVault v = SorpheraVault(payable(lottery.getRound(0, 1).vault));
+        // 24 paid entries: two full stamp cards and enough 90% budget for one real FWA draw (~0.076 ETH).
+        Sorphera.Pick[] memory picks = new Sorphera.Pick[](24);
+        (uint8[3] memory main, uint8 bonus,) = Balls.draw(lottery.seedFor(0, 1, 123));
+        for (uint256 i; i < 24; ++i) {
+            picks[i] = Sorphera.Pick(main, bonus);
+        }
+        uint256 vaultBefore = address(v).balance;
+        uint256 lotteryBefore = address(lottery).balance;
+        vm.prank(alice);
+        passport.enter{value: 0.12 ether}(0, 1, picks, 0, _keys(0, 1));
+        assertEq(address(v).balance - vaultBefore, 0.108 ether, "90% forwarded to the vault");
+        assertEq(address(lottery).balance - lotteryBefore, 0.012 ether, "10% fee held as liability");
+        (uint256 paid, uint256 reward) = lottery.entriesOf(0, 1, alice);
+        assertEq(paid, 24);
+        assertEq(reward, 0);
+        (,,,,, uint256 available) = passport.summary(alice);
+        assertEq(available, 0, "no credit before the round is terminal");
+        uint256 id = _allocate(v);
+        v.settle(id);
+        _draw(0, 123);
+        assertEq(uint8(lottery.getRound(0, 1).status), uint8(Sorphera.Status.Won));
+        assertEq(passport.process(alice, _keys(0, 1)), 1);
+        assertEq(passport.process(alice, _keys(0, 1)), 0, "idempotent");
+        (uint256 finalizedPaid,,,,, uint256 nowAvailable) = passport.summary(alice);
+        assertEq(finalizedPaid, 24);
+        assertEq(nowAvailable, 2);
+        lottery.openRound(0);
+        SorpheraVault next = SorpheraVault(payable(lottery.getRound(0, 2).vault));
+        Sorphera.Pick[] memory one = new Sorphera.Pick[](1);
+        one[0] = Sorphera.Pick(main, bonus);
+        uint256 nextBefore = address(next).balance;
+        vm.prank(alice);
+        passport.enter(0, 2, one, 1, _keys(0, 2));
+        assertEq(address(next).balance, nextBefore, "reward entry funds no acquisition budget");
+        Sorphera.Round memory r = lottery.getRound(0, 2);
+        assertEq(r.sold, 1);
+        assertEq(r.paidEntries, 0);
+        assertEq(r.rewardEntries, 1);
+        (address player, uint32 combination, bool isReward) = lottery.tickets(0, 2, 1);
+        assertEq(player, alice);
+        assertEq(combination, lottery.combinationKey(main, bonus));
+        assertTrue(isReward);
+        (,,,,, uint256 spent) = passport.summary(alice);
+        assertEq(spent, 1, "one reward left after redemption");
+        vm.prank(alice);
+        lottery.claimETH(0, 1, _one(1), alice);
+        assertEq(address(lottery).balance, lottery.totalLiabilities());
     }
 
     function _one(uint256 n) internal pure returns (uint256[] memory a) {

@@ -53,4 +53,18 @@ if c.get('lottery'):
  assert configuredReserve>=int(config['minimumFundingWei']),'configure onchain VRF reserve before opening rounds'
  report['futureOnchainReserve']=configuredReserve
 else:report['consumer']='NOT YET DEPLOYED: add lottery as consumer after deployment'
+# Passport: release readiness fails closed without the deployed, doubly bound Passport at the qualifying price.
+price=checked(c.get('qualifyingPriceWei'),'qualifyingPriceWei');price=int(price)
+assert price>=10 and price<=100*10**18 and price%10==0,'qualifying price violates lottery price rules'
+for game in ['ETH','NFT']:assert int(c['rules'][game]['price'])==price,'game price is not the Passport qualifying price: '+game
+if c.get('lottery'):
+ passport=checked(c.get('passport'),'passport')
+ assert len(cast('code',passport,'--block',a.block))>2,'missing code: passport'
+ assert call(c['lottery'],'passport()(address)').lower()==passport.lower(),'lottery not bound to passport'
+ assert call(passport,'lottery()(address)').lower()==c['lottery'].lower(),'passport bound to another lottery'
+ assert int(call(passport,'qualifyingPrice()(uint256)').split()[0])==price,'passport qualifying price mismatch'
+ assert call(c['lottery'],'salesEnabled()(bool)')=='false','sales must remain disabled before release approval'
+ if c.get('factory'):assert call(c['factory'],'lottery()(address)').lower()==c['lottery'].lower(),'factory not bound'
+ report['passport']={'address':passport,'qualifyingPriceWei':str(price),'bindings':'verified both ways'}
+else:report['passport']='NOT YET DEPLOYED: deploy SorpheraPassport(lottery, qualifyingPriceWei) after the lottery, then setPassport'
 print(json.dumps(report,indent=2))

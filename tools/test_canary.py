@@ -14,8 +14,10 @@ class FakeEngine:
         self.state, self.sender, self.live = {}, address(90), False
         self.rpc = self
         self.rounds = {game: [0, 1, 1000, 0, 50000, 50060, 53600, address(10 + game),
-                              0, 0, 0, 0, 0, [1, 2, 3], 1, 123, 0, 0, 0, 0, 0, 0]
+                              0, 0, 0, 0, 0, [1, 2, 3], 1, 123, 0, 0, 0, 0, 0, 0, 0, 0]
                        for game in (0, 1)}
+        self.processed, self.bindings = False, {"factory": address(6), "lotteryPassport": address(7),
+                                                "passportLottery": address(6), "price": 1000, "sales": "false"}
         self.sent, self.journal, self.pending = [], {}, {}
         self.acquired, self.allocated, self.claimed = set(), set(), set()
         self.now, self.next_request, self.owner, self.asset_claimed = 50061, 20, address(11), False
@@ -51,6 +53,17 @@ class FakeEngine:
             return [address(5), 2, 2, 2, self.asset_claimed]
         if signature.startswith("ownerOf"):
             return [self.owner]
+        if signature == canary.SUMMARY:
+            paid = 17100 if self.processed else 0
+            return [paid, paid % 12, paid // 12, 0, 0, paid // 12]
+        if signature.startswith("lottery()"):
+            return [self.bindings["factory"] if target == address(5) else self.bindings["passportLottery"]]
+        if signature.startswith("passport()"):
+            return [self.bindings["lotteryPassport"]]
+        if signature.startswith("qualifyingPrice()"):
+            return [self.bindings["price"]]
+        if signature.startswith("salesEnabled()"):
+            return [self.bindings["sales"]]
         raise AssertionError(signature)
 
     def transact(self, action):
@@ -80,6 +93,10 @@ class FakeEngine:
             self.next_request += 1
         elif signature.startswith("finalizeTieBreak"):
             self.rounds[1][0], self.rounds[1][17] = 5, 123
+        elif signature.startswith("process(address"):
+            if not all(r[0] == 5 for r in self.rounds.values()):
+                raise AssertionError("Passport processing before both rounds are Won")
+            self.processed = True
         elif signature.startswith("execute"):
             inner, inner_args = json.loads(args[1])
             if inner.startswith("claimETH"):
@@ -106,8 +123,8 @@ class CanaryTests(unittest.TestCase):
     def workflow(self, engine=None, limit=200):
         engine = engine or FakeEngine()
         work = canary.Canary(engine, self.config, limit)
-        work.a.update(lottery=address(6), pool=address(4), controller=address(3),
-                      vault0=address(10), vault1=address(11))
+        work.a.update(lottery=address(6), pool=address(4), controller=address(3), passport=address(7),
+                      factory=address(5), vault0=address(10), vault1=address(11))
         work.s["subscription"] = 42
         return work
 
@@ -170,6 +187,48 @@ class CanaryTests(unittest.TestCase):
         self.assertEqual(work.e.owner, work.e.sender)
         self.assertEqual(len({work.e.rounds[0][10], work.e.rounds[1][10], work.e.rounds[1][20]}), 3)
         self.assertFalse(resumed.verify_evidence(), "simulation does not provide actual coordinator receipts")
+
+    def test_round_signature_matches_exported_abi_with_passport_fields(self):
+        import json as _json
+        from pathlib import Path
+        abi = _json.loads((Path(__file__).resolve().parents[1] / "frontend" / "abi" / "Sorphera.json").read_text())
+        from contracts import abi_type
+        get_round = next(f for f in abi if f["type"] == "function" and f["name"] == "getRound")
+        names = [c["name"] for c in get_round["outputs"][0]["components"]]
+        self.assertEqual(names[-2:], ["paidEntries", "rewardEntries"])
+        self.assertEqual(names[8], "sold")
+        self.assertEqual(canary.ROUND, "getRound(uint8,uint256)(" + abi_type(get_round["outputs"][0]) + ")")
+        tickets = next(f for f in abi if f["type"] == "function" and f["name"] == "tickets")
+        self.assertEqual([o["name"] for o in tickets["outputs"]], ["player", "combination", "reward"])
+        cancelled = next(e for e in abi if e["type"] == "event" and e["name"] == "Cancelled")
+        self.assertEqual([i["name"] for i in cancelled["inputs"]], ["game", "round", "available", "tickets"])
+        passport = _json.loads((Path(__file__).resolve().parents[1] / "frontend" / "abi" / "SorpheraPassport.json").read_text())
+        summary = next(f for f in passport if f["type"] == "function" and f["name"] == "summary")
+        self.assertEqual(canary.SUMMARY, "summary(address)(" + ",".join(abi_type(o) for o in summary["outputs"]) + ")")
+
+    def test_bindings_fail_closed_and_rewards_require_terminal_rounds(self):
+        work = self.workflow()
+        work.bindings()
+        for key, bad in (("factory", address(9)), ("lotteryPassport", address(9)), ("passportLottery", address(9)),
+                         ("price", 999), ("sales", "true")):
+            broken = self.workflow()
+            broken.e.bindings[key] = bad
+            with self.assertRaises(ValueError):
+                broken.bindings()
+        with self.assertRaises(AssertionError):
+            work.rewards()
+        work.entries(0); work.entries(1)
+        work.advance(0); work.advance(1)
+        work.e.rounds[0][0] = 4; work.e.rounds[1][0] = 4
+        work.advance(0); work.advance(1)
+        work.e.rounds[1][0] = 10
+        self.assertTrue(work.advance(1))
+        work.rewards()
+        self.assertEqual(work.s["evidence"]["passport"]["finalizedPaid"], 17100)
+        self.assertEqual(work.s["evidence"]["passport"]["available"], 1425)
+        sent = len(work.e.sent)
+        work.rewards()
+        self.assertEqual(len(work.e.sent), sent, "processing is journaled once")
 
     def test_actual_receipts_and_distinct_ids_required_for_live_success(self):
         work = self.workflow()

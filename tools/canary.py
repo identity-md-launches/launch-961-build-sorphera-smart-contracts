@@ -9,7 +9,11 @@ from pathlib import Path
 
 COORDINATOR = "0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B"
 KEY = "0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae"
-ROUND = "getRound(uint8,uint256)((uint8,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint8[3],uint8,uint32,uint256,uint256,uint256,uint256,uint256,uint256))"
+# Round tuple with the appended Passport fields (paidEntries, rewardEntries); tools/test_canary.py pins it
+# against the exported ABI so a layout change cannot silently misdecode `sold`, `vault` or request ids.
+ROUND = "getRound(uint8,uint256)((uint8,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint8[3],uint8,uint32,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256))"
+SUMMARY = "summary(address)(uint256,uint256,uint256,uint256,uint256,uint256)"
+STAMPS_PER_REWARD = 12
 FULFILLED = "RandomWordsFulfilled(uint256,uint256,uint256,uint96,bool,bool,bool)"
 REQUESTED = "RandomWordsRequested(bytes32,uint256,uint256,uint256,uint16,uint32,uint32,bytes,address)"
 CREATED = "SubscriptionCreated(uint256,address)"
@@ -82,13 +86,13 @@ def offline_plan(config):
             "dependencies": "controlled mock FWA; production Sorphera and real VRF coordinator",
             "ticketPriceWei": price, "tickets": {"ETH": 5700, "NFT": 11400},
             "ticketBatches": 171, "ticketValueWei": price * 17100,
-            "stages": ["deploy controlled mocks/controller and production router/factory/lottery",
-                       "bind; create/use company subscription; register and check funding",
+            "stages": ["deploy controlled mocks/controller and production router/factory/lottery/passport",
+                       "bind factory, router and passport; verify bindings; create/use company subscription; register and check funding",
                        "freeze small test price; validate; open two rounds",
                        "atomic enable/buy/disable batches; synthetic FWA acquisition/settlement",
                        "wait cutoff; request two draws; wait actual coordinator fulfillments",
                        "finalize; independent NFT tie request; wait fulfillment; finalize tie",
-                       "claim ETH and NFT; collect canonical coordinator billing/callback receipts"],
+                       "claim ETH and NFT; process Passport stamps for the controller; collect canonical coordinator billing/callback receipts"],
             "required": ["company test-wallet authorization", "dedicated company sender and secure signer",
                          "Sepolia RPC and test ETH for bounded gas/funding",
                          "company subscription owner access or create permission and billing reserve"]}
@@ -151,8 +155,13 @@ class Canary:
         self.deploy("router", "src/SorpheraRouter.sol:SorpheraRouter", "constructor(address)", self.a["controller"])
         self.deploy("factory", "src/SorpheraVaultFactory.sol:SorpheraVaultFactory", "constructor(address,address)", self.a["router"], self.a["controller"])
         self.deploy("lottery", "src/Sorphera.sol:Sorphera", "constructor(address,address,address)", self.a["controller"], self.a["factory"], COORDINATOR)
+        price = int(self.cfg.get("ticketPriceWei", 1000))
+        # The Passport qualifying price is immutable and must equal the frozen canary ticket price.
+        self.deploy("passport", "src/SorpheraPassport.sol:SorpheraPassport", "constructor(address,uint256)", self.a["lottery"], price)
         self.admin("bind-factory", self.a["factory"], "setLottery(address)", self.a["lottery"])
         self.admin("bind-router", self.a["router"], "configure(address,address)", self.a["pool"], self.a["helper"])
+        self.admin("bind-passport", self.a["lottery"], "setPassport(address)", self.a["passport"])
+        self.bindings()
         sub = self.s.get("subscription", self.cfg.get("subscription"))
         if sub is None:
             receipt = self.tx("create-subscription", COORDINATOR, "createSubscription()")
@@ -191,6 +200,33 @@ class Canary:
                    0 if self.cfg.get("nativePayment", True) else reserve,
                    reserve if self.cfg.get("nativePayment", True) else 0)
         self.admin("validate", self.a["lottery"], "validateLaunch()")
+
+    def bindings(self):
+        """Fail closed on any missing or misdirected binding before spending on subscription work."""
+        price = int(self.cfg.get("ticketPriceWei", 1000))
+        if self.one(self.a["factory"], "lottery()(address)").lower() != self.a["lottery"].lower():
+            raise ValueError("factory is not bound to the deployed lottery")
+        if self.one(self.a["lottery"], "passport()(address)").lower() != self.a["passport"].lower():
+            raise ValueError("lottery is not bound to the deployed Passport")
+        if self.one(self.a["passport"], "lottery()(address)").lower() != self.a["lottery"].lower():
+            raise ValueError("Passport is bound to another lottery")
+        if int(self.one(self.a["passport"], "qualifyingPrice()(uint256)")) != price:
+            raise ValueError("Passport qualifying price differs from the canary ticket price")
+        if str(self.one(self.a["lottery"], "salesEnabled()(bool)")).lower() == "true":
+            raise ValueError("sales must remain disabled during canary setup")
+
+    def rewards(self):
+        """Passport finality: all canary tickets are paid, so both Won rounds credit 17,100 stamps."""
+        controller = self.a["controller"]
+        if "passport-process" not in self.s["completed"]:
+            self.tx("passport-process", self.a["passport"], "process(address,(uint8,uint256)[])", controller, "[(0,1),(1,1)]")
+        summary = [int(x) for x in self.read(self.a["passport"], SUMMARY, controller)]
+        expected = 5700 + 11400
+        if summary[0] != expected or summary[5] != expected // STAMPS_PER_REWARD:
+            raise ValueError("Passport credit differs from the paid canary entries; do not reprice or regrant")
+        self.s["evidence"]["passport"] = {"finalizedPaid": summary[0], "available": summary[5],
+                                          "processTx": self.s["completed"]["passport-process"]}
+        self.e.save()
 
     def funding(self):
         s = self.read(COORDINATOR, "getSubscription(uint256)(uint96,uint96,uint64,address,address[])", self.s["subscription"])
@@ -357,6 +393,8 @@ class Canary:
         for game in (0, 1):
             self.entries(game)
         completed = [self.advance(game) for game in (0, 1)]
+        if all(completed):
+            self.rewards()
         self.collect()
         if all(completed) and self.verify_evidence():
             self.s["liveStatus"] = ("LIVE SEPOLIA VERIFIED: coordinator receipts, billing, callbacks and claims"

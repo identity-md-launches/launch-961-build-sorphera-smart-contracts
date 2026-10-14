@@ -21,7 +21,27 @@
         "$contract:SorpheraVaultFactory",
         "0xD7f86b4b8Cae7D942340FF628F82735b7a20893a"
       ]
+    },
+    {
+      "contract": "SorpheraPassport",
+      "constructorArgs": [
+        "$contract:Sorphera",
+        null
+      ],
+      "unsetInputs": {
+        "1": "qualifyingPriceWei: immutable company input, UNSET; must equal both games' Rules.price (5000000000000000 is only the local fixture)"
+      }
     }
   ],
-  "notes": "DRAFT MAINNET MANIFEST ONLY. Chain 1 requires separate platform-supported launch approval. Router -> factory -> Sorphera, then owner binds factory.setLottery. Owner and company subscription supplied by requester. All sales disabled. This does not retarget parked Sepolia launch 961."
+  "notes": "DRAFT MAINNET MANIFEST ONLY. Chain 1 requires separate platform-supported launch approval. Router -> factory -> Sorphera, then owner binds factory.setLottery. Owner and company subscription supplied by requester. All sales disabled. This does not retarget parked Sepolia launch 961. SorpheraPassport(lottery, qualifyingPriceWei) is deployed fourth and bound once with Sorphera.setPassport; its price argument is null here because the production qualifying price is not approved. Release readiness (script/ReleaseChecks.sol, tools/preflight.py) fails closed without both bindings.",
+  "postDeploymentOwnerActions": [
+    "SorpheraVaultFactory.setLottery($contract:Sorphera) once",
+    "Sorphera.setPassport($contract:SorpheraPassport) once",
+    "SorpheraRouter.configure(pool, helper)",
+    "Sorphera.configureRules(0|1, rules with price == qualifyingPriceWei)",
+    "Sorphera.configureRandomness(...)",
+    "Sorphera.configureVRFReserve(...)",
+    "Sorphera.validateLaunch()",
+    "ReleaseChecks.requireReady(...) must pass; sales stay disabled"
+  ]
 }
